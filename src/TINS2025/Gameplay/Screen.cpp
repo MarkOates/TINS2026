@@ -972,7 +972,7 @@ void Screen::render_game_hud()
    //al_draw_filled_circle(100, 100, 30, ALLEGRO_COLOR{1, 1, 1, 1});
 
    { // Draw the "Excitement meter"
-      int bar_x = 100;
+      int bar_x = 180;
       int bar_y = 1080/2;
       int bar_height = 8;
       int bar_margin = 4;
