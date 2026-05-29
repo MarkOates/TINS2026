@@ -1,0 +1,30 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/Users/markoates/Repos/TINS2026/bin/data/maps/hello_zoo-world_map-02.tmj": {
+            "scale": 2.2501,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 276.6543709168481,
+                "y": 245.10021776809918
+            }
+        },
+        "/Users/markoates/Repos/TINS2026/bin/data/maps/hello_zoo-world_map-0n.tmj": {
+            "scale": 0.76178125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 800.098453460229,
+                "y": 800.0984534602289
+            }
+        }
+    },
+    "openFiles": [
+    ],
+    "project": "hello_zoo-0x-project.tiled-project",
+    "recentFiles": [
+        "/Users/markoates/Repos/TINS2026/bin/data/maps/hello_zoo-world_map-02.tmj"
+    ]
+}

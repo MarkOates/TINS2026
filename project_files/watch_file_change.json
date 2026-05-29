@@ -1,0 +1,11 @@
+{
+  "tasks": [
+    {
+      "file": "/Users/markoates/Desktop/hello_zoo-animals-0x.ai",
+      "interval_ms": 1000,
+      "commands": [
+        "/Users/markoates/Repos/TINS2026/scripts/illustrator/export_hello_zoo_sprites.sh"
+      ]
+    }
+  ]
+}

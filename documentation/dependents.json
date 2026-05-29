@@ -1,0 +1,385 @@
+{
+  "ALLEGRO_EVENT": [
+    "DialControl/CameraControl",
+    "DialControl/CameraStudio",
+    "DialControl/Gameplay/Screen",
+    "DialControl/ViewMotionStudio",
+    "TINS2025/Gameplay/Screen",
+    "Timeline/MotionStudio"
+  ],
+  "AllegroFlare/Camera3D": [
+    "DialControl/CameraControl",
+    "DialControl/CameraInfo",
+    "DialControl/CameraInfoOverlay",
+    "DialControl/CameraStudio"
+  ],
+  "AllegroFlare/KeyboardCommandMapper": [
+    "DialControl/CameraControl",
+    "DialControl/CameraStudio",
+    "Timeline/MotionStudio"
+  ],
+  "AllegroFlare/FontBin": [
+    "DialControl/CameraInfoOverlay",
+    "DialControl/CameraStudio",
+    "DialControl/Gameplay/Screen",
+    "DialControl/ViewMotionStudio",
+    "TINS2025/Gameplay/Screen",
+    "Timeline/MotionStudio",
+    "Timeline/ParameterView",
+    "Timeline/ParameterView"
+  ],
+  "ALLEGRO_FONT": [
+    "DialControl/CameraInfoOverlay",
+    "DialControl/Gameplay/Screen",
+    "DialControl/ViewMotionStudio",
+    "TINS2025/Gameplay/Screen",
+    "Timeline/ParameterView",
+    "Timeline/ParameterView"
+  ],
+  "al_draw_text": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "al_draw_rounded_rectangle": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "AllegroFlare/Vec2D": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "ALLEGRO_COLOR": [
+    "DialControl/CameraInfoOverlay",
+    "Timeline/ParameterView"
+  ],
+  "AllegroFlare/Vec3D": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "std/atan": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "std/cos": [
+    "DialControl/CameraInfoOverlay",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "std/sin": [
+    "DialControl/CameraInfoOverlay",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "std/sqrt": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "fmodf": [
+    "DialControl/CameraInfoOverlay"
+  ],
+  "AllegroFlare/Camera2D": [
+    "DialControl/CameraStudio"
+  ],
+  "nlohmann/json": [
+    "DialControl/CameraStudio",
+    "Timeline/MotionStudio"
+  ],
+  "AllegroFlare/JSONLoaders/AllegroFlare/Camera3D": [
+    "DialControl/CameraStudio",
+    "Timeline/MotionStudio"
+  ],
+  "DialControl/CameraInfo": [
+    "DialControl/CameraStudio"
+  ],
+  "DialControl/CameraInfoOverlay": [
+    "DialControl/CameraStudio",
+    "DialControl/ViewMotionStudio"
+  ],
+  "AllegroFlare/GameConfigurations/Complete": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/Levels/Base": [
+    "DialControl/Game/Configurations/Main",
+    "DialControl/Gameplay/Level",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Level"
+  ],
+  "AllegroFlare/DialogTree/NodeBank": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogTree/NodeBankFactory": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/DialogTree/Nodes/Wait": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/DialogTree/Nodes/ExitProgram": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/DialogTree/Nodes/MultipageWithOptions": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogTree/NodeOptions/GoToNode": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogTree/NodeOptions/ExitDialog": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "DialControl/Gameplay/Level": [
+    "DialControl/Game/Configurations/Main",
+    "DialControl/Gameplay/Screen"
+  ],
+  "AllegroFlare/Achievement": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/Elements/StoryboardPages/Base": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/GameSession": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/GameProgressAndStateInfos/Base": [
+    "DialControl/Game/Configurations/Main",
+    "DialControl/GameProgressAndStateInfo",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/GameProgressAndStateInfo"
+  ],
+  "AllegroFlare/LoadASavedGame/SaveSlots/Base": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/LoadASavedGame/SaveSlots/Empty": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "DialControl/Gameplay/Screen": [
+    "DialControl/Game/Configurations/Main",
+    "DialControl/Gameplay/Screen"
+  ],
+  "DialControl/GameProgressAndStateInfo": [
+    "DialControl/Game/Configurations/Main"
+  ],
+  "AllegroFlare/Screens/Gameplay": [
+    "DialControl/Game/Configurations/Main",
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/Runners/Complete": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/AudioController": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/EventNames": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/GameEventDatas/AchievementUnlocked": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/GameEvent": [
+    "DialControl/Game/Configurations/Main",
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/Screens/Subscreen/Screen": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/Screens/TitledMenuScreen": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/Screens/TitledMenuScreenFactory": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/Screens/Base": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/SavingAndLoading/SavingAndLoading/LoadStyle": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/SavingAndLoading/SavingAndLoading/SaveStyle": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/SavingAndLoading/SavingAndLoading/StartStyle": [
+    "DialControl/Game/Configurations/Main",
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "DialControl/JSONLoaders/DialControl/GameProgressAndStateInfo": [
+    "DialControl/GameProgressAndStateInfo"
+  ],
+  "AllegroFlare/BitmapBin": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/EventEmitter": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/ModelBin": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "al_is_primitives_addon_initialized": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen",
+    "Timeline/ParameterView"
+  ],
+  "AllegroFlare/Player": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/VirtualControllers/Base": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/VirtualControllers/GenericController": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/AssetStudio/Database": [
+    "DialControl/Gameplay/Screen",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "DialControl/CameraStudio": [
+    "DialControl/ViewMotionStudio"
+  ],
+  "Timeline/MotionStudio": [
+    "DialControl/ViewMotionStudio"
+  ],
+  "Timeline/ParameterMappings/AllegroFlare/Camera3D": [
+    "DialControl/ViewMotionStudio"
+  ],
+  "Timeline/Parameter": [
+    "DialControl/ViewMotionStudio",
+    "Timeline/MotionStudio",
+    "Timeline/Parameter",
+    "Timeline/ParameterMappings/AllegroFlare/Camera3D",
+    "Timeline/ParameterView"
+  ],
+  "Timeline/ParameterView": [
+    "DialControl/ViewMotionStudio",
+    "Timeline/MotionStudio"
+  ],
+  "AllegroFlare/Logger": [
+    "DialControl/ViewMotionStudio"
+  ],
+  "AllegroFlare/php": [
+    "DialControl/ViewMotionStudio",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "ALLEGRO_BITMAP": [
+    "TINS2025/Entity"
+  ],
+  "AllegroFlare/Physics/AABB2D": [
+    "TINS2025/Entity"
+  ],
+  "al_draw_rectangle": [
+    "TINS2025/Entity"
+  ],
+  "AllegroFlare/Model3D": [
+    "TINS2025/Entity",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2025/Gameplay/Level": [
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2025/Gameplay/Screen": [
+    "TINS2025/Game/Configurations/Main",
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2025/GameProgressAndStateInfo": [
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "AllegroFlare/StoryboardPageFactory": [
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "al_get_color_html": [
+    "TINS2025/Game/Configurations/Main"
+  ],
+  "TINS2025/JSONLoaders/TINS2025/GameProgressAndStateInfo": [
+    "TINS2025/GameProgressAndStateInfo"
+  ],
+  "AllegroFlare/CollisionObservers/Simple": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2025/Entity": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/TileMaps/TileMap": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/Physics/TileMapCollisionStepper": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogSystem/DialogSystem": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogTree/Nodes/Interparsable": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "DialControl/ViewMotionStudio": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/Placement3D": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/PlayerInputControllers/Generic": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogTree/Nodes/ExitDialog": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/Tiled/TMJDataLoader": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "std/remove_if": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "std/sort": [
+    "TINS2025/Gameplay/Screen",
+    "Timeline/Parameter"
+  ],
+  "Timeline/Keyframe": [
+    "Timeline/Keyframe",
+    "Timeline/Parameter"
+  ],
+  "AllegroFlare/Placement2D": [
+    "Timeline/MotionStudio"
+  ],
+  "al_draw_line": [
+    "Timeline/MotionStudio"
+  ],
+  "Timeline/JSONLoaders/Timeline/Parameter": [
+    "Timeline/MotionStudio"
+  ],
+  ":AllegroFlare/Camera3D": [
+    "Timeline/ParameterMappings/AllegroFlare/Camera3D"
+  ],
+  "AllegroFlare/Timeline/Track": [
+    "Timeline/ParameterView",
+    "Timeline/ParameterView"
+  ],
+  "AllegroFlare/Color/": [
+    "Timeline/ParameterView",
+    "Timeline/ParameterView"
+  ]
+}

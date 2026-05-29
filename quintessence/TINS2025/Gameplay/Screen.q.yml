@@ -1,0 +1,2335 @@
+parent_classes:
+
+
+  - class: AllegroFlare::Screens::Gameplay
+    scope: public
+    init_with: ''
+
+
+properties:
+
+
+  - name: data_folder_path
+    type: std::string
+    init_with: DEFAULT_DATA_FOLDER_PATH
+    getter: true
+    setter: before_initialized
+
+  - name: asset_studio_database
+    type: AllegroFlare::AssetStudio::Database*
+    init_with: nullptr
+    getter_ref: true
+    setter: before_initialized
+
+  - name: event_emitter
+    type: AllegroFlare::EventEmitter*
+    init_with: nullptr
+    setter: before_initialized
+    getter: true
+    getter: true
+
+  - name: bitmap_bin
+    type: AllegroFlare::BitmapBin*
+    init_with: nullptr
+    setter: before_initialized
+    getter: true
+
+  - name: font_bin
+    type: AllegroFlare::FontBin*
+    init_with: nullptr
+    setter: before_initialized
+    getter: true
+
+  - name: model_bin
+    type: AllegroFlare::ModelBin*
+    init_with: nullptr
+    setter: before_initialized
+    getter: true
+
+  - name: dialog_system
+    type: AllegroFlare::DialogSystem::DialogSystem*
+    init_with: nullptr
+    getter: true
+    setter: before_initialized
+
+  - name: view_motion_studio
+    type: DialControl::ViewMotionStudio
+    init_with: '{}'
+
+  - name: hide_view_motion_studio_hud
+    type: bool
+    init_with: false
+
+  - name: current_level_identifier
+    type: std::string
+    init_with: '"[unset-current_level]"'
+
+  - name: current_level
+    type: TINS2025::Gameplay::Level*
+    init_with: nullptr
+
+  - name: collision_observer
+    type: AllegroFlare::CollisionObservers::Simple
+    init_with: '{}'
+
+  - name: collision_tile_map
+    type: AllegroFlare::TileMaps::TileMap<int>
+    init_with: '{}'
+
+  - name: environment_overlay_placement
+    type: AllegroFlare::Placement3D
+    init_with: ''
+
+  - name: entities
+    type: std::vector<TINS2025::Entity>
+    init_with: '{}'
+
+  - name: environment_model
+    type: AllegroFlare::Model3D*
+    init_with: nullptr
+
+  - name: player_entity
+    type: TINS2025::Entity*
+    init_with: nullptr
+
+  - name: input_mode
+    type: int
+    init_with: 0
+
+  - name: QUEST__collected_apple
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__collected_carrot
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__collected_red_carrot
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__dialog_1_triggered
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__dialog_2_triggered
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__dialog_3_triggered
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__friend_1_requirements_asked
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__friend_2_requirements_asked
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: QUEST__friend_3_requirements_asked
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: current_chapter_number
+    type: int
+    init_with: 1
+    getter: true
+
+  - name: dip_to_black_overlay_opacity
+    type: float
+    init_with: 0.0f
+    getter: true
+
+  - name: dipping_to_black
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: in_test_or_development_mode
+    type: bool
+    init_with: true
+    getter: true
+    setter: true
+
+  - name: camera_is_tracking_player
+    type: bool
+    init_with: true
+    getter: true
+
+  - name: flag__showing_plant_now
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: initialized
+    type: bool
+    init_with: false
+    getter: true
+
+  - name: LOTTIE
+    type: char*
+    init_with: '(char*)"Lottie"'
+    static: true
+    constexpr: true
+
+  - name: FRIEND_1
+    type: char*
+    init_with: '(char*)"Frank"'
+    static: true
+    constexpr: true
+
+  - name: FRIEND_2
+    type: char*
+    init_with: '(char*)"Ditto"'
+    static: true
+    constexpr: true
+
+  - name: FRIEND_3
+    type: char*
+    init_with: '(char*)"Derek"'
+    static: true
+    constexpr: true
+
+  - name: DEFAULT_DATA_FOLDER_PATH
+    type: char*
+    init_with: '(char*)"[unset-data_folder_path]"'
+    static: true
+    constexpr: true
+
+  - name: TYPE
+    type: char*
+    init_with: '(char*)"TINS2025/Gameplay/Screen"'
+    static: true
+    constexpr: true
+
+
+enums:
+
+
+  - name: InputMode
+    type: uint32_t
+    enumerators:
+      - INPUT_MODE_NONE
+      - INPUT_MODE_PLAYING
+      - INPUT_MODE_EDITING
+
+
+methods:
+
+
+  - name: initialize
+    guards:
+      - (!initialized)
+      - al_is_system_installed()
+      - al_is_primitives_addon_initialized()
+      - al_is_font_addon_initialized()
+      - event_emitter
+      - bitmap_bin
+      - font_bin
+      - model_bin
+      - dialog_system
+      - (data_folder_path != DEFAULT_DATA_FOLDER_PATH)
+    body: |
+      set_update_strategy(AllegroFlare::Screens::Base::UpdateStrategy::SEPARATE_UPDATE_AND_RENDER_FUNCS);
+
+      // Setup the dialog
+      dialog_system->set_dialog_node_bank(build_dialog_node_bank());
+      dialog_system->set_standard_dialog_box_font_name("Quicksand-SemiBold.ttf");
+      dialog_system->set_standard_dialog_box_font_size(-52);
+      //dialog_system->set_standard_dialog_box_font_line_height(-52); // TODO: Add this feature
+      dialog_system->set_standard_dialog_box_width(1920 * 0.5);
+      dialog_system->set_standard_dialog_box_height(248);
+      dialog_system->set_standard_dialog_box_y(1080/5*4);
+      dialog_system->set_standard_dialog_box_frame_color(al_color_html("c6987e"));
+      dialog_system->set_standard_dialog_box_background_color(al_color_html("fdf5e6"));
+      dialog_system->set_standard_dialog_box_text_color(al_color_html("9f6b32"));
+      dialog_system->set_standard_dialog_box_label_color(al_color_html("fdf5e6"));
+
+      dialog_system->set_on_before_activating_dialog_node_by_name_callback_func([this](
+         AllegroFlare::DialogSystem::DialogSystem* dialog_system,
+         std::string activating_dialog_node_name,
+         AllegroFlare::DialogTree::Nodes::Base* dialog_node,
+         void* user_data
+      ){
+         if (!dialog_node) return; // consider throwing error
+
+         std::string speaker = LOTTIE;
+
+         if (dialog_node->is_type(AllegroFlare::DialogTree::Nodes::MultipageWithOptions::TYPE))
+         {
+            AllegroFlare::DialogTree::Nodes::MultipageWithOptions *as =
+               static_cast<AllegroFlare::DialogTree::Nodes::MultipageWithOptions*>(dialog_node);
+            speaker = as->get_speaker();
+         }
+         else if (dialog_node->is_type(AllegroFlare::DialogTree::Nodes::Interparsable::TYPE))
+         {
+            auto *as = static_cast<AllegroFlare::DialogTree::Nodes::Interparsable*>(dialog_node);
+            speaker = as->get_speaker();
+         }
+
+         if (speaker == LOTTIE) customize_dialog_for_DOTTIE();
+         else if (speaker == FRIEND_1) customize_dialog_for_FRIEND_1();
+         else if (speaker == FRIEND_2) customize_dialog_for_FRIEND_2();
+         else if (speaker == FRIEND_3) customize_dialog_for_FRIEND_3();
+         //}
+      });
+
+      //set_standard_dialog_box_label_color(al_color_html("fdf5e6"));
+
+
+      load_up_world();
+      initialized = true;
+      return;
+    body_dependency_symbols:
+      - al_is_primitives_addon_initialized
+
+
+  - name: customize_dialog_for_DOTTIE
+    body: |
+      dialog_system->set_standard_dialog_box_frame_color(al_color_html("c6987e"));
+      dialog_system->set_standard_dialog_box_background_color(al_color_html("fdf5e6"));
+      dialog_system->set_standard_dialog_box_text_color(al_color_html("9f6b32"));
+      dialog_system->set_standard_dialog_box_label_color(al_color_html("fdf5e6"));
+      //dialog_system->set_standard_dialog_box_frame_color(al_color_html("c4b067"));
+      //dialog_system->set_standard_dialog_box_background_color(al_color_html("c4b067"));
+      //dialog_system->set_standard_dialog_box_text_color(al_color_html("60541f"));
+      //dialog_system->set_standard_dialog_box_label_color(al_color_html("60541f"));
+      return;
+
+
+  - name: customize_dialog_for_FRIEND_1
+    body: |
+      //dialog_system->set_standard_dialog_box_frame_color(al_color_html("de923c"));
+      //dialog_system->set_standard_dialog_box_background_color(al_color_html("de923c"));
+      //dialog_system->set_standard_dialog_box_text_color(al_color_html("60541f"));
+      //dialog_system->set_standard_dialog_box_label_color(al_color_html("60541f"));
+      std::string bg = "c2905b";
+      std::string fg = "e6e3dd";
+      dialog_system->set_standard_dialog_box_frame_color(al_color_html(bg.c_str()));
+      dialog_system->set_standard_dialog_box_background_color(al_color_html(bg.c_str()));
+      dialog_system->set_standard_dialog_box_text_color(al_color_html(fg.c_str()));
+      dialog_system->set_standard_dialog_box_label_color(al_color_html(fg.c_str()));
+      if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(2);
+      return;
+
+
+  - name: customize_dialog_for_FRIEND_2
+    body: |
+      dialog_system->set_standard_dialog_box_frame_color(al_color_html("d2698a"));
+      dialog_system->set_standard_dialog_box_background_color(al_color_html("d2698a"));
+      dialog_system->set_standard_dialog_box_text_color(al_color_html("e4d4bb"));
+      dialog_system->set_standard_dialog_box_label_color(al_color_html("e4d4bb"));
+      if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(4);
+
+      //dialog_system->set_standard_dialog_box_frame_color(al_color_html("6dbacc"));
+      //dialog_system->set_standard_dialog_box_background_color(al_color_html("6dbacc"));
+      //dialog_system->set_standard_dialog_box_text_color(al_color_html("000000"));
+      //dialog_system->set_standard_dialog_box_label_color(al_color_html("000000"));
+      return;
+
+
+  - name: customize_dialog_for_FRIEND_3
+    body: |
+      dialog_system->set_standard_dialog_box_frame_color(al_color_html("6dbacc"));
+      dialog_system->set_standard_dialog_box_background_color(al_color_html("6dbacc"));
+      dialog_system->set_standard_dialog_box_text_color(al_color_html("4270a2"));
+      dialog_system->set_standard_dialog_box_label_color(al_color_html("4270a2"));
+      if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(5);
+
+      // HERE
+      return;
+
+
+  - name: gameplay_suspend_func
+    virtual: true
+    override: true
+    body: |
+
+      // Function that is called immediately after the gameplay is suspended.
+      //AllegroFlare::Logger::warn_from_once(
+         //"AllegroFlare::Screens::Gameplay::gameplay_suspend_func",
+         //"Not implemented in the base class. This method should be implemented in the derived class. Take into account "
+            //"the AllegroFlare/Screens/Gameplay class has a suspend_gameplay func"
+      //);
+      return;
+
+
+  - name: gameplay_resume_func
+    virtual: true
+    override: true
+    body: |
+      if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(3); // ???
+      // Function that is called immediately after the gameplay is resumed.
+      //AllegroFlare::Logger::warn_from_once(
+         //"AllegroFlare::Screens::Gameplay::gameplay_suspend_func",
+         //"Not implemented in the base class. This method should be implemented in the derived class. Take into account "
+            //"the AllegroFlare/Screens/Gameplay class has a resume_gameplay func"
+      //);
+      return;
+
+
+  - name: load_up_world
+    body: |
+      collision_observer.clear();
+
+
+      // Load up the world model
+      collision_tile_map.initialize();
+
+      //environment_model = model_bin->auto_get("simple_scene-03.obj");
+      //environment_model->texture = bitmap_bin->auto_get("simple_scene-03.png");
+
+      environment_overlay_placement.rotation.x = 0.25;
+      environment_overlay_placement.position.y = 0.25;
+
+      // Setup the tile map
+      ////collision_tile_map.resize(1000, 1000);
+      //collision_tile_map.initialize();
+      //AllegroFlare::Tiled::TMJDataLoader tmj_data_loader;
+      //tmj_data_loader.set_filename(data_folder_path + "maps/hello_friend-world_map-0n.tmj");
+      //tmj_data_loader.load();
+
+      ////get_tilelayers_tile_data
+      //auto data = tmj_data_loader.get_tilelayer_data_by_name_as_2d_vector("collision");
+
+      //collision_tile_map.resize(tmj_data_loader.get_num_columns(), tmj_data_loader.get_num_rows());
+      //collision_tile_map.fill_with_data(data);
+
+      //collision_tile_map.set_tile(69, 34, 1);
+
+
+      // Setup the entities
+      entities.reserve(256);
+
+      Entity e;
+      e.aabb2d.set_x(9.0);
+      e.aabb2d.set_y(5.0);
+      e.aabb2d.set_w(0.75);
+      e.aabb2d.set_h(0.25);
+      //e.sprite = bitmap_bin->auto_get("character_a-01.png");
+      e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_TILEMAP;
+      e.type = TINS2025::Entity::ENTITY_TYPE_PLAYER;
+      e.model = model_bin->auto_get("character_model-01.obj");
+      e.sprite = bitmap_bin->auto_get("player_character.png");
+      e.model->texture = e.sprite;
+      entities.push_back(e);
+
+      player_entity = &entities.back();
+
+
+
+      refresh_environment_and_world(true);
+
+
+      // Setup view_motion_studio
+      view_motion_studio.set_font_bin(font_bin);
+      view_motion_studio.set_data_folder_path(data_folder_path);
+      view_motion_studio.initialize();
+      //view_motion_studio.load_json(cameras_json_string); // Load some test data
+      // TODO: Fix these paths
+      std::string filename_load = data_folder_path + "animations/camera_move_1-0n.txt";
+      //std::string filename_save = "tests/fixtures/animations/camera_move_1-0n_output.txt";
+      //std::cout << "loading json" << std::endl;
+      std::string file_content = AllegroFlare::php::file_get_contents(filename_load);
+      view_motion_studio.load_json(file_content);
+
+
+      input_mode = INPUT_MODE_PLAYING;
+
+
+      // Hide the view motion studio
+      hide_view_motion_studio_hud = true;
+
+
+
+      // Setup the player_input_controller
+      auto generic_player_input_controller = new AllegroFlare::PlayerInputControllers::Generic();
+      generic_player_input_controller->set_on_time_step_update(
+         [this](AllegroFlare::Vec2D value, double time_now, double time_step) {
+            /*
+            float threshold = 0.1f;
+            float max_velocity = 0.2f;
+            float acceleration = 1.0f; // units per second squared
+            float deceleration = 2.0f; // units per second squared
+
+            // Get current velocity
+            AllegroFlare::Vec2D current_velocity = {
+               player_entity->aabb2d.get_velocity_x(),
+               player_entity->aabb2d.get_velocity_y()
+            };
+
+            AllegroFlare::Vec2D target_direction = value;
+            if (target_direction.get_magnitude() > 1.0f)
+            {
+               target_direction = target_direction.normalized();
+            }
+
+            AllegroFlare::Vec2D desired_velocity = target_direction * max_velocity;
+
+            AllegroFlare::Vec2D velocity_diff = desired_velocity - current_velocity;
+
+            // Calculate acceleration or deceleration based on input presence
+            float applied_accel = (std::abs(value.x) > threshold || std::abs(value.y) > threshold)
+               ? acceleration
+               : deceleration;
+
+            AllegroFlare::Vec2D velocity_change = velocity_diff.normalized() * applied_accel * time_step;
+
+            // Clamp the change if it's going to overshoot
+            if (velocity_change.get_magnitude() > velocity_diff.get_magnitude())
+            {
+               velocity_change = velocity_diff;
+            }
+
+            AllegroFlare::Vec2D new_velocity = current_velocity + velocity_change;
+
+            player_entity->aabb2d.set_velocity_x(new_velocity.x);
+            player_entity->aabb2d.set_velocity_y(new_velocity.y);
+
+            if (std::abs(value.x) > threshold || std::abs(value.y) > threshold)
+            {
+               player_entity->animation_mode = TINS2025::Entity::ANIMATION_MODE_WALKING_WOBBLY;
+            }
+            else
+            {
+               player_entity->animation_mode = TINS2025::Entity::ANIMATION_MODE_STANDING;
+            }
+            */
+            //throw std::runtime_error("asdfasf");
+
+            //player_entity->
+            //auto player_box = frustum_viewer.find_first_box("player_box");
+            //AllegroFlare::Camera3D &camera = frustum_viewer.get_camera_ref();
+
+            // Simple:
+            //player_box->position.x += value.x * 0.02;
+            //player_box->position.z += value.y * 0.02;
+            //player_entity->aabb2d.set_velocity_x(value.x * 0.02);
+            //player_entity->aabb2d.set_velocity_y(value.y * 0.02);
+            //player_entity->aabb2d.set_velocity_x(value.x * 0.01625 * 3);
+            //player_entity->aabb2d.set_velocity_y(value.y * 0.01625 * 3);
+
+            player_entity->aabb2d.set_velocity_x(value.x * 0.01625 * 3.5);
+            player_entity->aabb2d.set_velocity_y(value.y * 0.01625 * 3.5);
+            //player_entity->position.z += value.y * 0.02;
+
+            float threshold = 0.1f; // example threshold
+            if (std::abs(value.x) > threshold || std::abs(value.y) > threshold)
+            {
+            //if (value.x > 0.01
+               player_entity->animation_mode = TINS2025::Entity::ANIMATION_MODE_WALKING_WOBBLY;
+            }
+            else
+            {
+               player_entity->animation_mode = TINS2025::Entity::ANIMATION_MODE_STANDING;
+            }
+
+            // Relative to camera:
+            //float angle = camera.spin;
+            //float x_prime = value.x * std::cos(angle) - value.y * std::sin(angle);
+            //float y_prime = value.x * std::sin(angle) + value.y * std::cos(angle);
+
+            //player_entity->velocity.x = x_prime * 0.05;
+            //player_box->velocity.z = y_prime * 0.05;
+         }
+      );
+      set_player_input_controller(generic_player_input_controller);
+
+
+      event_emitter->emit_play_music_track_event("theme");
+
+
+      return;
+    body_dependency_symbols:
+      - AllegroFlare::php
+      - AllegroFlare::PlayerInputControllers::Generic
+      - std::cos
+      - std::sin
+      - AllegroFlare::Tiled::TMJDataLoader
+
+
+  - name: load_level_by_identifier
+    type: bool
+    virtual: true
+    override: true
+    parameters:
+      - name: level_identifier
+        type: std::string
+        default_argument: '"[unset-level_identifier]"'
+    body: |
+      return false;
+    body_dependency_symbols:
+     - TINS2025::Gameplay::Level
+
+
+  - name: on_activate
+    virtual: true
+    override: true
+    guards: [ initialized ]
+    body: |
+      //emit_event_to_update_input_hints_bar();
+      //emit_show_and_size_input_hints_bar_event();
+      return;
+
+
+  - name: on_deactivate
+    virtual: true
+    override: true
+    guards: [ initialized ]
+    body: |
+      //emit_hide_and_restore_size_input_hints_bar_event();
+      return;
+
+
+  - name: update
+    body: |
+      if (!get_gameplay_suspended())
+      {
+         // Observe aabb2d <-> tile steps
+         AllegroFlare::Physics::TileMapCollisionStepper tile_map_collision_stepper(
+            &collision_tile_map,
+            nullptr,
+            1.0f,
+            1.0f
+         );
+         for (auto &entity : entities)
+         {
+            if ((entity.flags & TINS2025::Entity::FLAG_COLLIDES_WITH_TILEMAP) == 0) continue;
+            tile_map_collision_stepper.set_aabb2d(&entity.aabb2d);
+            tile_map_collision_stepper.step();
+         }
+
+         // Observe changes in bounding box collisions
+         collision_observer.set_subject(player_entity);
+         std::set<void*> collidables;
+         for (auto &entity : entities)
+         {
+            if (entity.flags & TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER) collidables.insert((void*)&entity);
+         }
+         collision_observer.set_collidables(collidables);
+         collision_observer.set_on_test_collide([](void* subject_v, void* collidable_v) -> bool {
+            TINS2025::Entity &subject = *static_cast<TINS2025::Entity*>(subject_v);
+            TINS2025::Entity &collidable = *static_cast<TINS2025::Entity*>(collidable_v);
+
+            return (subject.aabb2d.collides(&collidable.aabb2d));
+         });
+
+         collision_observer.process();
+
+         for (auto &entered : collision_observer.get_entered())
+         {
+            TINS2025::Entity &entity = *static_cast<TINS2025::Entity*>(entered);
+            if (entity.flags & TINS2025::Entity::FLAG_INACTIVE) continue;
+
+            switch (entity.type)
+            {
+               case TINS2025::Entity::ENTITY_TYPE_GIRAFFE: {
+                  event_emitter->emit_activate_dialog_node_by_name_event("meet_giraffe");
+               } break;
+
+               case TINS2025::Entity::ENTITY_TYPE_APPLE:
+                  if (QUEST__friend_1_requirements_asked)
+                  {
+                     entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+                     entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+                     event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
+                     QUEST__collected_apple = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("inspect_apple");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CARROT:
+                  if (QUEST__friend_2_requirements_asked)
+                  {
+                     entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+                     entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+                     event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
+                     QUEST__collected_carrot = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("inspect_carrot");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_RED_CARROT:
+                  if (QUEST__friend_3_requirements_asked)
+                  {
+                     entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+                     entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+                     event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
+                     QUEST__collected_red_carrot = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("inspect_red_carrot");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_1:
+                  if (!QUEST__dialog_1_triggered)
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("character_intro_dialog");
+                     QUEST__dialog_1_triggered = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("character_attempts_to_leave");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_2:
+                  if (!QUEST__dialog_2_triggered)
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("character_enters_town");
+                     QUEST__dialog_2_triggered = true;
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_3:
+                  if (QUEST__collected_apple && QUEST__collected_carrot && QUEST__collected_red_carrot)
+                  {
+                     event_emitter->emit_play_music_track_event("sad_theme");
+                     event_emitter->emit_activate_dialog_node_by_name_event("character_suspicious_of_plant");
+                  }
+                  else
+                  {
+                     if (!QUEST__dialog_3_triggered)
+                     {
+                        event_emitter->emit_activate_dialog_node_by_name_event("character_sees_plant");
+                        QUEST__dialog_3_triggered = true;
+                     }
+                     else
+                     {
+                        event_emitter->emit_activate_dialog_node_by_name_event("character_sees_plant_again");
+                     }
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_4:
+                  //if (!QUEST__dialog_2_triggered)
+                  //{
+                  event_emitter->emit_play_music_track_event("chipper_tune");
+                  event_emitter->emit_activate_dialog_node_by_name_event("character_starts_bakeoff");
+                  //event_emitter->emit_activate_dialog_node_by_name_event("character_starts_bakeoff");
+                  //start_chapter_2
+                  //QUEST__dialog_2_triggered = true;
+                  //}
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_5:
+                  //if (!QUEST__dialog_2_triggered)
+                  //{
+                  event_emitter->emit_activate_dialog_node_by_name_event("start_chapter_3");
+                  //QUEST__dialog_2_triggered = true;
+                  //}
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_FRIEND_1:
+                  //if (QUEST__apple_collected)
+                  //{
+                     //event_emitter->emit_activate_dialog_node_by_name_event("celebrate_won_game");
+                  //}
+                  //else
+                  //{
+                  if (!QUEST__collected_apple)
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("friend_1_requirements");
+                     QUEST__friend_1_requirements_asked = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("friend_1_requirements_met");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_FRIEND_2:
+                  if (!QUEST__collected_carrot)
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("friend_2_requirements");
+                     QUEST__friend_2_requirements_asked = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("friend_2_requirements_met");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_FRIEND_3:
+                  if (!QUEST__collected_red_carrot)
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("friend_3_requirements");
+                     QUEST__friend_3_requirements_asked = true;
+                  }
+                  else
+                  {
+                     event_emitter->emit_activate_dialog_node_by_name_event("friend_3_requirements_met");
+                  }
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_0:
+                  view_motion_studio.set_current_camera_to_camera_at_index(0);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_1:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(1);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_2:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(2);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_3:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(3);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_4:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(4);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_5:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(5);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_6:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(6);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_7:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(7);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_8:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(8);
+               break;
+
+               case TINS2025::Entity::ENTITY_TYPE_CAMERA_9:
+                  view_motion_studio.
+                  set_current_camera_to_camera_at_index(9);
+               break;
+            }
+         }
+
+         // Update entity animations
+         //for (auto &entity : entities)
+         //{
+             //float bounce_counter = sin(time_now*34)*0.5 + 0.5;
+             //get_bitmap_placement_ref().anchor = { 0, -(bounce_counter * 3.0f) };
+         //}
+      }
+
+      // Update the view motion
+      view_motion_studio.update();
+
+      // Update the current camera to track the current player position
+      if (camera_is_tracking_player)
+      {
+         view_motion_studio.get_camera_studio_ref().get_live_camera_ref().position.x = player_entity->aabb2d.get_x();
+         view_motion_studio.get_camera_studio_ref().get_live_camera_ref().position.z = player_entity->aabb2d.get_y();
+      }
+
+      // Update dipping to black
+      if (dipping_to_black)
+      {
+         dip_to_black_overlay_opacity += 0.02;
+         if (dip_to_black_overlay_opacity > 1.0)
+         {
+            dip_to_black_overlay_opacity = 1.0f;
+            if (current_chapter_number == 1) event_emitter->emit_game_event(AllegroFlare::GameEvent("start_chapter_2"));
+            if (current_chapter_number == 2) event_emitter->emit_game_event(AllegroFlare::GameEvent("start_chapter_3"));
+         }
+      }
+      else
+      {
+         dip_to_black_overlay_opacity -= 0.02;
+         if (dip_to_black_overlay_opacity < 0.0) dip_to_black_overlay_opacity = 0.0f;
+      }
+
+
+      return;
+    body_dependency_symbols:
+      - AllegroFlare::Physics::TileMapCollisionStepper
+
+
+  - name: render
+    body: |
+      view_motion_studio.setup_camera_projection_on_live_camera();
+
+      AllegroFlare::Placement3D environment_model_displacement;
+      environment_model_displacement.position.x = 0.5;
+      environment_model_displacement.position.z = 0.5;
+      environment_model_displacement.start_transform();
+      environment_model->draw();
+      environment_model_displacement.restore_transform();
+
+      if (!hide_view_motion_studio_hud) DEVELOPMENT__render_tile_map();
+
+
+      std::vector<TINS2025::Entity> sorted_entities = entities;
+      std::sort(
+         sorted_entities.begin(),
+         sorted_entities.end(),
+         [](const TINS2025::Entity &a, const TINS2025::Entity &b)
+         {
+            float a_center_y = a.aabb2d.get_y() + a.aabb2d.get_h() * 0.5f;
+            float b_center_y = b.aabb2d.get_y() + b.aabb2d.get_h() * 0.5f;
+            return a_center_y < b_center_y; // back to front
+            //return a.aabb2d.get_y() < b.aabb2d.get_y(); // back to front
+         }
+      );
+
+
+      AllegroFlare::Placement3D placement;
+      //for (auto &entity : entities)
+      for (auto &entity : sorted_entities)
+      {
+         if (entity.flags & TINS2025::Entity::FLAG_INACTIVE) continue;
+         if (entity.flags & TINS2025::Entity::FLAG_HIDDEN) continue;
+
+         float animation_y_offset = 0.0f;
+         if (entity.animation_mode == TINS2025::Entity::ANIMATION_MODE_JUMPING_IN_EXCITEMENT)
+         {
+            //float bounce_counter = sin(time_now*34)*0.5 + 0.5;
+            //get_bitmap_placement_ref().anchor = { 0, -(bounce_counter * 3.0f) };
+            animation_y_offset = std::sin(al_get_time()*34)*0.4 + 0.5;
+         }
+         else if (entity.animation_mode == TINS2025::Entity::ANIMATION_MODE_WALKING_WOBBLY)
+         {
+            float i = 0.125 * 0.5; // intensity
+            animation_y_offset = std::sin(al_get_time()*34)*i + i;
+         }
+
+      
+         float item_y_offset = 0;
+         if (entity.type == TINS2025::Entity::ENTITY_TYPE_CAKE_1
+          || entity.type == TINS2025::Entity::ENTITY_TYPE_CAKE_2
+          || entity.type == TINS2025::Entity::ENTITY_TYPE_CAKE_3
+         )
+         {
+            item_y_offset = 0.45;
+         }
+         else if (entity.type == TINS2025::Entity::ENTITY_TYPE_COMPOSITE_CAKE)
+         {
+            item_y_offset = 0.35;
+         }
+         //else if (entity.type == TINS2025::Entity::ENTITY_TYPE_RED_CARROT)
+         //{
+            //item_y_offset = -0.25;
+         //}
+         
+
+         //entity.draw();
+         float entity_center_x = entity.aabb2d.get_x() + entity.aabb2d.get_w() * 0.5f;
+         float entity_center_y = entity.aabb2d.get_y() + entity.aabb2d.get_h() * 0.5f;
+         placement.position.x = entity_center_x; //entity.aabb2d.get_x() + ; // + entity.aabb2d.get_w() * 0.5f;
+         placement.position.z = entity_center_y; //entity.aabb2d.get_y(); // + entity.aabb2d.get_h() * 0.5;
+         placement.position.y = animation_y_offset + item_y_offset;
+         placement.scale.x = 1.0; // + entity.aabb2d.get_w() * 0.5f;
+         placement.scale.y = 1.25; // + entity.aabb2d.get_w() * 0.5f;
+         //placement.size.x = entity.aabb2d.get_w(); // + entity.aabb2d.get_w() * 0.5f;
+         //placement.size.z = entity.aabb2d.get_h(); // + entity.aabb2d.get_h() * 0.5;
+         /*
+         //placement.size.x = entity.aabb2d.get_w(); // + entity.aabb2d.get_w() * 0.5f;
+         //placement.size.z = entity.aabb2d.get_h(); // + entity.aabb2d.get_h() * 0.5;
+         placement.size.y = 0;
+         placement.align.x = 0.5;
+         placement.align.z = 0.5;
+         placement.align.y = 0;
+         */
+
+         placement.start_transform();
+         entity.model->set_texture(entity.sprite);
+         entity.model->draw();
+         if (!hide_view_motion_studio_hud)
+         {
+            al_draw_rectangle(0, 0, entity.aabb2d.get_w(), entity.aabb2d.get_h(), ALLEGRO_COLOR{1, 1, 1, 1}, 0.01);
+         }
+         placement.restore_transform();
+      }
+
+
+      if (dip_to_black_overlay_opacity > 0.0001)
+      {
+         view_motion_studio.get_camera_studio_ref().setup_projection_on_hud_camera();
+         float o = dip_to_black_overlay_opacity;
+         al_draw_filled_rectangle(0, 0, 1920, 1080, ALLEGRO_COLOR{0, 0, 0, o});
+      }
+
+
+      //view_motion_studio.setup_camera_projection_on_live_camera();
+
+      // Render the view motion hud
+      if (!hide_view_motion_studio_hud) view_motion_studio.render_hud();
+      //DEVELOPMENT__render_tile_map();
+      //for (auto &entity : entities)
+      //{
+         //if ((entity.flags & TINS2025::Entity::FLAG_HIDDEN) == 0) entity.draw_bbox();
+      //}
+      return;
+    body_dependency_symbols:
+      - AllegroFlare::Placement3D
+      - std::sort
+
+
+  - name: game_event_func
+    virtual: true
+    override: true
+    parameters:
+      - name: game_event
+        type: AllegroFlare::GameEvent*
+        default_argument: nullptr
+    guards: [ game_event ]
+    body: |
+      //if (scripting) scripting->game_event_func(game_event);
+
+      //if (game_event->is_type("trigger_central_core_cinematic"))
+      //{
+         //start_cinematic_camera("central_core_cinematic");
+      //}
+      if (game_event->is_type("show_bunbucks_cake"))
+      {
+         auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               return e.type == TINS2025::Entity::ENTITY_TYPE_BUNBUCKS_CAKE;
+         });
+         if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         else { } // Not found
+      }
+      else if (game_event->is_type("show_cake_1"))
+      {
+         event_emitter->emit_play_music_track_event("sad_theme");
+         // TODO: Sound effect, "poof" or "tada"
+         auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               return e.type == TINS2025::Entity::ENTITY_TYPE_CAKE_1;
+         });
+         if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         else { } // Not found
+      }
+      else if (game_event->is_type("show_cake_2"))
+      {
+         // TODO: Sound effect, "poof" or "tada"
+         auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               return e.type == TINS2025::Entity::ENTITY_TYPE_CAKE_2;
+         });
+         if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         else { } // Not found
+      }
+      else if (game_event->is_type("show_cake_3"))
+      {
+         // TODO: Sound effect, "poof" or "tada"
+         auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               return e.type == TINS2025::Entity::ENTITY_TYPE_CAKE_3;
+         });
+         if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         else { } // Not found
+      }
+      else if (game_event->is_type("show_composite_cake"))
+      {
+         // TODO: Sound effect, "poof" or "tada"
+         auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               return e.type == TINS2025::Entity::ENTITY_TYPE_COMPOSITE_CAKE;
+         });
+         if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         else { } // Not found
+      }
+      else if (game_event->is_type("bakeoff_begins"))
+      {
+         //event_emitter->emit_play_music_track_event("sad_theme");
+         //{ "theme", { "hello_friend-theme-01.ogg", true, "ignore" } },
+         //{ "sad_theme", { "hello_friend-sad_theme-01.ogg", true, "ignore" } },
+         //{ "chipper_tune", { "hello_friend-chipper_tune-01.ogg", true, "ignore" } },
+         // Start reveal music here
+
+         // TODO: Sound effect, "poof" or "tada"
+         //auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               //return e.type == TINS2025::Entity::ENTITY_TYPE_THE_PLANT;
+         //});
+         //if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         //else { } // Not found
+      }
+      else if (game_event->is_type("plant_begins"))
+      {
+         event_emitter->emit_play_music_track_event("theme");
+         // Start reveal music here
+
+         // TODO: Sound effect, "poof" or "tada"
+         //auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               //return e.type == TINS2025::Entity::ENTITY_TYPE_THE_PLANT;
+         //});
+         //if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         //else { } // Not found
+      }
+      else if (game_event->is_type("show_the_plant"))
+      {
+         // TODO: Sound effect, "poof" or "tada"
+         auto it = std::find_if(entities.begin(), entities.end(), [](const TINS2025::Entity &e) {
+               return e.type == TINS2025::Entity::ENTITY_TYPE_THE_PLANT;
+         });
+         if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
+         else { } // Not found
+
+         camera_is_tracking_player = false;
+         flag__showing_plant_now = true;
+         view_motion_studio.set_current_camera_to_camera_at_index(0);
+         view_motion_studio.get_motion_studio_ref().set_playhead_position(0);
+         //view_motion_studio.get_motion_studio_ref().start_animation();
+         view_motion_studio.get_motion_studio_ref().set_playing(true);
+         event_emitter->emit_play_music_track_event("closer");
+         //view_motion_studio.get_motion_studio_ref().set_playback_speed(true);
+         //amera_is_tracking_player = false; // HERE
+      }
+      else if (game_event->is_type("end_chapter_1"))
+      {
+         dipping_to_black = true;
+         suspend_gameplay();
+      }
+      else if (game_event->is_type("character_realizes"))
+      {
+         event_emitter->emit_play_music_track_event("idea");
+         // TODO: Start camera move here;
+      }
+      else if (game_event->is_type("end_chapter_2"))
+      {
+         //current_chapter_number = 3; // HACK
+         dipping_to_black = true;
+         suspend_gameplay();
+      }
+      else if (game_event->is_type("start_chapter_2"))
+      {
+         current_chapter_number = 2;
+         refresh_environment_and_world(true);
+         dipping_to_black = false;
+         //resume_suspended_gameplay();
+         //event_emitter->emit_activate_dialog_node_by_name_event("friend_3_requirements"); //
+         //event_emitter->emit_play_music_track_event("chipper_tune"); // HERE
+         event_emitter->emit_play_music_track_event("chipper_tune");
+         //event_emitter->emit_activate_dialog_node_by_name_event("character_starts_bakeoff");
+         //event_emitter->emit_activate_dialog_node_by_name_event(""); // HERE
+      }
+      else if (game_event->is_type("start_chapter_3"))
+      {
+         current_chapter_number = 3;
+         refresh_environment_and_world(true);
+         dipping_to_black = false;
+         resume_suspended_gameplay();
+         event_emitter->emit_play_music_track_event("theme");
+         view_motion_studio.set_current_camera_to_camera_at_index(7);
+      }
+      else if (game_event->is_type("win_game"))
+      {
+         call_on_finished_callback_func(); // Consider technique to exit
+         // HERE
+         
+         //game_is_won();
+         //toggle_player_input_controller_between_robot_and_player_if_available();
+      }
+
+      // game_configuration->handle_game_event(game_event);
+      return;
+      return;
+
+
+  - name: refresh_environment_and_world
+    parameters:
+      - name: set_player_position
+        type: bool
+        default_argument: false
+    body: |
+      // TODO: Take in to account (current_chapter_number = 2) case
+
+      // Clear out all the entities (non-character)
+      entities.erase(
+         std::remove_if(entities.begin(), entities.end(),
+            [](const TINS2025::Entity &entity)
+            {
+               return entity.type != TINS2025::Entity::ENTITY_TYPE_PLAYER;
+            }),
+         entities.end()
+      );
+
+
+      // Clear the bitmap bin, except, restore the player entities sprite
+      bitmap_bin->clear();
+      player_entity->sprite = bitmap_bin->auto_get("player_character.png");
+
+
+      // Relad the TMJ and refill the tile layer data
+      AllegroFlare::Tiled::TMJDataLoader tmj_data_loader;
+      tmj_data_loader.set_filename(data_folder_path + "maps/hello_zoo-world_map-0n.tmj");
+      tmj_data_loader.load();
+
+      auto data = tmj_data_loader.get_tilelayer_data_by_name_as_2d_vector("collision");
+
+      collision_tile_map.resize(tmj_data_loader.get_num_columns(), tmj_data_loader.get_num_rows());
+      collision_tile_map.fill_with_data(data);
+
+
+      tmj_data_loader.for_each_object([this, set_player_position]
+            (AllegroFlare::Tiled::TMJObject* object, void* user_data) {
+         int tile_width = 16;
+         int tile_height = 16;
+         float object_x = object->x / (float)tile_width;
+
+         float object_y = object->y / (float)tile_height;
+         float object_w = object->width / (float)tile_width;
+         float object_h = object->height / (float)tile_height;
+
+         if (current_chapter_number == 3 && object->object_layer_name != "entities_chapter_3") return;
+         if (current_chapter_number == 2 && object->object_layer_name != "entities_chapter_2") return;
+         if (current_chapter_number == 1 && object->object_layer_name != "entities_chapter_1") return;
+
+
+         if (object->name == "player_character")
+         {
+            if (set_player_position)
+            {
+               player_entity->aabb2d.set_x(object_x);
+               player_entity->aabb2d.set_y(object_y);
+            }
+            return;
+         }
+
+         Entity e;
+         e.aabb2d.set_x(object_x);
+         e.aabb2d.set_y(object_y);
+         e.aabb2d.set_w(1.0);
+         e.aabb2d.set_h(1.0);
+         e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER;
+
+         e.model = model_bin->auto_get("character_model-01.obj");
+         if (object->name == "friend_1")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_1;
+            e.sprite = bitmap_bin->auto_get("friend_1.png");
+         }
+         else if (object->name == "animal_giraffe")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_GIRAFFE;
+            e.sprite = bitmap_bin->auto_get("turtle-01.png");
+         }
+         else if (object->name == "friend_2")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_2;
+            e.sprite = bitmap_bin->auto_get("friend_2.png");
+         }
+         else if (object->name == "friend_3")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_3;
+            e.sprite = bitmap_bin->auto_get("friend_3.png");
+         }
+         else if (object->name == "apple")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_APPLE;
+            e.sprite = bitmap_bin->auto_get("apple.png");
+         }
+         else if (object->name == "carrot")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CARROT;
+            e.sprite = bitmap_bin->auto_get("carrot.png");
+         }
+         else if (object->name == "red_carrot")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_RED_CARROT;
+            e.sprite = bitmap_bin->auto_get("red_carrot.png");
+         }
+         else if (object->name == "dialog_trigger_1")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_1;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "dialog_trigger_2")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_2;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "dialog_trigger_3")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_3;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "dialog_trigger_4")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_4;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "dialog_trigger_5")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_5;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_0")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_0;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_1")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_1;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_2")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_2;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_3")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_3;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_4")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_4;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_5")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_5;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_6")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_6;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_7")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_7;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_8")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_8;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "camera_9")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAMERA_9;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.aabb2d.set_w(object_w);
+            e.aabb2d.set_h(object_h);
+         }
+         else if (object->name == "bunbucks_cake")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_BUNBUCKS_CAKE;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            e.sprite = bitmap_bin->auto_get("bunbucks_cake.png");
+            e.aabb2d.set_w(1.0);
+            e.aabb2d.set_h(1.0);
+         }
+         else if (object->name == "cake_1")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAKE_1;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            //e.sprite = bitmap_bin->auto_get("bunbucks_cake.png");
+            e.sprite = bitmap_bin->auto_get("composite_cake-01.png");
+            e.model = model_bin->auto_get("cake_1.obj");
+            //e.model = model_bin->auto_get("composite_cake-01.obj");
+            e.aabb2d.set_w(1.0);
+            e.aabb2d.set_h(1.0);
+         }
+         else if (object->name == "cake_2")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAKE_2;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            //e.sprite = bitmap_bin->auto_get("bunbucks_cake.png");
+            e.sprite = bitmap_bin->auto_get("composite_cake-01.png");
+            e.model = model_bin->auto_get("cake_2.obj");
+            e.aabb2d.set_w(1.0);
+            e.aabb2d.set_h(1.0);
+         }
+         else if (object->name == "cake_3")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_CAKE_3;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            //e.sprite = bitmap_bin->auto_get("bunbucks_cake.png");
+            e.sprite = bitmap_bin->auto_get("composite_cake-01.png");
+            e.model = model_bin->auto_get("cake_3.obj");
+            //e.model = model_bin->auto_get("composite_cake-01.obj");
+            e.aabb2d.set_w(1.0);
+            e.aabb2d.set_h(1.0);
+         }
+         else if (object->name == "composite_cake")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_COMPOSITE_CAKE;
+            //e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            //e.sprite = bitmap_bin->auto_get("bunbucks_cake.png");
+            e.sprite = bitmap_bin->auto_get("composite_cake-01.png");
+            //e.model = model_bin->auto_get("cake_3.obj");
+            e.model = model_bin->auto_get("composite_cake-01.obj");
+            e.aabb2d.set_w(1.0);
+            e.aabb2d.set_h(1.0);
+         }
+         else if (object->name == "the_plant")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_THE_PLANT;
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            //e.sprite = bitmap_bin->auto_get("bunbucks_cake.png");
+            e.sprite = bitmap_bin->auto_get("the_plant-01.png");
+            //e.model = model_bin->auto_get("cake_3.obj");
+            e.model = model_bin->auto_get("the_plant-01.obj");
+            e.aabb2d.set_w(1.0);
+            e.aabb2d.set_h(1.0);
+         }
+
+         entities.push_back(e);
+         
+         //std::function<void(AllegroFlare::Tiled::TMJObject*, void*)> function={}, void* user_data=nullptr)
+      });
+
+
+
+      // Reload the environment model
+      //std::string model_filename = "hello_friend-environment-0n.obj";
+      std::string model_filename = "hello_zoo-world-0x-Scene-visual.obj";
+      std::string image_filename = "hello_friend-environment-0n.png";
+
+      model_bin->destroy(model_filename);
+      bitmap_bin->destroy(image_filename);
+      environment_model = model_bin->auto_get(model_filename);
+      environment_model->texture = bitmap_bin->auto_get(image_filename);
+
+      return;
+    body_dependency_symbols:
+      - std::remove_if
+
+
+  - name: display_switch_in_func
+    virtual: true
+    override: true
+    guards: [ initialized ]
+    body: |
+      AllegroFlare::Screens::Gameplay::display_switch_in_func();
+
+      if (in_test_or_development_mode)
+      {
+         refresh_environment_and_world();
+      }
+
+      return;
+
+
+
+  - name: primary_update_func
+    virtual: true
+    override: true
+    parameters:
+      - name: time_now
+        type: double
+        default_argument: 0.0f
+      - name: delta_time
+        type: double
+        default_argument: 1.0f
+    guards: [ initialized ]
+    body: |
+      AllegroFlare::Screens::Gameplay::primary_update_func(time_now, delta_time);
+
+      if (flag__showing_plant_now)
+      {
+         if (view_motion_studio.get_motion_studio_ref().get_playhead() > 23.53)
+         {
+            flag__showing_plant_now = false;
+            //event_emitter->emit_game_ // HERE
+            event_emitter->emit_game_event(AllegroFlare::GameEvent("win_game"));
+            // HERE win game
+         }
+      }
+
+      update();
+      return;
+
+
+  - name: primary_render_func
+    virtual: true
+    override: true
+    guards: [ initialized ]
+    body: |
+      // Render stuff here
+      al_clear_to_color(al_color_html("d3e7ea"));
+      render();
+      return;
+
+
+  - name: key_down_func
+    virtual: true
+    override: true
+    parameters:
+      - name: ev
+        type: ALLEGRO_EVENT*
+        default_argument: nullptr
+    guards: [ initialized, ev ]
+    body: |
+      // Process standard gameplay screen controls, which includes whatever active player_input_controller is
+      // assigned to the Screens/Gameplay
+      AllegroFlare::Screens::Gameplay::key_down_func(ev);
+
+      bool shift = ev->keyboard.modifiers & ALLEGRO_KEYMOD_SHIFT;
+      bool ctrl = ev->keyboard.modifiers & ALLEGRO_KEYMOD_COMMAND;
+
+
+      if (in_test_or_development_mode)
+      {
+         if (ev->keyboard.keycode == ALLEGRO_KEY_BACKQUOTE)
+         {
+            // Toggle playmode
+            if (input_mode == INPUT_MODE_PLAYING) input_mode = INPUT_MODE_EDITING;
+            else if (input_mode == INPUT_MODE_EDITING) input_mode = INPUT_MODE_PLAYING;
+         }
+         else if (ev->keyboard.keycode == ALLEGRO_KEY_H)
+         {
+            hide_view_motion_studio_hud = !hide_view_motion_studio_hud;
+         }
+         //else if (ev->keyboard.keycode == ALLEGRO_KEY_U)
+         //{
+            //event_emitter->emit_game_event(AllegroFlare::GameEvent("end_chapter_1"));
+         //}
+         //else if (ev->keyboard.keycode == ALLEGRO_KEY_Y)
+         //{
+            //event_emitter->emit_game_event(AllegroFlare::GameEvent("start_chapter_2"));
+         //}
+         else
+         {
+            switch (input_mode)
+            {
+               case INPUT_MODE_PLAYING:
+               break;
+
+               case INPUT_MODE_EDITING:
+                  view_motion_studio.on_key_down(ev);
+               break;
+            }
+         }
+      }
+
+      return;
+
+
+  - name: virtual_control_button_up_func
+    virtual: true
+    override: true
+    parameters:
+      - name: player
+        type: AllegroFlare::Player*
+        default_argument: nullptr
+      - name: virtual_controller
+        type: AllegroFlare::VirtualControllers::Base*
+        default_argument: nullptr
+      - name: virtual_controller_button_num
+        type: int
+        default_argument: 0
+      - name: is_repeat
+        type: bool
+        default_argument: false
+    guards: [ initialized ]
+    body: |
+      // TODO: this function
+      return;
+
+
+  - name: virtual_control_button_down_func
+    virtual: true
+    override: true
+    parameters:
+      - name: player
+        type: AllegroFlare::Player*
+        default_argument: nullptr
+      - name: virtual_controller
+        type: AllegroFlare::VirtualControllers::Base*
+        default_argument: nullptr
+      - name: virtual_controller_button_num
+        type: int
+        default_argument: 0
+      - name: is_repeat
+        type: bool
+        default_argument: false
+    guards: [ initialized ]
+    body: |
+      // TODO: this function
+      using namespace AllegroFlare;
+      //if (!is_processing_user_input()) return;
+
+      if (virtual_controller_button_num == VirtualControllers::GenericController::BUTTON_RIGHT)
+      {
+         //player_velocity.x = 1;
+         //chapter_select_element.rotate_carousel_right();
+      }
+      if (virtual_controller_button_num == VirtualControllers::GenericController::BUTTON_LEFT)
+      {
+         //player_velocity.x = -1;
+         //chapter_select_element.rotate_carousel_left();
+      }
+      if (virtual_controller_button_num == VirtualControllers::GenericController::BUTTON_A
+         || virtual_controller_button_num == VirtualControllers::GenericController::BUTTON_MENU
+         )
+      {
+         //select_menu_option();
+      }
+      if (virtual_controller_button_num == VirtualControllers::GenericController::BUTTON_X)
+      {
+         //exit_screen();
+      }
+      //call_on_finished_callback_func(); // Consider technique to exit
+      return;
+    body_dependency_symbols:
+      - AllegroFlare::VirtualControllers::GenericController
+
+
+  - name: virtual_control_axis_change_func
+    virtual: true
+    override: true
+    parameters:
+      - name: ev
+        type: ALLEGRO_EVENT*
+        default_argument: nullptr
+    guards: [ initialized ]
+    body: |
+      // TODO: this function
+      return;
+
+
+  - name: obtain_font
+    type: ALLEGRO_FONT*
+    guards: [ font_bin ]
+    body: |
+      return font_bin->auto_get("Inter-Regular.ttf -32");
+
+
+  - name: DEVELOPMENT__render_tile_map
+    body: |
+      AllegroFlare::Placement3D tile_map_placement = environment_overlay_placement;
+      float o = 0.25;
+      tile_map_placement.rotation.x = 0.25;
+      tile_map_placement.position.y = 0.25;
+  
+      AllegroFlare::TileMaps::TileMap<int> &tile_map = collision_tile_map;
+      float tile_width=1.0f;
+      float tile_height=1.0f;
+
+      tile_map_placement.start_transform();
+      for (int y=0; y<tile_map.get_num_rows(); y++)
+      {
+         for (int x=0; x<tile_map.get_num_columns(); x++)
+         {
+            int tile_type = tile_map.get_tile(x, y);
+            switch(tile_type)
+            {
+               case 0:
+                 //al_draw_rectangle(x * tile_width, y * tile_height, (x+1) * tile_width, (y+1) * tile_height, 
+                    //ALLEGRO_COLOR{0.2, 0.2, 0.21, 0.21}, 1.0);
+               break;
+
+               case 1:
+                 al_draw_filled_rectangle(x * tile_width, y * tile_height, (x+1) * tile_width, (y+1) * tile_height, 
+                    ALLEGRO_COLOR{0.94f*o, 0.42f*o, 0.8f*o, 1.0f*o});
+               break;
+
+               default:
+                 //al_draw_filled_rectangle(x * tile_width, y * tile_height, (x+1) * tile_width, (y+1) * tile_height, 
+                    //ALLEGRO_COLOR{0.8, 0.32, 0.4, 1.0});
+               break;
+            }
+         }
+      }
+      tile_map_placement.restore_transform();
+      return;
+
+
+  - name: build_dialog_node_bank
+    static: true
+    type: AllegroFlare::DialogTree::NodeBank
+    body: |
+      AllegroFlare::DialogTree::NodeBank result;
+
+      //std::string LOTTIE = "Lottie";
+      //std::string FRIEND_1 = "Ditto";
+      //std::string FRIEND_2 = "Frank";
+      //std::string FRIEND_3 = "Derek";
+
+      result.set_nodes({
+         //character_enters_town
+         //character_sees_plant
+         { "character_intro_dialog", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Whew!",
+               "I made it!",
+               "As a botanist, I can't wait to check out the (em)mysterious flower(/em).",
+               "I came all the way to this small town just to see it!",
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         )},
+         { "character_attempts_to_leave", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "As much as I'd like to leave and get some goodies from Bunbucks, I really want to check out the flower."
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         )},
+         { "character_enters_town", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "What a cute little town!",
+               "I had no idea this place would be so small.",
+               "There can't be more than...",
+               "1...",
+               "2...",
+               "3 houses here!",
+               "I bet the residents here are pretty grateful to be in the presence of one of the rarest plants...",
+               "like...",
+               "...ever!",
+               "I bet they're pretty cool and relaxed just knowing it's nearby!",
+               "Oooh! And there it is! The rare flower!",
+               "And it hasn't bloomed yet. It looks like I got here just in time!",
+               "I can't wait to get a closer look."
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         )},
+         { "character_sees_plant", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "OOoooo!",
+               "And! Just as I suspected.",
+               "It hasn't yet bloomed. It's still a little bud.",
+               "Oh my... eee!! After all the years I've studied botany!",
+               "I couldn't be more excited!",
+               "It's even more miraculous than I could have dreamed!",
+               "And it still hasn't even bloomed yet!",
+               "EEEeeee!!",
+               "Maybe I should talk to the local villagers and see what their thoughts are on such a wonderful thing.",
+               //"
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         )},
+         { "character_sees_plant_again", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Maybe I should talk to the local villagers and see what their thoughts are on such a wonderful flower.",
+               //"
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         )},
+         { "character_suspicious_of_plant", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Hmmm...",
+               "Something's not quite right.",
+               "Normally, just around this time, the plant would start showing signs of budding.",
+               "But, it's like... nothing.",
+               "No worry! I read some guy's comment on PlantVids once. He said that this happens sometimes.",
+               "The comment said something about how the flower needs a cake, and it will start to bloom.",
+               "I came prepared!",
+               "I picked up a little cake at Bunbucks on the way here.",
+               "It was 50% off too!",
+               "Heheh! It gets the job done!",
+               "I mean, comments on the internet can't all be wrong right?",
+               "...",
+               "OK, here I go...",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "use bunbucks", new AllegroFlare::DialogTree::NodeOptions::GoToNode("use_bunbucks"), 0 } }
+         )},
+         { "use_bunbucks", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "show_bunbucks_cake",
+               "->character_tries_bunbucks_cake"
+            )
+         },
+
+         { "start_chapter_2", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "start_chapter_2",
+               "character_starts_bakeoff"
+            )
+         },
+         { "character_starts_bakeoff", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Yaaayy!",
+               "It's now time for the big bake-off cake reveal!",
+               //"Today's the big day for the bake-off!",
+               "But wait, if this is a competition, how do we know who will be the winner?"
+               //"Normally, just around this time, the plant would start showing signs of budding.",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_01"), 0 } }
+            //}, { { "win for now", new AllegroFlare::DialogTree::NodeOptions::GoToNode("emit_win_game"), 0 } }
+            //}, { { "exit for now", new AllegroFlare::DialogTree::NodeOptions::GoToNode("exit_dialog"), 0 } }
+         )},
+         { "bakeoff_01", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_2, {
+               "Well, we each present our cakes one by one.",
+               "And, whoever makes the flower bloom the most is declared the winner!",
+               //"The bakeoff has begun!",
+               //"But wait, if this is a competition, how do we know who will be the winner?"
+               //"Normally, just around this time, the plant would start showing signs of budding.",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_02"), 0 } }
+            //}, { { "win for now", new AllegroFlare::DialogTree::NodeOptions::GoToNode("emit_win_game"), 0 } }
+            //}, { { "exit for now", new AllegroFlare::DialogTree::NodeOptions::GoToNode("exit_dialog"), 0 } }
+         )},
+         { "bakeoff_02", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Oh wow!",
+               "It sure didn't like my Bunbucks cake, heh.",
+               "I can see why it didn't bloom, then.",
+               "I can't wait to see your cakes!",
+               "Let the bake-off begin!"
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_03a"), 0 } }
+         )},
+         { "bakeoff_03a", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "bakeoff_begins",
+               "bakeoff_03b"
+            )
+         },
+         //{ "bakeoff_03a", new AllegroFlare::DialogTree::Nodes::MultipageWithOptions(FRIEND_1, {
+               //"OK! I'll present my cake first!",
+               //"It sure didn't like my Bunbucks cake.",
+               //"I can see why it didn't bloom. I can't wait to see your cakes!",
+               //"Let the bake-off begin!"
+            //}, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_03"), 0 } }
+         //)},
+         { "bakeoff_03b", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_1, {
+               "OK! I'll present my cake first!",
+               //"It sure didn't like my Bunbucks cake.",
+               //"I can see why it didn't bloom. I can't wait to see your cakes!",
+               //"Let the bake-off begin!"
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_04"), 0 } }
+         )},
+         { "bakeoff_04", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "show_cake_1",
+               "bakeoff_05"
+            )
+         },
+         { "bakeoff_05", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_1, {
+               "Wah!!",
+               "...",
+               "Huh?",
+               "The flower didn't react at all.",
+               "My cake had the perfect proportions!",
+               "Oh no! I'm super disappointed in myself.",
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_06"), 0 } }
+         )},
+         //{ "bakeoff_05", new AllegroFlare::DialogTree::Nodes::MultipageWithOptions(FRIEND_1, {
+               //"Wah!!",
+               //"The flower didn't react at all.",
+               //"Oh no! I'm super disappointed in myself.",
+            //}, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_06"), 0 } }
+         //)},
+
+
+         { "bakeoff_06", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_2, {
+               "Yikes!",
+               "Heh heh! I guess that gives me a better chance of winning the competition!",
+               "Ok, I'll present my cake now!",
+               //"It sure didn't like my Bunbucks cake.",
+               //"I can see why it didn't bloom. I can't wait to see your cakes!",
+               //"Let the bake-off begin!"
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_07"), 0 } }
+         )},
+         { "bakeoff_07", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "show_cake_2",
+               "bakeoff_08"
+            )
+         },
+         { "bakeoff_08", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_2, {
+               "Heegh!!",
+               "...", // Change
+               "How?!",
+               "I put my best into this one.",
+               "There's no way it couldn't have worked.",
+               "I measured mine to have the perfect proportions!",
+               "How could this be?!",
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_9"), 0 } }
+         )},
+
+
+         { "bakeoff_9", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_3, {
+               "Oh man!",
+               "The two of you made amazing cakes, and neither of them worked?!",
+               "That means mine doesn't stand a chance!",
+               "On the other hand, that also means I'm the one left with a chance to be the winner!",
+               "Ok, here goes nothing..."
+               //"It sure didn't like my Bunbucks cake.",
+               //"I can see why it didn't bloom. I can't wait to see your cakes!",
+               //"Let the bake-off begin!"
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_10"), 0 } }
+         )},
+         { "bakeoff_10", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "show_cake_3",
+               "bakeoff_11"
+            )
+         },
+         { "bakeoff_11", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_3, {
+               "Yah!!", // Change
+               "...", // Change
+               "Wahh?!", // Change
+               "But... I put my best into this one.", // Change
+               //"There's no way!",
+               "And I measured the perfect proportions, too!",
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_12"), 0 } }
+         )},
+
+
+
+
+         { "bakeoff_12", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Hmm...",
+               "This is indeed strange!",
+               "Why would none of the cakes work for the flower.",
+               //"What did my botany book have to say about this?",
+               "Hmm...",
+               "It's peculiar that ALL THREE of you said something about how you had the pefect propotions!",
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("bakeoff_13"), 0 } }
+         )},
+         { "bakeoff_13", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "character_realizes",
+               "bakeoff_14"
+            )
+         },
+
+
+         { "bakeoff_14", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               //"Hmm...",
+               //"This is indeed strange!",
+               //"Why would none of the cakes work for the flower.",
+               ////"What did my botany book have to say about this?",
+               //"Hmm...",
+               //"It's peculiar that *all three* of you said something about how you had the pefect propotions!",
+               "Wait! THAT'S IT!",
+               "I know what it is!",
+               "I know what we need to do!",
+               "In order to make the perfect cake... we all must...",
+               "There's not time to explain!",
+               "Quick, everybody!",
+               "GIVE ME ALL YOUR CAKES!",
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_end_chapter_2"), 0 } }
+         )},
+         { "->trigger_end_chapter_2", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "end_chapter_2",
+               "exit_dialog"
+            )
+         },
+
+
+         { "start_chapter_3", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "start_chapter_3",
+               "cake_reveal_00"
+            )
+         },
+         { "cake_reveal_00", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_1, {
+               "Woooww!",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("cake_reveal_01"), 0 } }
+         )},
+         { "cake_reveal_01", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_2, {
+               "Amazing!",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("cake_reveal_02"), 0 } }
+         )},
+         { "cake_reveal_02", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_3, {
+               "It's perfect!",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("cake_reveal_03"), 0 } }
+         )},
+         { "cake_reveal_03", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "This is it!",
+               "Making a layered cake with all our cakes combined is the answer!",
+               //"The last ingredient we all needed was...",
+               //"We needed to see all of our cakes combined!",
+               //"It turns out the last missing ingredient we needed for the competition was...",
+               //"Layers!",
+               "Each of you measured the perfect ratios, but...",
+               "You didn't take into account that each of you ALSO had perfect ratios with EACH OTHER!",
+               "It turns out the last missing ingredient we needed for the competition was...",
+               "Layers!",
+               //"It turns out the last missing ingredient we needed for the competition was...",
+               //"Layers!",
+               //"each other's ratios, as well.",
+               //"This is the layered cake with all our cakes combined!",
+               //"We have to work together!",
+               //"Making a layered cake with all our cakes combined is the answer!",
+               //"I know it!",
+               "Working TOGETHER is the answer to a perfect cake! Not against one another.",
+               "This is why the flower wouldn't bloom!",
+               "It's because everybody was so stressed about the competition.",
+               //"This is the layered cake with all our cakes combined!",
+               "When we put all of our cakes together into a single, layered cake, it's like something else entirely!",
+               //"This is the layered cake with all our cakes combined!",
+               //"I know it!",
+               //"And, I noticed all our cakes were the perfect dimensions to stack on top of each other.",
+               //"This cake is so amazing!",
+               //"The ratios are just... just... perfect!",
+               //"I think all our cakes deserves a... a... gold medal!",
+               //"Oh wait! I can see the plant reacting!",
+               //"And the flower is in full bloom!",
+               //"Something's not quite right.",
+               //"Normally, just around this time, the plant would start showing signs of budding.",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("cake_reveal_04"), 0 } }
+         )},
+         { "cake_reveal_04", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_1, {
+               "This cake is so amazing!",
+               //"The ratios are just... just... perfect!",
+               //"I think all our cakes deserves a... a... gold medal!",
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("cake_reveal_05"), 0 } }
+         )},
+         { "cake_reveal_05", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_2, {
+               //"This cake is so amazing!",
+               "The ratios together... They are just... just... perfect for each other!",
+               //"I think all our cakes deserves a... a... gold medal!",
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("cake_reveal_06"), 0 } }
+         )},
+         { "cake_reveal_06", new AllegroFlare::DialogTree::Nodes::Interparsable(FRIEND_3, {
+               //"This cake is so amazing!",
+               //"The ratios are just... just... perfect!",
+               "I think all our cakes deserve a... a... gold medal!",
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("start_plant_reveal"), 0 } }
+         )},
+         { "start_plant_reveal", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "plant_begins",
+               "show_plant_reveal_02"
+            )
+         },
+         { "show_plant_reveal_02", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Oh wait! I can see the plant reacting!",
+               //"And the flower is in full bloom!",
+               //"Something's not quite right.",
+               //"Normally, just around this time, the plant would start showing signs of budding.",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("show_plant_reveal_03"), 0 } }
+         )},
+         { "show_plant_reveal_03", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "show_the_plant",
+               "celebrate_plant_02"
+            )
+         },
+         { "celebrate_plant_02", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "We did it!",
+               "YAAAAY!",
+               //"And the flower is in full bloom!",
+               //"Something's not quite right.",
+               //"Normally, just around this time, the plant would start showing signs of budding.",
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "win for now", new AllegroFlare::DialogTree::NodeOptions::GoToNode("exit_dialog"), 0 } }
+         )},
+
+         { "->character_tries_bunbucks_cake", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               "Heuh!",
+               "...",
+               "Huh.",
+               "Weird.",
+               "Nothing happened.",
+               "Well, should be no big deal, heh.",
+               "I mean, everybody's presenting cakes at the bake-a-thon so it should be fine by then.",
+               "...right?"
+            }, { { "End Ch1", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_end_chapter_1"), 0 } }
+         )},
+         { "->trigger_end_chapter_1", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "end_chapter_1",
+               "exit_dialog"
+            )
+         },
+         { "pickup_food", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               {
+                  "Sweet! I just found an essential ingredient for a perfect cake!"
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "meet_giraffe", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               {
+                  "Amazing! A giraffe!",
+                  "They have huge long necks!",
+                  "Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "inspect_apple", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE,
+               {
+                  "A reeeeally nice juicy apple!",
+                  "There's so many delicious types of apples.",
+                  "My favorite is the cosmic crisp.",
+               },
+               { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            )
+         },
+         { "inspect_carrot", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE,
+               {
+                  "Ooh an orange carrot.",
+                  "Unlike red carrots, the orange ones are the most common cultivar of Daucus carota sativus.",
+                  "This carrot looks really yummy right now.",
+                  "I forgot to eat my snack on the way down here.",
+                  "Mmm... sweet, delicious beta-carotene."
+               },
+               { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            )
+         },
+         { "inspect_red_carrot", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE,
+               {
+                  "Ooo this is a nice red carrot.",
+                  "It's a variety of Daucus carota.",
+                  "This is the same species as regular carrots, just bred for that deep red color.",
+                  "I'll take a selfie with it to show my collegues."
+               },
+               { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            )
+         },
+         { "friend_2_requirements", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_2,
+               {
+                  "Normally this time of year is a time for celebration!",
+                  "But holy cow am I stressed!",
+                  "I've got to bake a cake, and, I've just got to win this competition.",
+                  "All the stress has got me locked right up! I can't seem to do anything.",
+                  "Maybe if I had a carrot!",
+                  "Yes! That's the thing!",
+                  "If I had a nice juicy carrot it would make my cake into perfection.",
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "friend_3_requirements", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_3,
+               {
+                  "You know, last year's bake-a-thon was so much fun!",
+                  "I impressed everybody with my super unique mini cake.",
+                  "Everyone was so happy... but...",
+                  "I don't think anyone will like my cake this year.",
+                  "Everyone will think my cake is as uninteresting as a cake could possibly be!",
+                  "Only because this year's bake-a-thon has been turned into a competition!",
+                  "The stress of all this has me...",
+                  "AnXiOuSs!!",
+                  "*pfoo* *pfoo* *pfoo*",
+                  "Just breathe...",
+                  "Maybe if I had a red carrot it might be just the trick to fix my cake."
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "friend_1_requirements", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_1,
+               {
+                  "Eeks! I'm so flummoxed!",
+                  "The annual bake-a-thon is happening soon and my cake is going to be a disaster!",
+                  "It was supposed to be a glorious event, what with the flower blooming and all.",
+                  "But now everyone's so stressed about it...",
+                  "...and it's stressing ME out!!!",
+                  "I wanted to hang out with Derek and make cakes, but he's all mopy so we can't do that.",
+                  "Maybe if I put a special ingredient in my cake, it'll cheer him up.",
+                  "He's always loved apples."
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "friend_1_requirements_met", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_1,
+               {
+                  "Amazing!",
+                  "This apple is exactly what I need!",
+                  "Well... at least I think it is.",
+                  "The competition still has me stressed, but at least I can move forward!",
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "friend_2_requirements_met", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_2,
+               {
+                  "Woo-hoo!",
+                  "This carrot is perfect for my cake!",
+                  "Meeehg... except I'm still stressed about the compeition.",
+                  "Thanks to you I at least have something I can work with.",
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         { "friend_3_requirements_met", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_3,
+               {
+                  "Yes!!",
+                  "This big juicy red carrot is perfecto!",
+                  "Except one thing...",
+                  "I'm still going to have to make the cake for the competition.",
+                  "How stressful!",
+                  "I guess I better get going if I'm going to make this work."
+               },
+               {
+                  { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               }
+            )
+         },
+         //{ "friend_1_requirements_met", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               //DITTO,
+               //{
+                  //"Amazing! This should fix my pie in no time! Thank you!"
+               //},
+               //{
+                  //{ "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               //}
+            //)
+         //},
+         { "celebrate_won_game", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               FRIEND_1,
+               {
+                  "Thank you so much!!",
+                  "You've saved my new groundbreaking layered apple pie!",
+               },
+               {
+                  { "->Reply", new AllegroFlare::DialogTree::NodeOptions::GoToNode("reply_to_won_game"), 0 },
+               }
+            )
+         },
+         { "reply_to_won_game", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               {
+                  "Yay!!",
+                  "I'm so glad I could help!",
+                  "Best of luck to you in the competition!"
+               },
+               {
+                  { "Win game", new AllegroFlare::DialogTree::NodeOptions::GoToNode("emit_win_game"), 0 },
+               }
+            )
+         },
+        //AllegroFlare::DialogTree::NodeOptions::GoToNode
+         { "emit_win_game", new AllegroFlare::DialogTree::Nodes::EmitGameEvent("win_game", "exit_dialog") },
+         { "exit_dialog", new AllegroFlare::DialogTree::Nodes::ExitDialog() },
+               //LOTTIE,
+               //{
+                  //"I did it! What a party!"
+               //},
+               //{
+                  //{ "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+                  //{ "Win game", new AllegroFlare::DialogTree::Nodes::EmitGameEvent("win_game", "->mission_briefing") },
+               //}
+            //)
+         //},
+      });
+
+      return result;
+    body_dependency_symbols:
+      - AllegroFlare::DialogTree::Nodes::Interparsable
+      - AllegroFlare::DialogTree::Nodes::MultipageWithOptions
+      - AllegroFlare::DialogTree::Nodes::ExitDialog
+      - AllegroFlare::DialogTree::NodeOptions::ExitDialog
+      - AllegroFlare::DialogTree::NodeOptions::GoToNode
+
+
+dependencies:
+
+
+  - symbol: ALLEGRO_FONT
+    headers: [ allegro5/allegro.h ]
+  - symbol: ALLEGRO_EVENT
+    headers: [ allegro5/allegro.h ]
+  - symbol: AllegroFlare::Screens::Gameplay
+    headers: [ AllegroFlare/Screens/Gameplay.hpp ]
+  - symbol: AllegroFlare::BitmapBin
+    headers: [ AllegroFlare/BitmapBin.hpp ]
+  - symbol: AllegroFlare::EventEmitter
+    headers: [ AllegroFlare/EventEmitter.hpp ]
+  - symbol: AllegroFlare::FontBin
+    headers: [ AllegroFlare/FontBin.hpp ]
+  - symbol: AllegroFlare::ModelBin
+    headers: [ AllegroFlare/ModelBin.hpp ]
+  - symbol: al_is_primitives_addon_initialized
+    headers: [ allegro5/allegro_primitives.h ]
+  - symbol: AllegroFlare::Player
+    headers: [ AllegroFlare/Player.hpp ]
+  - symbol: AllegroFlare::VirtualControllers::Base
+    headers: [ AllegroFlare/VirtualControllers/Base.hpp ]
+  - symbol: AllegroFlare::VirtualControllers::GenericController
+    headers: [ AllegroFlare/VirtualControllers/GenericController.hpp ]
+  - symbol: TINS2025::Gameplay::Screen
+    headers: [ TINS2025/Gameplay/Screen.hpp ]
+  - symbol: TINS2025::Gameplay::Level
+    headers: [ TINS2025/Gameplay/Level.hpp ]
+  - symbol: AllegroFlare::GameEvent
+    headers: [ AllegroFlare/GameEvent.hpp ]
+  - symbol: AllegroFlare::AssetStudio::Database
+    headers: [ AllegroFlare/AssetStudio/Database.hpp ]
+  - symbol: AllegroFlare::CollisionObservers::Simple
+    headers: [ AllegroFlare/CollisionObservers/Simple.hpp ]
+  - symbol: TINS2025::Entity
+    headers: [ TINS2025/Entity.hpp ]
+  - symbol: AllegroFlare::TileMaps::TileMap
+    headers: [ AllegroFlare/TileMaps/TileMap.hpp ]
+  - symbol: AllegroFlare::Physics::TileMapCollisionStepper
+    headers: [ AllegroFlare/Physics/TileMapCollisionStepper.hpp ]
+  - symbol: AllegroFlare::DialogSystem::DialogSystem
+    headers: [ AllegroFlare/DialogSystem/DialogSystem.hpp ]
+  - symbol: AllegroFlare::DialogTree::Nodes::Interparsable
+    headers: [ AllegroFlare/DialogTree/Nodes/Interparsable.hpp ]
+  - symbol: AllegroFlare::DialogTree::Nodes::MultipageWithOptions
+    headers: [ AllegroFlare/DialogTree/Nodes/MultipageWithOptions.hpp ]
+  - symbol: AllegroFlare::DialogTree::NodeOptions::ExitDialog
+    headers: [ AllegroFlare/DialogTree/NodeOptions/ExitDialog.hpp ]
+  - symbol: AllegroFlare::DialogTree::NodeOptions::GoToNode
+    headers: [ AllegroFlare/DialogTree/NodeOptions/GoToNode.hpp ]
+  - symbol: AllegroFlare::DialogTree::NodeBank
+    headers: [ AllegroFlare/DialogTree/NodeBank.hpp ]
+  - symbol: DialControl::ViewMotionStudio
+    headers: [ DialControl/ViewMotionStudio.hpp ]
+  - symbol: AllegroFlare::php
+    headers: [ AllegroFlare/UsefulPHP.hpp ]
+  - symbol: AllegroFlare::Model3D
+    headers: [ AllegroFlare/Model3D.hpp ]
+  - symbol: AllegroFlare::Placement3D
+    headers: [ AllegroFlare/Placement3D.hpp ]
+  - symbol: AllegroFlare::PlayerInputControllers::Generic
+    headers: [ AllegroFlare/PlayerInputControllers/Generic.hpp ]
+  - symbol: AllegroFlare::DialogTree::Nodes::ExitDialog
+    headers: [ AllegroFlare/DialogTree/Nodes/ExitDialog.hpp ]
+  - symbol: std::cos
+    headers: [ cmath ]
+  - symbol: std::sin
+    headers: [ cmath ]
+  - symbol: AllegroFlare::Tiled::TMJDataLoader
+    headers: [ AllegroFlare/Tiled/TMJDataLoader.hpp ]
+  - symbol: std::remove_if
+    headers: [ algorithm ]
+  - symbol: std::sort
+    headers: [ algorithm ]
+
+

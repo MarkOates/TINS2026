@@ -1,7 +1,7 @@
 
 
 #include <AllegroFlare/Runners/Complete.hpp>
-#include <TINS2026/Game/Configurations/Main.hpp>
+#include <TINS2025/Game/Configurations/Main.hpp>
 #include <allegro5/allegro.h>
 #include <vector> // for parsing command line args
 #include <algorithm> // for parsing command line args
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 
    // TODO: improve this to return an error when an unrecognized flag is present
 
-   TINS2026::Game::Configurations::Main main_configuration;
+   TINS2025::Game::Configurations::Main main_configuration;
 
    std::string deployment_environment =
          contains_development_flag
