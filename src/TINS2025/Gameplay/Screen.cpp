@@ -7,6 +7,7 @@
 #include <AllegroFlare/DialogTree/Nodes/ExitDialog.hpp>
 #include <AllegroFlare/DialogTree/Nodes/Interparsable.hpp>
 #include <AllegroFlare/DialogTree/Nodes/MultipageWithOptions.hpp>
+#include <AllegroFlare/Elements/HealthBars/Classic.hpp>
 #include <AllegroFlare/Physics/TileMapCollisionStepper.hpp>
 #include <AllegroFlare/Placement3D.hpp>
 #include <AllegroFlare/PlayerInputControllers/Generic.hpp>
@@ -962,6 +963,48 @@ void Screen::update()
    return;
 }
 
+void Screen::render_game_hud()
+{
+   AllegroFlare::Camera2D hud_camera;
+   hud_camera.setup_dimensional_projection(al_get_target_bitmap());
+   al_clear_depth_buffer(1);
+
+   //al_draw_filled_circle(100, 100, 30, ALLEGRO_COLOR{1, 1, 1, 1});
+
+   { // Draw the "Excitement meter"
+      int bar_x = 100;
+      int bar_y = 1080/2;
+      int bar_height = 8;
+      int bar_margin = 4;
+      int bar_width = 48;
+      {
+         // Draw the excitement meter
+         AllegroFlare::Placement2D bar_place;
+         bar_place.rotation = 3.1415 * 0.5;
+         bar_place.position.x = bar_x;
+         bar_place.position.y = bar_y;
+         bar_place.align.y = 0.5;
+         bar_place.align.x = 0.5;
+         //bar_place.start_transform();
+         AllegroFlare::Elements::HealthBars::Classic bar;
+         bar.set_max(20);
+         bar.set_value(10);
+         // NOTE: These values are switched around because 
+         bar.set_bar_width(bar_height);
+         bar.set_bar_height(bar_width);
+         bar.set_bar_spacing(bar_height + bar_margin);
+
+         bar_place.size.y = bar.get_bar_height();
+         bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
+         bar_place.start_transform();
+         bar.render();
+         bar_place.restore_transform();
+      }
+   }
+
+   return;
+}
+
 void Screen::render()
 {
    view_motion_studio.setup_camera_projection_on_live_camera();
@@ -1057,6 +1100,11 @@ void Screen::render()
       }
       placement.restore_transform();
    }
+
+
+
+   render_game_hud();
+
 
 
    if (dip_to_black_overlay_opacity > 0.0001)

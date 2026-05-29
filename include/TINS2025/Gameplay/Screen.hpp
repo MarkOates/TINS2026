@@ -131,6 +131,7 @@ namespace TINS2025
          virtual void on_activate() override;
          virtual void on_deactivate() override;
          void update();
+         void render_game_hud();
          void render();
          virtual void game_event_func(AllegroFlare::GameEvent* game_event=nullptr) override;
          void refresh_environment_and_world(bool set_player_position=false);
