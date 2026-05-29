@@ -536,6 +536,9 @@ void Screen::load_up_world()
    view_motion_studio.load_json(file_content);
 
 
+   view_motion_studio.set_current_camera_to_camera_at_index(3); // Set camera to 3 by default
+
+
    input_mode = INPUT_MODE_PLAYING;
 
 
@@ -719,6 +722,10 @@ void Screen::update()
          switch (entity.type)
          {
             case TINS2025::Entity::ENTITY_TYPE_GIRAFFE: {
+               event_emitter->emit_activate_dialog_node_by_name_event("meet_giraffe");
+            } break;
+
+            case TINS2025::Entity::ENTITY_TYPE_GOAT: {
                event_emitter->emit_activate_dialog_node_by_name_event("meet_giraffe");
             } break;
 
@@ -1298,10 +1305,17 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_1;
          e.sprite = bitmap_bin->auto_get("friend_1.png");
       }
-      else if (object->name == "animal_giraffe")
+      else if (object->name == "giraffe")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_GIRAFFE;
-         e.sprite = bitmap_bin->auto_get("turtle-01.png");
+         e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+         e.model = model_bin->auto_get("hello_zoo-entities-0x-giraffe.obj");
+      }
+      else if (object->name == "goat")
+      {
+         e.type = TINS2025::Entity::ENTITY_TYPE_GOAT;
+         e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+         e.model = model_bin->auto_get("hello_zoo-entities-0x-goat.obj");
       }
       else if (object->name == "friend_2")
       {

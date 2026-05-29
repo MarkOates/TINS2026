@@ -79,6 +79,7 @@ enums:
        - ENTITY_TYPE_CAMERA_8
        - ENTITY_TYPE_CAMERA_9
        - ENTITY_TYPE_GIRAFFE
+       - ENTITY_TYPE_GOAT
 
 
   - name: AnimationMode

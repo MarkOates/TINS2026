@@ -163,7 +163,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":40,
+                 "x":576,
                  "y":248
                 }, 
                 {
@@ -222,8 +222,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":16,
-                 "y":224
+                 "x":632,
+                 "y":440
                 }, 
                 {
                  "height":32,
@@ -233,8 +233,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":392,
-                 "y":232
+                 "x":976,
+                 "y":368
                 }, 
                 {
                  "height":48,
@@ -244,8 +244,8 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":344,
-                 "y":224
+                 "x":920,
+                 "y":256
                 }, 
                 {
                  "height":64,
@@ -255,8 +255,8 @@
                  "type":"",
                  "visible":true,
                  "width":184,
-                 "x":64,
-                 "y":216
+                 "x":704,
+                 "y":344
                 }, 
                 {
                  "height":64,
@@ -266,8 +266,8 @@
                  "type":"",
                  "visible":true,
                  "width":88,
-                 "x":248,
-                 "y":216
+                 "x":712,
+                 "y":472
                 }, 
                 {
                  "height":64,
@@ -277,8 +277,8 @@
                  "type":"",
                  "visible":true,
                  "width":56,
-                 "x":8,
-                 "y":216
+                 "x":336,
+                 "y":128
                 }, 
                 {
                  "height":64,
@@ -288,8 +288,8 @@
                  "type":"",
                  "visible":true,
                  "width":152,
-                 "x":80,
-                 "y":216
+                 "x":400,
+                 "y":496
                 }, 
                 {
                  "height":0,
@@ -302,6 +302,18 @@
                  "width":0,
                  "x":232,
                  "y":152
+                }, 
+                {
+                 "height":0,
+                 "id":67,
+                 "name":"goat",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":672,
+                 "y":280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -532,7 +544,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":67,
+ "nextobjectid":68,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

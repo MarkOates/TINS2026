@@ -53,6 +53,7 @@ namespace TINS2025
          ENTITY_TYPE_CAMERA_8,
          ENTITY_TYPE_CAMERA_9,
          ENTITY_TYPE_GIRAFFE,
+         ENTITY_TYPE_GOAT,
       };
       enum AnimationMode
       {
