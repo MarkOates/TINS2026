@@ -910,6 +910,7 @@ methods:
             bar.set_bar_width(bar_height);
             bar.set_bar_height(bar_width);
             bar.set_bar_spacing(bar_height + bar_margin);
+            bar.set_fill_color(al_color_name("pink"));
 
             bar_place.size.y = bar.get_bar_height();
             bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
