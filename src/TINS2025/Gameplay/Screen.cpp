@@ -64,6 +64,9 @@ Screen::Screen()
    , in_test_or_development_mode(true)
    , camera_is_tracking_player(true)
    , flag__showing_plant_now(false)
+   , lottie__num_notebook_pages(0)
+   , lottie__num_lines_written(0)
+   , lottie__excitement(0)
    , initialized(false)
 {
 }
@@ -731,6 +734,13 @@ void Screen::update()
 
          switch (entity.type)
          {
+            case TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE: {
+               entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+               entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+               lottie__num_notebook_pages++;
+               event_emitter->emit_activate_dialog_node_by_name_event("#collect_notebook_paper");
+            } break;
+
             case TINS2025::Entity::ENTITY_TYPE_GIRAFFE: {
                event_emitter->emit_activate_dialog_node_by_name_event("meet_giraffe");
             } break;
@@ -754,31 +764,45 @@ void Screen::update()
             break;
 
             case TINS2025::Entity::ENTITY_TYPE_CARROT:
-               if (QUEST__friend_2_requirements_asked)
-               {
-                  entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-                  entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
-                  QUEST__collected_carrot = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("inspect_carrot");
-               }
+               //if (QUEST__friend_3_requirements_asked)
+               //{
+                  //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+                  //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+                  //event_emitter->emit_activate_dialog_node_by_name_event("pickup_food"); // DEVELOPMENT
+                  //lottie__num_notebook_pages++;
+                  //event_emitter->emit_activate_dialog_node_by_name_event("#collect_notebook_paper"); // DEVELOPMENT
+                  //QUEST__collected_red_carrot = true;
+               //}
+               //else
+               //{
+                  //event_emitter->emit_activate_dialog_node_by_name_event("inspect_red_carrot");
+               //}
+               //if (QUEST__friend_2_requirements_asked)
+               //{
+                  //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+                  //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+                  //event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
+                  //QUEST__collected_carrot = true;
+               //}
+               //else
+               //{
+                  //event_emitter->emit_activate_dialog_node_by_name_event("inspect_carrot");
+               //}
             break;
 
             case TINS2025::Entity::ENTITY_TYPE_RED_CARROT:
-               if (QUEST__friend_3_requirements_asked)
-               {
+               //if (QUEST__friend_3_requirements_asked)
+               //{
                   entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
                   entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
-                  QUEST__collected_red_carrot = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("inspect_red_carrot");
-               }
+                  //event_emitter->emit_activate_dialog_node_by_name_event("pickup_food"); // DEVELOPMENT
+                  //event_emitter->emit_activate_dialog_node_by_name_event("get_notebook_paper"); // DEVELOPMENT
+                  //QUEST__collected_red_carrot = true;
+               //}
+               //else
+               //{
+                  //event_emitter->emit_activate_dialog_node_by_name_event("inspect_red_carrot");
+               //}
             break;
 
             case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_1:
@@ -984,6 +1008,17 @@ void Screen::render_game_hud()
    ALLEGRO_COLOR text_color = ALLEGRO_COLOR{1, 1, 1, 1};
    ALLEGRO_COLOR fill_color = ALLEGRO_COLOR{0, 0, 0, 0.2};
 
+
+
+   //- name: lottie__num_notebook_pages
+     //type: int
+     //init_with: 0
+
+   //- name: lottie__excitement
+     //type: int
+     //init_with: 0
+
+
    { // Draw the meters
       //float off_y = -30;
       al_draw_filled_rounded_rectangle(94, 380, 326, 696, 16, 16, fill_color);
@@ -1006,7 +1041,7 @@ void Screen::render_game_hud()
             //bar_place.start_transform();
             AllegroFlare::Elements::HealthBars::Classic bar;
             bar.set_max(20);
-            bar.set_value(10);
+            bar.set_value((lottie__excitement / 100.0) * bar.get_max());
             // NOTE: These values are switched around because 
             bar.set_bar_width(bar_height);
             bar.set_bar_height(bar_width);
@@ -1035,8 +1070,10 @@ void Screen::render_game_hud()
             bar_place.align.x = 0.5;
             //bar_place.start_transform();
             AllegroFlare::Elements::HealthBars::Classic bar;
+            //bar.set_max(20);
+            //bar.set_value(10);
             bar.set_max(20);
-            bar.set_value(10);
+            bar.set_value((lottie__num_lines_written * (lottie__num_notebook_pages * 6) / 100.0) * bar.get_max());
             // NOTE: These values are switched around because 
             bar.set_bar_width(bar_height);
             bar.set_bar_height(bar_width);
@@ -1103,6 +1140,15 @@ void Screen::render_game_hud()
             if (count > limit) break;
          }
       }
+   }
+
+
+   { // DEVELOPMENT
+      float l=0;
+      float lh = 40;
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_pages: %d", lottie__num_notebook_pages);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_lines_written: %d", lottie__num_lines_written);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %d", lottie__excitement);
    }
 
 
@@ -1491,6 +1537,13 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
          e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+      }
+      else if (object->name == "notebook_page")
+      {
+         e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
+         e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
+         //e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
+         //e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "friend_2")
       {
@@ -1953,6 +2006,19 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
    result.set_nodes({
       //character_enters_town
       //character_sees_plant
+      { "#collect_notebook_paper", new AllegroFlare::DialogTree::Nodes::YouGotAnItemDialog(
+            "Sheet of Notebook Paper",
+            //"storyboard-2-01-1165x500.png"
+            //"player_character.png"
+            "notebook_paper_item_feature-01.png"
+            //"As a botanist, I can't wait to check out the (em)mysterious flower(/em).",
+            //"I came all the way to this small town just to see it!",
+         //)}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+      )},
+      { "get_notebook_paper", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+            "A (em)Sheet of Notebook Paper(/em) increases your total number of blank lines by 6.",
+         }, { { "GoToNode", new AllegroFlare::DialogTree::NodeOptions::GoToNode("#collect_notebook_paper"), 0 } }
+      )},
       { "character_intro_dialog", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
             "Whew!",
             "I made it!",

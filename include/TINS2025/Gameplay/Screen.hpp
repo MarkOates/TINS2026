@@ -79,6 +79,9 @@ namespace TINS2025
          bool in_test_or_development_mode;
          bool camera_is_tracking_player;
          bool flag__showing_plant_now;
+         int lottie__num_notebook_pages;
+         int lottie__num_lines_written;
+         int lottie__excitement;
          bool initialized;
 
       protected:

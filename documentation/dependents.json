@@ -361,6 +361,9 @@
   "AllegroFlare/Elements/HealthBars/Classic": [
     "TINS2025/Gameplay/Screen"
   ],
+  "AllegroFlare/Billboarder3D": [
+    "TINS2025/Gameplay/Screen"
+  ],
   "Timeline/Keyframe": [
     "Timeline/Keyframe",
     "Timeline/Parameter"

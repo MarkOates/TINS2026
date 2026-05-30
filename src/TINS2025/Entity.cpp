@@ -58,6 +58,7 @@ std::string Entity::to_string(Type value, bool throw_on_error)
    if (value == Type::ENTITY_TYPE_CAMERA_7) return "entity_type_camera_7";
    if (value == Type::ENTITY_TYPE_CAMERA_8) return "entity_type_camera_8";
    if (value == Type::ENTITY_TYPE_CAMERA_9) return "entity_type_camera_9";
+   if (value == Type::ENTITY_TYPE_NOTEBOOK_PAGE) return "entity_type_notebook_page";
    if (value == Type::ENTITY_TYPE_GIRAFFE) return "entity_type_giraffe";
    if (value == Type::ENTITY_TYPE_GOAT) return "entity_type_goat";
    if (value == Type::ENTITY_TYPE_LEOPARD) return "entity_type_leopard";
