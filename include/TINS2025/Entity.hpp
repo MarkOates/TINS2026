@@ -54,6 +54,9 @@ namespace TINS2025
          ENTITY_TYPE_CAMERA_9,
          ENTITY_TYPE_GIRAFFE,
          ENTITY_TYPE_GOAT,
+         ENTITY_TYPE_LEOPARD,
+         ENTITY_TYPE_TIGER,
+         ENTITY_TYPE_ZEBRAH,
       };
       enum AnimationMode
       {

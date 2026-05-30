@@ -1332,6 +1332,24 @@ methods:
             e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
             e.model = model_bin->auto_get("hello_zoo-entities-0x-goat.obj");
          }
+         else if (object->name == "leopard")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_LEOPARD;
+            e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+            e.model = model_bin->auto_get("hello_zoo-entities-0x-leopard.obj");
+         }
+         else if (object->name == "tiger")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_TIGER;
+            e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+            e.model = model_bin->auto_get("hello_zoo-entities-0x-tiger.obj");
+         }
+         else if (object->name == "zebrah")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_ZEBRAH;
+            e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+            e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
+         }
          else if (object->name == "friend_2")
          {
             e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_2;

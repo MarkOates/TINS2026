@@ -139,8 +139,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":400,
-                 "y":56
+                 "x":216,
+                 "y":80
                 }, 
                 {
                  "height":0,
@@ -151,8 +151,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":760,
-                 "y":208
+                 "x":784,
+                 "y":80
                 }, 
                 {
                  "height":0,
@@ -163,8 +163,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":576,
-                 "y":248
+                 "x":560,
+                 "y":200
                 }, 
                 {
                  "height":0,
@@ -175,8 +175,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":608,
-                 "y":296
+                 "x":848,
+                 "y":136
                 }, 
                 {
                  "height":0,
@@ -187,8 +187,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":280,
-                 "y":32
+                 "x":872,
+                 "y":224
                 }, 
                 {
                  "height":0,
@@ -199,8 +199,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":688,
-                 "y":160
+                 "x":176,
+                 "y":184
                 }, 
                 {
                  "height":0,
@@ -211,8 +211,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":416,
-                 "y":256
+                 "x":160,
+                 "y":416
                 }, 
                 {
                  "height":48,
@@ -277,8 +277,8 @@
                  "type":"",
                  "visible":true,
                  "width":56,
-                 "x":336,
-                 "y":128
+                 "x":216,
+                 "y":488
                 }, 
                 {
                  "height":64,
@@ -300,8 +300,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":232,
-                 "y":152
+                 "x":416,
+                 "y":128
                 }, 
                 {
                  "height":0,
@@ -312,8 +312,44 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":672,
-                 "y":280
+                 "x":504,
+                 "y":128
+                }, 
+                {
+                 "height":0,
+                 "id":68,
+                 "name":"leopard",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":376,
+                 "y":128
+                }, 
+                {
+                 "height":0,
+                 "id":69,
+                 "name":"tiger",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":544,
+                 "y":128
+                }, 
+                {
+                 "height":0,
+                 "id":70,
+                 "name":"zebrah",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":584,
+                 "y":128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -544,7 +580,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":68,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
