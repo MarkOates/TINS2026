@@ -446,7 +446,6 @@ void Screen::customize_dialog_for_FRIEND_3()
    dialog_system->set_standard_dialog_box_label_color(al_color_html("4270a2"));
    if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(5);
 
-   // HERE
    return;
 }
 
@@ -743,6 +742,8 @@ void Screen::update()
 
             case TINS2025::Entity::ENTITY_TYPE_GIRAFFE: {
                event_emitter->emit_activate_dialog_node_by_name_event("meet_giraffe");
+
+               //event_emitter->emit_activate_dialog_node_by_name_event("celebrate_won_game");
             } break;
 
             case TINS2025::Entity::ENTITY_TYPE_GOAT: {
@@ -1143,6 +1144,7 @@ void Screen::render_game_hud()
    }
 
 
+   if (false)
    { // DEVELOPMENT
       float l=0;
       float lh = 40;
@@ -1300,6 +1302,16 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
       else { } // Not found
    }
+   else if (game_event->is_type("document_giraffe"))
+   {
+      // TODO: Can document? if NOT, then output:
+      //        "oh no! I don't have enough lines of paper! I'll need to find a sheet! but I'm soo excited!"
+      // OTHERWISE:
+      int num_giraffe_lines = 3;
+
+      lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
+      lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
+   }
    else if (game_event->is_type("show_cake_1"))
    {
       event_emitter->emit_play_music_track_event("sad_theme");
@@ -1381,7 +1393,7 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       view_motion_studio.get_motion_studio_ref().set_playing(true);
       event_emitter->emit_play_music_track_event("closer");
       //view_motion_studio.get_motion_studio_ref().set_playback_speed(true);
-      //amera_is_tracking_player = false; // HERE
+      //amera_is_tracking_player = false;
    }
    else if (game_event->is_type("end_chapter_1"))
    {
@@ -1406,10 +1418,10 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       dipping_to_black = false;
       //resume_suspended_gameplay();
       //event_emitter->emit_activate_dialog_node_by_name_event("friend_3_requirements"); //
-      //event_emitter->emit_play_music_track_event("chipper_tune"); // HERE
+      //event_emitter->emit_play_music_track_event("chipper_tune");
       event_emitter->emit_play_music_track_event("chipper_tune");
       //event_emitter->emit_activate_dialog_node_by_name_event("character_starts_bakeoff");
-      //event_emitter->emit_activate_dialog_node_by_name_event(""); // HERE
+      //event_emitter->emit_activate_dialog_node_by_name_event("");
    }
    else if (game_event->is_type("start_chapter_3"))
    {
@@ -1423,7 +1435,6 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
    else if (game_event->is_type("win_game"))
    {
       call_on_finished_callback_func(); // Consider technique to exit
-      // HERE
       
       //game_is_won();
       //toggle_player_input_controller_between_robot_and_player_if_available();
@@ -1793,9 +1804,7 @@ void Screen::primary_update_func(double time_now, double delta_time)
       if (view_motion_studio.get_motion_studio_ref().get_playhead() > 23.53)
       {
          flag__showing_plant_now = false;
-         //event_emitter->emit_game_ // HERE
          event_emitter->emit_game_event(AllegroFlare::GameEvent("win_game"));
-         // HERE win game
       }
    }
 
@@ -2390,11 +2399,27 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             {
                "Amazing! A giraffe!",
                "They have huge long necks!",
-               "Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
+               //"Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
             },
             {
-               { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
             }
+         )
+      },
+      { "->document_giraffe", new AllegroFlare::DialogTree::Nodes::Interparsable(
+            LOTTIE,
+            {
+               "This is such an amazing creature!",
+               "For the (em)Giraffe(/em), I'll need to write (em)3 lines of notes(/em)!",
+            },
+            {
+               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->emit_document_giraffe"), 0 }
+            }
+         )
+      },
+      { "->emit_document_giraffe", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+            "document_giraffe",
+            "exit_dialog"
          )
       },
       { "inspect_apple", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE,
