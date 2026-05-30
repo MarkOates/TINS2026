@@ -698,6 +698,15 @@ void Screen::update()
          tile_map_collision_stepper.step();
       }
 
+      // Update the "distance to player"
+      for (auto &entity : entities)
+      {
+         if (entity.flags & TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER)
+         {
+            entity.distance_to_player = entity.aabb2d.fast_distance_to_center(player_entity->aabb2d.get_center());
+         }
+      }
+
       // Observe changes in bounding box collisions
       collision_observer.set_subject(player_entity);
       std::set<void*> collidables;
@@ -975,73 +984,115 @@ void Screen::render_game_hud()
    ALLEGRO_COLOR text_color = ALLEGRO_COLOR{1, 1, 1, 1};
    ALLEGRO_COLOR fill_color = ALLEGRO_COLOR{0, 0, 0, 0.2};
 
-   al_draw_filled_rounded_rectangle(94, 380, 326, 696, 16, 16, fill_color);
+   { // Draw the meters
+      //float off_y = -30;
+      al_draw_filled_rounded_rectangle(94, 380, 326, 696, 16, 16, fill_color);
 
-   { // Draw the "Excitement meter"
-      int bar_x = 170;
-      int bar_y = 1080/2;
-      int bar_height = 8;
-      int bar_margin = 4;
-      int bar_width = 48;
-      int text_offset_y = -42;
-      {
-         // Draw the excitement meter
-         AllegroFlare::Placement2D bar_place;
-         bar_place.rotation = -3.1415 * 0.5;
-         bar_place.position.x = bar_x;
-         bar_place.position.y = bar_y;
-         bar_place.align.y = 0.5;
-         bar_place.align.x = 0.5;
-         //bar_place.start_transform();
-         AllegroFlare::Elements::HealthBars::Classic bar;
-         bar.set_max(20);
-         bar.set_value(10);
-         // NOTE: These values are switched around because 
-         bar.set_bar_width(bar_height);
-         bar.set_bar_height(bar_width);
-         bar.set_bar_spacing(bar_height + bar_margin);
-         bar.set_fill_color(al_color_name("pink"));
+      { // Draw the "Excitement meter"
+         int bar_x = 170;
+         int bar_y = 1080/2;
+         int bar_height = 8;
+         int bar_margin = 4;
+         int bar_width = 48;
+         int text_offset_y = -42;
+         {
+            // Draw the excitement meter
+            AllegroFlare::Placement2D bar_place;
+            bar_place.rotation = -3.1415 * 0.5;
+            bar_place.position.x = bar_x;
+            bar_place.position.y = bar_y;
+            bar_place.align.y = 0.5;
+            bar_place.align.x = 0.5;
+            //bar_place.start_transform();
+            AllegroFlare::Elements::HealthBars::Classic bar;
+            bar.set_max(20);
+            bar.set_value(10);
+            // NOTE: These values are switched around because 
+            bar.set_bar_width(bar_height);
+            bar.set_bar_height(bar_width);
+            bar.set_bar_spacing(bar_height + bar_margin);
+            bar.set_fill_color(al_color_name("pink"));
 
-         bar_place.size.y = bar.get_bar_height();
-         bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
-         bar_place.start_transform();
-         bar.render();
+            bar_place.size.y = bar.get_bar_height();
+            bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
+            bar_place.start_transform();
+            bar.render();
 
-         al_draw_text(font, text_color, 0, text_offset_y, 0, "EXCITEMENT");
+            al_draw_text(font, text_color, 0, text_offset_y, 0, "EXCITEMENT");
 
-         bar_place.restore_transform();
-      }
+            bar_place.restore_transform();
+         }
 
 
-      bar_x = 275;
-      {
-         // Draw the excitement meter
-         AllegroFlare::Placement2D bar_place;
-         bar_place.rotation = -3.1415 * 0.5;
-         bar_place.position.x = bar_x;
-         bar_place.position.y = bar_y;
-         bar_place.align.y = 0.5;
-         bar_place.align.x = 0.5;
-         //bar_place.start_transform();
-         AllegroFlare::Elements::HealthBars::Classic bar;
-         bar.set_max(20);
-         bar.set_value(10);
-         // NOTE: These values are switched around because 
-         bar.set_bar_width(bar_height);
-         bar.set_bar_height(bar_width);
-         bar.set_bar_spacing(bar_height + bar_margin);
-         bar.set_fill_color(al_color_name("pink"));
+         bar_x = 275;
+         {
+            // Draw the excitement meter
+            AllegroFlare::Placement2D bar_place;
+            bar_place.rotation = -3.1415 * 0.5;
+            bar_place.position.x = bar_x;
+            bar_place.position.y = bar_y;
+            bar_place.align.y = 0.5;
+            bar_place.align.x = 0.5;
+            //bar_place.start_transform();
+            AllegroFlare::Elements::HealthBars::Classic bar;
+            bar.set_max(20);
+            bar.set_value(10);
+            // NOTE: These values are switched around because 
+            bar.set_bar_width(bar_height);
+            bar.set_bar_height(bar_width);
+            bar.set_bar_spacing(bar_height + bar_margin);
+            bar.set_fill_color(al_color_name("pink"));
 
-         bar_place.size.y = bar.get_bar_height();
-         bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
-         bar_place.start_transform();
-         bar.render();
+            bar_place.size.y = bar.get_bar_height();
+            bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
+            bar_place.start_transform();
+            bar.render();
 
-         al_draw_text(font, text_color, 0, text_offset_y, 0, "BLANK LINES");
+            al_draw_text(font, text_color, 0, text_offset_y, 0, "BLANK LINES");
 
-         bar_place.restore_transform();
+            bar_place.restore_transform();
+         }
       }
    }
+
+   // Draw the animals distance list
+   {
+      float box_y = 352;
+      al_draw_filled_rounded_rectangle(94, 380+box_y, 326, 696+box_y-40, 16, 16, fill_color);
+
+      static std::vector<TINS2025::Entity*> distance_entities;
+      distance_entities.reserve(32);
+      distance_entities.clear();
+      for (auto &entity : entities)
+      {
+         if (entity.flags & TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER)
+         {
+            distance_entities.push_back(&entity);
+         }
+      }
+      std::sort(distance_entities.begin(), distance_entities.end(),
+         [](const TINS2025::Entity* a, const TINS2025::Entity* b)
+         {
+            return a->distance_to_player < b->distance_to_player;
+         });
+      float xx = 100 + 15;
+      float yy = 1080/7*5;
+      int line = 0;
+      int line_height = al_get_font_line_height(font);
+      int limit = 4;
+      int count = 0;
+      for (auto &entity : distance_entities)
+      {
+         // entity name
+         float y = yy + line * line_height;
+         al_draw_text(font, text_color, xx, y, 0, entity->type_to_string().c_str());
+         al_draw_textf(font, text_color, xx+184, y, ALLEGRO_ALIGN_RIGHT, "%d", (int)entity->distance_to_player);
+         line++;
+         count++;
+         if (count > limit) break;
+      }
+   }
+
 
    return;
 }
@@ -1399,30 +1450,35 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.type = TINS2025::Entity::ENTITY_TYPE_GIRAFFE;
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-giraffe.obj");
+         e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "goat")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_GOAT;
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-goat.obj");
+         e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "leopard")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_LEOPARD;
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-leopard.obj");
+         e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "tiger")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_TIGER;
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-tiger.obj");
+         e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "zebrah")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_ZEBRAH;
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
+         e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "friend_2")
       {

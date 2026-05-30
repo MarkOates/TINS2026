@@ -5,6 +5,7 @@
 #include <AllegroFlare/Physics/AABB2D.hpp>
 #include <allegro5/allegro.h>
 #include <cstdint>
+#include <string>
 
 
 namespace TINS2025
@@ -20,6 +21,7 @@ namespace TINS2025
          FLAG_HIDDEN = 0x0002,
          FLAG_COLLIDES_WITH_PLAYER = 0x0004,
          FLAG_COLLIDES_WITH_TILEMAP = 0x0008,
+         FLAG_TRACKS_DISTANCE_TO_PLAYER = 0x0010,
       };
       enum Type
       {
@@ -75,11 +77,14 @@ namespace TINS2025
       AllegroFlare::Model3D* model;
       uint32_t type;
       uint32_t animation_mode;
+      float distance_to_player;
       AllegroFlare::Physics::AABB2D aabb2d;
       uint32_t flags;
       Entity();
       ~Entity();
 
+      static std::string to_string(Type value=Type::ENTITY_TYPE_UNDEF, bool throw_on_error=true);
+      std::string type_to_string();
       void draw();
    };
 }

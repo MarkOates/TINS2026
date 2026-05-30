@@ -21,6 +21,11 @@ properties:
     init_with: TINS2025::Entity::ANIMATION_MODE_STANDING
     exposed: true
 
+  - name: distance_to_player
+    type: float
+    init_with: 9999.0f
+    exposed: true
+
   - name: aabb2d
     type: AllegroFlare::Physics::AABB2D
     init_with: '{}'
@@ -44,9 +49,11 @@ enums:
       - FLAG_HIDDEN
       - FLAG_COLLIDES_WITH_PLAYER
       - FLAG_COLLIDES_WITH_TILEMAP
+      - FLAG_TRACKS_DISTANCE_TO_PLAYER
 
 
   - name: Type
+    to_string: true
     scope: public
     enumerators:
        - ENTITY_TYPE_UNDEF
@@ -95,6 +102,25 @@ enums:
 
 
 methods:
+
+
+  - name: type_to_string
+    type: std::string
+    body: |
+      static std::map<uint32_t, std::string> names = {
+         { ENTITY_TYPE_GIRAFFE, "Giraffe" },
+         { ENTITY_TYPE_GOAT, "Goat" },
+         { ENTITY_TYPE_LEOPARD, "Leopard", },
+         { ENTITY_TYPE_TIGER, "Tiger", },
+         { ENTITY_TYPE_ZEBRAH, "Zebrah", },
+      };
+      if (names.count(type) == 0)
+      {
+         throw std::runtime_error("AAAAAAAAAAAAA! Entity: No name found for this entity type.");
+      }
+      return names[type];
+    body_dependency_symbols:
+      - std::map
 
 
   - name: draw
