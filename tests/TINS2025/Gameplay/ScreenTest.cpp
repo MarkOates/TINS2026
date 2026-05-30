@@ -73,12 +73,12 @@ TEST_F(TINS2025_Gameplay_ScreenTestWithAllegroFrameworksFullFixture,
 
    AllegroFlare::AudioController *audio_controller = get_framework_audio_controller();
       audio_controller->set_and_load_music_track_elements({
-         //{ "intro_music", { "wanderer-01.ogg", true, "ignore" } },
-         { "theme", { "hello_friend-theme-01.ogg", true, "ignore" } },
-         { "sad_theme", { "hello_friend-sad_theme-01.ogg", true, "ignore" } },
-         { "chipper_tune", { "hello_friend-chipper_tune-01.ogg", true, "ignore" } },
-         { "idea", { "hello_friend-idea-01.ogg", false, "ignore" } },
-         { "closer", { "hello_friend-closer-01.ogg", false, "ignore" } },
+         ////{ "intro_music", { "wanderer-01.ogg", true, "ignore" } },
+         //{ "theme", { "hello_friend-theme-01.ogg", true, "ignore" } },
+         //{ "sad_theme", { "hello_friend-sad_theme-01.ogg", true, "ignore" } },
+         //{ "chipper_tune", { "hello_friend-chipper_tune-01.ogg", true, "ignore" } },
+         //{ "idea", { "hello_friend-idea-01.ogg", false, "ignore" } },
+         //{ "closer", { "hello_friend-closer-01.ogg", false, "ignore" } },
       });
 
    TINS2025::Gameplay::Screen screen;

@@ -888,16 +888,20 @@ methods:
 
       //al_draw_filled_circle(100, 100, 30, ALLEGRO_COLOR{1, 1, 1, 1});
 
+      ALLEGRO_FONT *font = font_bin->auto_get("Quicksand-SemiBold.ttf -42");
+      ALLEGRO_COLOR text_color = ALLEGRO_COLOR{1, 1, 1, 1};
+
       { // Draw the "Excitement meter"
          int bar_x = 180;
          int bar_y = 1080/2;
          int bar_height = 8;
          int bar_margin = 4;
          int bar_width = 48;
+         int text_offset_y = -42;
          {
             // Draw the excitement meter
             AllegroFlare::Placement2D bar_place;
-            bar_place.rotation = 3.1415 * 0.5;
+            bar_place.rotation = -3.1415 * 0.5;
             bar_place.position.x = bar_x;
             bar_place.position.y = bar_y;
             bar_place.align.y = 0.5;
@@ -916,6 +920,39 @@ methods:
             bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
             bar_place.start_transform();
             bar.render();
+
+            al_draw_text(font, text_color, 0, text_offset_y, 0, "EXCITEMENT");
+
+            bar_place.restore_transform();
+         }
+
+
+         bar_x = 275;
+         {
+            // Draw the excitement meter
+            AllegroFlare::Placement2D bar_place;
+            bar_place.rotation = -3.1415 * 0.5;
+            bar_place.position.x = bar_x;
+            bar_place.position.y = bar_y;
+            bar_place.align.y = 0.5;
+            bar_place.align.x = 0.5;
+            //bar_place.start_transform();
+            AllegroFlare::Elements::HealthBars::Classic bar;
+            bar.set_max(20);
+            bar.set_value(10);
+            // NOTE: These values are switched around because 
+            bar.set_bar_width(bar_height);
+            bar.set_bar_height(bar_width);
+            bar.set_bar_spacing(bar_height + bar_margin);
+            bar.set_fill_color(al_color_name("pink"));
+
+            bar_place.size.y = bar.get_bar_height();
+            bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
+            bar_place.start_transform();
+            bar.render();
+
+            al_draw_text(font, text_color, 0, text_offset_y, 0, "BLANK LINES");
+
             bar_place.restore_transform();
          }
       }
