@@ -42,6 +42,7 @@ Screen::Screen()
    , dialog_system(nullptr)
    , gameplay_progress({})
    , progress_file_filename("save.json")
+   , items_collected_tmj_ids(gameplay_progress.items_collected_tmj_ids)
    , view_motion_studio({})
    , hide_view_motion_studio_hud(false)
    , current_level_identifier("[unset-current_level]")
@@ -182,6 +183,12 @@ TINS2026::GameplayProgress Screen::get_gameplay_progress() const
 std::string Screen::get_progress_file_filename() const
 {
    return progress_file_filename;
+}
+
+
+std::set<uint32_t>& Screen::get_items_collected_tmj_ids() const
+{
+   return items_collected_tmj_ids;
 }
 
 
@@ -481,6 +488,24 @@ void Screen::load_progress_file()
 
 void Screen::save_progress_file()
 {
+   // Refresh some of our critical pieces of data
+   //player_entity->aabb2d.set_x(
+   gameplay_progress.player_location.x = player_entity->aabb2d.get_x();
+   gameplay_progress.player_location.y = player_entity->aabb2d.get_y();
+
+   //std::set<uint32_t> items_collected_tmj_ids;
+
+   //for (auto &entity : entities)
+   //{
+      //if ((entity.flags & TINS2025::Entity::FLAG_COLLECTED) == 0)
+      //{
+         //items_collected_tmj_ids
+      //}
+   //}
+
+   gameplay_progress.player_location.y = player_entity->aabb2d.get_y(); // HERE
+
+
    std::string full_progress_file_filename = build_full_progress_file_filename();
 
    try
@@ -797,6 +822,21 @@ void Screen::on_deactivate()
    return;
 }
 
+void Screen::mark_entity_collected(TINS2025::Entity* entity)
+{
+   if (!(entity))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::mark_entity_collected]: error: guard \"entity\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::mark_entity_collected]: error: guard \"entity\" not met");
+   }
+   entity->flags |= TINS2025::Entity::FLAG_HIDDEN;
+   entity->flags |= TINS2025::Entity::FLAG_INACTIVE;
+   entity->flags |= TINS2025::Entity::FLAG_COLLECTED;
+   return;
+}
+
 void Screen::update()
 {
    auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
@@ -851,10 +891,15 @@ void Screen::update()
          switch (entity.type)
          {
             case TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE: {
-               entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-               entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-               entity.flags |= TINS2025::Entity::FLAG_COLLECTED;
+               //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+               //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+               //entity.flags |= TINS2025::Entity::FLAG_COLLECTED;
+
                lottie__total_lines_available += LINES_PER_PAGE;
+               items_collected_tmj_ids.insert(entity.tmj_id);
+
+               mark_entity_collected(&entity);
+
                event_emitter->emit_activate_dialog_node_by_name_event("#collect_notebook_paper");
             } break;
 
@@ -1126,7 +1171,7 @@ void Screen::white_flash()
 void Screen::render_game_hud()
 {
    auto &lottie__num_lines_written = gameplay_progress.player_lines_filled;
-   auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
+   auto &lottie__total_lines_available = gameplay_progress.player_line_capacity;
 
    AllegroFlare::Camera2D hud_camera;
    hud_camera.setup_dimensional_projection(al_get_target_bitmap());
@@ -2006,6 +2051,18 @@ void Screen::key_down_func(ALLEGRO_EVENT* ev)
       case ALLEGRO_KEY_0: {
          load_progress_file();
          refresh_environment_and_world();
+
+         // Set the player location
+         player_entity->aabb2d.set_x(gameplay_progress.player_location.x);
+         player_entity->aabb2d.set_y(gameplay_progress.player_location.y);
+
+         // mark collected items as collected
+         for (auto &entity : entities)
+         {
+            if (items_collected_tmj_ids.count(entity.tmj_id) == 0) continue;
+            mark_entity_collected(&entity);
+         }
+
          white_flash();
          // TODO: White flash?
       } break;

@@ -22,6 +22,7 @@
 #include <TINS2026/GameplayProgress.hpp>
 #include <allegro5/allegro.h>
 #include <cstdint>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -66,6 +67,7 @@ namespace TINS2025
          AllegroFlare::DialogSystem::DialogSystem* dialog_system;
          TINS2026::GameplayProgress gameplay_progress;
          std::string progress_file_filename;
+         std::set<uint32_t>& items_collected_tmj_ids;
          DialControl::ViewMotionStudio view_motion_studio;
          bool hide_view_motion_studio_hud;
          std::string current_level_identifier;
@@ -121,6 +123,7 @@ namespace TINS2025
          AllegroFlare::DialogSystem::DialogSystem* get_dialog_system() const;
          TINS2026::GameplayProgress get_gameplay_progress() const;
          std::string get_progress_file_filename() const;
+         std::set<uint32_t>& get_items_collected_tmj_ids() const;
          bool get_QUEST__collected_apple() const;
          bool get_QUEST__collected_carrot() const;
          bool get_QUEST__collected_red_carrot() const;
@@ -155,6 +158,7 @@ namespace TINS2025
          virtual bool load_level_by_identifier(std::string level_identifier="[unset-level_identifier]") override;
          virtual void on_activate() override;
          virtual void on_deactivate() override;
+         void mark_entity_collected(TINS2025::Entity* entity=nullptr);
          void update();
          void white_flash();
          void render_game_hud();

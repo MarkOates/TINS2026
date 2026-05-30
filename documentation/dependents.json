@@ -378,6 +378,9 @@
   "AllegroFlare/UsefulPHP": [
     "TINS2025/Gameplay/Screen"
   ],
+  "TINS2026/Animal": [
+    "TINS2026/AnimalDatabase"
+  ],
   "Timeline/Keyframe": [
     "Timeline/Keyframe",
     "Timeline/Parameter"

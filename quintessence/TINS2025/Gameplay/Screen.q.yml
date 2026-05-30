@@ -62,6 +62,11 @@ properties:
     init_with: '"save.json"'
     getter: true
 
+  - name: items_collected_tmj_ids
+    type: std::set<uint32_t>&
+    init_with: gameplay_progress.items_collected_tmj_ids
+    getter: true
+
   - name: view_motion_studio
     type: DialControl::ViewMotionStudio
     init_with: '{}'
@@ -395,6 +400,24 @@ methods:
 
   - name: save_progress_file
     body: |
+      // Refresh some of our critical pieces of data
+      //player_entity->aabb2d.set_x(
+      gameplay_progress.player_location.x = player_entity->aabb2d.get_x();
+      gameplay_progress.player_location.y = player_entity->aabb2d.get_y();
+
+      //std::set<uint32_t> items_collected_tmj_ids;
+
+      //for (auto &entity : entities)
+      //{
+         //if ((entity.flags & TINS2025::Entity::FLAG_COLLECTED) == 0)
+         //{
+            //items_collected_tmj_ids
+         //}
+      //}
+
+      gameplay_progress.player_location.y = player_entity->aabb2d.get_y(); // HERE
+
+
       std::string full_progress_file_filename = build_full_progress_file_filename();
 
       try
@@ -724,6 +747,19 @@ methods:
       return;
 
 
+  - name: mark_entity_collected
+    parameters:
+      - name: entity
+        type: TINS2025::Entity*
+        default_argument: nullptr
+    guards: [ entity ]
+    body: |
+      entity->flags |= TINS2025::Entity::FLAG_HIDDEN;
+      entity->flags |= TINS2025::Entity::FLAG_INACTIVE;
+      entity->flags |= TINS2025::Entity::FLAG_COLLECTED;
+      return;
+
+
   - name: update
     body: |
       auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
@@ -778,10 +814,15 @@ methods:
             switch (entity.type)
             {
                case TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE: {
-                  entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-                  entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  entity.flags |= TINS2025::Entity::FLAG_COLLECTED;
+                  //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
+                  //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
+                  //entity.flags |= TINS2025::Entity::FLAG_COLLECTED;
+
                   lottie__total_lines_available += LINES_PER_PAGE;
+                  items_collected_tmj_ids.insert(entity.tmj_id);
+
+                  mark_entity_collected(&entity);
+
                   event_emitter->emit_activate_dialog_node_by_name_event("#collect_notebook_paper");
                } break;
 
@@ -1055,7 +1096,7 @@ methods:
   - name: render_game_hud
     body: |
       auto &lottie__num_lines_written = gameplay_progress.player_lines_filled;
-      auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
+      auto &lottie__total_lines_available = gameplay_progress.player_line_capacity;
 
       AllegroFlare::Camera2D hud_camera;
       hud_camera.setup_dimensional_projection(al_get_target_bitmap());
@@ -1936,6 +1977,18 @@ methods:
          case ALLEGRO_KEY_0: {
             load_progress_file();
             refresh_environment_and_world();
+
+            // Set the player location
+            player_entity->aabb2d.set_x(gameplay_progress.player_location.x);
+            player_entity->aabb2d.set_y(gameplay_progress.player_location.y);
+
+            // mark collected items as collected
+            for (auto &entity : entities)
+            {
+               if (items_collected_tmj_ids.count(entity.tmj_id) == 0) continue;
+               mark_entity_collected(&entity);
+            }
+
             white_flash();
             // TODO: White flash?
          } break;

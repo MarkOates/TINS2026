@@ -69,6 +69,7 @@ table td
   <li><a href="#quintessence/TINS2025/Gameplay/Level.q.yml">quintessence/TINS2025/Gameplay/Level.q.yml</a></li>
   <li><a href="#quintessence/TINS2025/Gameplay/Screen.q.yml">quintessence/TINS2025/Gameplay/Screen.q.yml</a></li>
   <li><a href="#quintessence/TINS2026/Animal.q.yml">quintessence/TINS2026/Animal.q.yml</a></li>
+  <li><a href="#quintessence/TINS2026/AnimalDatabase.q.yml">quintessence/TINS2026/AnimalDatabase.q.yml</a></li>
   <li><a href="#quintessence/TINS2026/GameplayProgress.q.yml">quintessence/TINS2026/GameplayProgress.q.yml</a></li>
   <li><a href="#quintessence/Timeline/Keyframe.q.yml">quintessence/Timeline/Keyframe.q.yml</a></li>
   <li><a href="#quintessence/Timeline/MotionStudio.q.yml">quintessence/Timeline/MotionStudio.q.yml</a></li>
@@ -1605,6 +1606,10 @@ table td
   <td class="property">std::string</td>
 </tr>
 <tr>
+  <td class="property">items_collected_tmj_ids</td>
+  <td class="property">std::set&lt;uint32_t&gt;&amp;</td>
+</tr>
+<tr>
   <td class="property">view_motion_studio</td>
   <td class="property">DialControl::ViewMotionStudio</td>
 </tr>
@@ -1818,6 +1823,10 @@ table td
 <tr>
   <td class="method">void</td>
   <td class="method"><b>on_deactivate</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>mark_entity_collected</b>(TINS2025::Entity* entity=nullptr)</td>
 </tr>
 <tr>
   <td class="method">void</td>
@@ -2044,6 +2053,34 @@ table td
     </table>
 </div>    <h3>Dependencies</h3>
 <p>This class contains no dependencies</p>  </div>
+</ul>
+<br><br><br>
+<br><br><br>
+<ul>
+  <div class="component">
+    <h3 id="quintessence/TINS2026/AnimalDatabase.q.yml">quintessence/TINS2026/AnimalDatabase.q.yml</h3>
+    <p>(This component does not include supplementary documentation)</p>
+    <h3>Properties</h3>
+<div class="property-box properties">     <table>
+<tr>
+  <td class="property">animals</td>
+  <td class="property">std::vector&lt;TINS2026::Animal&gt;</td>
+</tr>
+    </table>
+</div>    <h3>Methods</h3>
+<div class="property-box methods">     <table>
+<tr>
+  <td class="method">std::string</td>
+  <td class="method"><b>run</b>()</td>
+</tr>
+    </table>
+</div>    <h3>Dependencies</h3>
+<div class="property-box dependencies">     <table>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::Animal&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/Animal.hpp&quot;]}</td>
+</tr>
+    </table>
+</div>  </div>
 </ul>
 <br><br><br>
 <br><br><br>
@@ -3018,6 +3055,9 @@ table td
   ],
   "AllegroFlare/UsefulPHP": [
     "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2026/Animal": [
+    "TINS2026/AnimalDatabase"
   ],
   "Timeline/Keyframe": [
     "Timeline/Keyframe",

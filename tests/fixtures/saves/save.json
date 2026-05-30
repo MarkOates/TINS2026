@@ -1,11 +1,14 @@
 {
-  "items_collected_tmj_ids": [],
+  "items_collected_tmj_ids": [
+    71,
+    84
+  ],
   "player_excitement": 0,
-  "player_line_capacity": 0,
+  "player_line_capacity": 8,
   "player_lines_filled": 0,
   "player_location": {
-    "x": 0.0,
-    "y": 0.0
+    "x": 35.144474029541016,
+    "y": 6.423717498779297
   },
   "progress_and_state_flags": []
 }
