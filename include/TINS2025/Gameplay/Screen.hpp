@@ -39,6 +39,14 @@ namespace TINS2025
          static constexpr char* DEFAULT_DATA_FOLDER_PATH = (char*)"[unset-data_folder_path]";
          static constexpr char* TYPE = (char*)"TINS2025/Gameplay/Screen";
 
+      public:
+
+         enum class ProgressAndStateFlags : uint32_t
+         {
+            NONE = 0,
+            FLAG_UNLOCKED_GIRAFFE,
+            FLAG_UNLOCKED_GOAT,
+         };
       private:
          enum InputMode : uint32_t
          {
@@ -122,6 +130,8 @@ namespace TINS2025
          bool get_flag__showing_plant_now() const;
          bool get_initialized() const;
          AllegroFlare::AssetStudio::Database* &get_asset_studio_database_ref();
+         static std::string to_string(ProgressAndStateFlags value=ProgressAndStateFlags::NONE, bool throw_on_error=true);
+         static ProgressAndStateFlags from_string(std::string value="[unset-value]", bool throw_on_error=true);
          void initialize();
          void customize_dialog_for_DOTTIE();
          void customize_dialog_for_FRIEND_1();

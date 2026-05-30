@@ -270,6 +270,25 @@ AllegroFlare::AssetStudio::Database* &Screen::get_asset_studio_database_ref()
 }
 
 
+std::string Screen::to_string(ProgressAndStateFlags value, bool throw_on_error)
+{
+   if (value == ProgressAndStateFlags::NONE) return "none";
+   if (value == ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE) return "flag_unlocked_giraffe";
+   if (value == ProgressAndStateFlags::FLAG_UNLOCKED_GOAT) return "flag_unlocked_goat";
+   // TODO: Implement "throw_on_error" argument
+   return "";
+}
+
+
+Screen::ProgressAndStateFlags Screen::from_string(std::string value, bool throw_on_error)
+{
+   if (value == "none") return ProgressAndStateFlags::NONE;
+   if (value == "flag_unlocked_giraffe") return ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE;
+   if (value == "flag_unlocked_goat") return ProgressAndStateFlags::FLAG_UNLOCKED_GOAT;
+   throw std::runtime_error("Blast/Cpp/EnumClass: ERROR: Could not find enum for \" + value + \"");
+}
+
+
 void Screen::initialize()
 {
    if (!((!initialized)))

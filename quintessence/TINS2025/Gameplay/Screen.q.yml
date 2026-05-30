@@ -237,6 +237,17 @@ enums:
       - INPUT_MODE_EDITING
 
 
+  - class: ProgressAndStateFlags
+    scope: public
+    type: uint32_t
+    to_string: true
+    from_string: true
+    enumerators:
+      - NONE
+      - FLAG_UNLOCKED_GIRAFFE
+      - FLAG_UNLOCKED_GOAT
+
+
 methods:
 
 
