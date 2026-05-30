@@ -2,7 +2,6 @@
 
 
 #include <AllegroFlare/Vec2D.hpp>
-#include <TINS2025/Gameplay/Screen.hpp>
 #include <cstdint>
 #include <set>
 
@@ -22,7 +21,7 @@ namespace TINS2026
       int player_excitement;
       int player_line_capacity;
       int player_lines_filled;
-      std::set<TINS2025::Gameplay::Screen::ProgressAndStateFlags> progress_and_state_flags;
+      std::set<uint32_t> progress_and_state_flags;
       GameplayProgress();
       ~GameplayProgress();
 

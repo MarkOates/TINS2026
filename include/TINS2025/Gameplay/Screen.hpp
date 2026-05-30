@@ -19,6 +19,7 @@
 #include <DialControl/ViewMotionStudio.hpp>
 #include <TINS2025/Entity.hpp>
 #include <TINS2025/Gameplay/Level.hpp>
+#include <TINS2026/GameplayProgress.hpp>
 #include <allegro5/allegro.h>
 #include <cstdint>
 #include <string>
@@ -37,11 +38,12 @@ namespace TINS2025
          static constexpr char* FRIEND_2 = (char*)"Ditto";
          static constexpr char* FRIEND_3 = (char*)"Derek";
          static constexpr char* DEFAULT_DATA_FOLDER_PATH = (char*)"[unset-data_folder_path]";
+         static constexpr char* PROGRESS_FILE_FOLDER = (char*)"bin/data/saves/";
          static constexpr char* TYPE = (char*)"TINS2025/Gameplay/Screen";
 
       public:
 
-         enum class ProgressAndStateFlags : uint32_t
+         enum ProgressAndStateFlags : uint32_t
          {
             NONE = 0,
             FLAG_UNLOCKED_GIRAFFE,
@@ -61,6 +63,8 @@ namespace TINS2025
          AllegroFlare::FontBin* font_bin;
          AllegroFlare::ModelBin* model_bin;
          AllegroFlare::DialogSystem::DialogSystem* dialog_system;
+         TINS2026::GameplayProgress gameplay_progress;
+         std::string progress_file_filename;
          DialControl::ViewMotionStudio view_motion_studio;
          bool hide_view_motion_studio_hud;
          std::string current_level_identifier;
@@ -113,6 +117,8 @@ namespace TINS2025
          AllegroFlare::FontBin* get_font_bin() const;
          AllegroFlare::ModelBin* get_model_bin() const;
          AllegroFlare::DialogSystem::DialogSystem* get_dialog_system() const;
+         TINS2026::GameplayProgress get_gameplay_progress() const;
+         std::string get_progress_file_filename() const;
          bool get_QUEST__collected_apple() const;
          bool get_QUEST__collected_carrot() const;
          bool get_QUEST__collected_red_carrot() const;
@@ -133,6 +139,9 @@ namespace TINS2025
          static std::string to_string(ProgressAndStateFlags value=ProgressAndStateFlags::NONE, bool throw_on_error=true);
          static ProgressAndStateFlags from_string(std::string value="[unset-value]", bool throw_on_error=true);
          void initialize();
+         std::string build_full_progress_file_filename();
+         void load_progress_file();
+         void save_progress_file();
          void customize_dialog_for_DOTTIE();
          void customize_dialog_for_FRIEND_1();
          void customize_dialog_for_FRIEND_2();

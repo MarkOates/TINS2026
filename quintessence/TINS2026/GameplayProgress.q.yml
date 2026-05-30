@@ -27,7 +27,7 @@ properties:
     exposed: true
 
   - name: progress_and_state_flags
-    type: std::set<TINS2025::Gameplay::Screen::ProgressAndStateFlags>
+    type: std::set<uint32_t>
     init_with: '{}'
     exposed: true
 
@@ -37,7 +37,5 @@ dependencies:
 
   - symbol: AllegroFlare::Vec2D
     headers: [ AllegroFlare/Vec2D.hpp ]
-  - symbol: TINS2025::Gameplay::Screen::ProgressAndStateFlags
-    headers: [ TINS2025/Gameplay/Screen.hpp ]
 
 

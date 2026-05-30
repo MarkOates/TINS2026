@@ -15,9 +15,11 @@
 #include <AllegroFlare/UsefulPHP.hpp>
 #include <AllegroFlare/VirtualControllers/GenericController.hpp>
 #include <TINS2025/Gameplay/Level.hpp>
+#include <TINS2026/JSONLoaders/TINS2026/GameplayProgress.hpp>
 #include <algorithm>
 #include <allegro5/allegro_primitives.h>
 #include <cmath>
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -38,6 +40,8 @@ Screen::Screen()
    , font_bin(nullptr)
    , model_bin(nullptr)
    , dialog_system(nullptr)
+   , gameplay_progress({})
+   , progress_file_filename("save.json")
    , view_motion_studio({})
    , hide_view_motion_studio_hud(false)
    , current_level_identifier("[unset-current_level]")
@@ -165,6 +169,18 @@ AllegroFlare::ModelBin* Screen::get_model_bin() const
 AllegroFlare::DialogSystem::DialogSystem* Screen::get_dialog_system() const
 {
    return dialog_system;
+}
+
+
+TINS2026::GameplayProgress Screen::get_gameplay_progress() const
+{
+   return gameplay_progress;
+}
+
+
+std::string Screen::get_progress_file_filename() const
+{
+   return progress_file_filename;
 }
 
 
@@ -410,6 +426,28 @@ void Screen::initialize()
 
    load_up_world();
    initialized = true;
+   return;
+}
+
+std::string Screen::build_full_progress_file_filename()
+{
+   return PROGRESS_FILE_FOLDER + progress_file_filename;
+}
+
+void Screen::load_progress_file()
+{
+   // HERE
+   std::string full_progress_file_filename = build_full_progress_file_filename();
+   //std::filesystem::exists
+   //nlohmann::json j;
+   //j.parse(
+   //progress << 
+   return;
+}
+
+void Screen::save_progress_file()
+{
+   std::string full_progress_file_filename = build_full_progress_file_filename();
    return;
 }
 

@@ -3,6 +3,9 @@
 
 #include <TINS2026/JSONLoaders/TINS2026/GameplayProgress.hpp>
 #include <TINS2026/Testing/Comparison/TINS2026/GameplayProgress.hpp>
+#include <TINS2025/Gameplay/Screen.hpp>
+//TINS2025::Gameplay::Screen
+//#include <TINS2026/Testing/Comparison/TINS2026/GameplayProgress.hpp>
 //#include <AllegroFlare/Testing/Comparison/TINS2026/JSONLoaders/TINS2026/GameplayProgress.hpp>
 //#include <[COMPONENT_NAME]].hpp>
 
@@ -24,6 +27,9 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
 
    nlohmann::json j = gameplay_progress;
 
+    //"flag_unlocked_giraffe",
+    //"flag_unlocked_goat"
+
    std::string expected_values =
 R"({
   "items_collected_tmj_ids": [
@@ -39,8 +45,8 @@ R"({
     "y": -16.0
   },
   "progress_and_state_flags": [
-    "flag_unlocked_giraffe",
-    "flag_unlocked_goat"
+    1,
+    2
   ]
 })";
 
@@ -80,8 +86,8 @@ R"({
     "y": -16.0
   },
   "progress_and_state_flags": [
-    "flag_unlocked_giraffe",
-    "flag_unlocked_goat"
+    1,
+    2
   ]
 })";
 

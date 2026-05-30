@@ -52,6 +52,16 @@ properties:
     getter: true
     setter: before_initialized
 
+  - name: gameplay_progress
+    type: TINS2026::GameplayProgress
+    init_with: '{}'
+    getter: true
+
+  - name: progress_file_filename
+    type: std::string
+    init_with: '"save.json"'
+    getter: true
+
   - name: view_motion_studio
     type: DialControl::ViewMotionStudio
     init_with: '{}'
@@ -219,6 +229,12 @@ properties:
     static: true
     constexpr: true
 
+  - name: PROGRESS_FILE_FOLDER
+    type: char*
+    init_with: '(char*)"bin/data/saves/"'
+    static: true
+    constexpr: true
+
   - name: TYPE
     type: char*
     init_with: '(char*)"TINS2025/Gameplay/Screen"'
@@ -237,7 +253,7 @@ enums:
       - INPUT_MODE_EDITING
 
 
-  - class: ProgressAndStateFlags
+  - name: ProgressAndStateFlags
     scope: public
     type: uint32_t
     to_string: true
@@ -316,6 +332,34 @@ methods:
       return;
     body_dependency_symbols:
       - al_is_primitives_addon_initialized
+
+
+  - name: build_full_progress_file_filename
+    type: std::string
+    body: |
+      return PROGRESS_FILE_FOLDER + progress_file_filename;
+
+
+  - name: load_progress_file
+    body: |
+      // HERE
+      std::string full_progress_file_filename = build_full_progress_file_filename();
+      //std::filesystem::exists
+      //nlohmann::json j;
+      //j.parse(
+      //progress << 
+      return;
+    body_dependency_symbols:
+      - std::filesystem::exists
+      - TINS2026::JSONLoaders::TINS2026::GameplayProgress
+
+
+  - name: save_progress_file
+    body: |
+      std::string full_progress_file_filename = build_full_progress_file_filename();
+      return;
+    body_dependency_symbols:
+      - TINS2026::JSONLoaders::TINS2026::GameplayProgress
 
 
   - name: customize_dialog_for_DOTTIE
@@ -2566,6 +2610,8 @@ methods:
 dependencies:
 
 
+  - symbol: TINS2026::GameplayProgress
+    headers: [ TINS2026/GameplayProgress.hpp ]
   - symbol: ALLEGRO_FONT
     headers: [ allegro5/allegro.h ]
   - symbol: ALLEGRO_EVENT
@@ -2642,5 +2688,9 @@ dependencies:
     headers: [ AllegroFlare/Elements/HealthBars/Classic.hpp ]
   - symbol: AllegroFlare::Billboarder3D
     headers: [ AllegroFlare/Billboarder3D.hpp ]
+  - symbol: TINS2026::JSONLoaders::TINS2026::GameplayProgress
+    headers: [ TINS2026/JSONLoaders/TINS2026/GameplayProgress.hpp ]
+  - symbol: std::filesystem::exists
+    headers: [ filesystem ]
 
 

@@ -69,6 +69,7 @@ table td
   <li><a href="#quintessence/TINS2025/Gameplay/Level.q.yml">quintessence/TINS2025/Gameplay/Level.q.yml</a></li>
   <li><a href="#quintessence/TINS2025/Gameplay/Screen.q.yml">quintessence/TINS2025/Gameplay/Screen.q.yml</a></li>
   <li><a href="#quintessence/TINS2026/Animal.q.yml">quintessence/TINS2026/Animal.q.yml</a></li>
+  <li><a href="#quintessence/TINS2026/GameplayProgress.q.yml">quintessence/TINS2026/GameplayProgress.q.yml</a></li>
   <li><a href="#quintessence/Timeline/Keyframe.q.yml">quintessence/Timeline/Keyframe.q.yml</a></li>
   <li><a href="#quintessence/Timeline/MotionStudio.q.yml">quintessence/Timeline/MotionStudio.q.yml</a></li>
   <li><a href="#quintessence/Timeline/Parameter.q.yml">quintessence/Timeline/Parameter.q.yml</a></li>
@@ -1596,6 +1597,14 @@ table td
   <td class="property">AllegroFlare::DialogSystem::DialogSystem*</td>
 </tr>
 <tr>
+  <td class="property">gameplay_progress</td>
+  <td class="property">TINS2026::GameplayProgress</td>
+</tr>
+<tr>
+  <td class="property">progress_file_filename</td>
+  <td class="property">std::string</td>
+</tr>
+<tr>
   <td class="property">view_motion_studio</td>
   <td class="property">DialControl::ViewMotionStudio</td>
 </tr>
@@ -1736,6 +1745,10 @@ table td
   <td class="property">char*</td>
 </tr>
 <tr>
+  <td class="property">PROGRESS_FILE_FOLDER</td>
+  <td class="property">char*</td>
+</tr>
+<tr>
   <td class="property">TYPE</td>
   <td class="property">char*</td>
 </tr>
@@ -1745,6 +1758,18 @@ table td
 <tr>
   <td class="method">void</td>
   <td class="method"><b>initialize</b>()</td>
+</tr>
+<tr>
+  <td class="method">std::string</td>
+  <td class="method"><b>build_full_progress_file_filename</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>load_progress_file</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>save_progress_file</b>()</td>
 </tr>
 <tr>
   <td class="method">void</td>
@@ -1849,6 +1874,9 @@ table td
     </table>
 </div>    <h3>Dependencies</h3>
 <div class="property-box dependencies">     <table>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::GameplayProgress&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/GameplayProgress.hpp&quot;]}</td>
+</tr>
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;ALLEGRO_FONT&quot;, &quot;headers&quot;=&gt;[&quot;allegro5/allegro.h&quot;]}</td>
 </tr>
@@ -1963,6 +1991,12 @@ table td
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;AllegroFlare::Billboarder3D&quot;, &quot;headers&quot;=&gt;[&quot;AllegroFlare/Billboarder3D.hpp&quot;]}</td>
 </tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::JSONLoaders::TINS2026::GameplayProgress&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/JSONLoaders/TINS2026/GameplayProgress.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;std::filesystem::exists&quot;, &quot;headers&quot;=&gt;[&quot;filesystem&quot;]}</td>
+</tr>
     </table>
 </div>  </div>
 </ul>
@@ -1992,6 +2026,50 @@ table td
     </table>
 </div>    <h3>Dependencies</h3>
 <p>This class contains no dependencies</p>  </div>
+</ul>
+<br><br><br>
+<br><br><br>
+<ul>
+  <div class="component">
+    <h3 id="quintessence/TINS2026/GameplayProgress.q.yml">quintessence/TINS2026/GameplayProgress.q.yml</h3>
+    <p>(This component does not include supplementary documentation)</p>
+    <h3>Properties</h3>
+<div class="property-box properties">     <table>
+<tr>
+  <td class="property">items_collected_tmj_ids</td>
+  <td class="property">std::set&lt;uint32_t&gt;</td>
+</tr>
+<tr>
+  <td class="property">player_location</td>
+  <td class="property">AllegroFlare::Vec2D</td>
+</tr>
+<tr>
+  <td class="property">player_excitement</td>
+  <td class="property">int</td>
+</tr>
+<tr>
+  <td class="property">player_line_capacity</td>
+  <td class="property">int</td>
+</tr>
+<tr>
+  <td class="property">player_lines_filled</td>
+  <td class="property">int</td>
+</tr>
+<tr>
+  <td class="property">progress_and_state_flags</td>
+  <td class="property">std::set&lt;uint32_t&gt;</td>
+</tr>
+    </table>
+</div>    <h3>Methods</h3>
+<div class="property-box methods">     <table>
+    </table>
+</div>    <h3>Dependencies</h3>
+<div class="property-box dependencies">     <table>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;AllegroFlare::Vec2D&quot;, &quot;headers&quot;=&gt;[&quot;AllegroFlare/Vec2D.hpp&quot;]}</td>
+</tr>
+    </table>
+</div>  </div>
 </ul>
 <br><br><br>
 <br><br><br>
@@ -2588,7 +2666,8 @@ table td
     "DialControl/CameraInfoOverlay"
   ],
   "AllegroFlare/Vec2D": [
-    "DialControl/CameraInfoOverlay"
+    "DialControl/CameraInfoOverlay",
+    "TINS2026/GameplayProgress"
   ],
   "ALLEGRO_COLOR": [
     "DialControl/CameraInfoOverlay",
@@ -2863,6 +2942,9 @@ table td
   "TINS2025/JSONLoaders/TINS2025/GameProgressAndStateInfo": [
     "TINS2025/GameProgressAndStateInfo"
   ],
+  "TINS2026/GameplayProgress": [
+    "TINS2025/Gameplay/Screen"
+  ],
   "AllegroFlare/CollisionObservers/Simple": [
     "TINS2025/Gameplay/Screen"
   ],
@@ -2907,6 +2989,12 @@ table td
     "TINS2025/Gameplay/Screen"
   ],
   "AllegroFlare/Billboarder3D": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2026/JSONLoaders/TINS2026/GameplayProgress": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "std/filesystem/exists": [
     "TINS2025/Gameplay/Screen"
   ],
   "Timeline/Keyframe": [

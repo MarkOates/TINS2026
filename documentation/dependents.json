@@ -43,7 +43,8 @@
     "DialControl/CameraInfoOverlay"
   ],
   "AllegroFlare/Vec2D": [
-    "DialControl/CameraInfoOverlay"
+    "DialControl/CameraInfoOverlay",
+    "TINS2026/GameplayProgress"
   ],
   "ALLEGRO_COLOR": [
     "DialControl/CameraInfoOverlay",
@@ -318,6 +319,9 @@
   "TINS2025/JSONLoaders/TINS2025/GameProgressAndStateInfo": [
     "TINS2025/GameProgressAndStateInfo"
   ],
+  "TINS2026/GameplayProgress": [
+    "TINS2025/Gameplay/Screen"
+  ],
   "AllegroFlare/CollisionObservers/Simple": [
     "TINS2025/Gameplay/Screen"
   ],
@@ -362,6 +366,12 @@
     "TINS2025/Gameplay/Screen"
   ],
   "AllegroFlare/Billboarder3D": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2026/JSONLoaders/TINS2026/GameplayProgress": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "std/filesystem/exists": [
     "TINS2025/Gameplay/Screen"
   ],
   "Timeline/Keyframe": [
