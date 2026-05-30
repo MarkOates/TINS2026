@@ -70,7 +70,7 @@ Screen::Screen()
    , flag__showing_plant_now(false)
    , lottie__num_notebook_pages(0)
    , lottie__num_lines_written(0)
-   , lottie__excitement(0)
+   , lottie__excitement__DEP(0)
    , initialized(false)
 {
 }
@@ -453,8 +453,9 @@ void Screen::load_progress_file()
 
       std::string content = AllegroFlare::php::file_get_contents(full_progress_file_filename);
 
-      nlohmann::json j;
-      j.parse(content);
+      //nlohmann::json j;
+      //j.parse(content);
+      nlohmann::json j = nlohmann::json::parse(content);
 
       gameplay_progress = j;
    }
@@ -1116,6 +1117,7 @@ void Screen::render_game_hud()
    ALLEGRO_COLOR text_color = ALLEGRO_COLOR{1, 1, 1, 1};
    ALLEGRO_COLOR fill_color = ALLEGRO_COLOR{0, 0, 0, 0.2};
 
+   int &lottie__excitement = gameplay_progress.player_excitement;
 
 
    //- name: lottie__num_notebook_pages
@@ -1138,6 +1140,7 @@ void Screen::render_game_hud()
          int bar_margin = 4;
          int bar_width = 48;
          int text_offset_y = -42;
+         //int lottie_excitement = gameplay_progress.player_excitement;
          {
             // Draw the excitement meter
             AllegroFlare::Placement2D bar_place;
@@ -1414,6 +1417,7 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
    }
    else if (game_event->is_type("document_giraffe"))
    {
+      int &lottie__excitement = gameplay_progress.player_excitement;
       // TODO: Can document? if NOT, then output:
       //        "oh no! I don't have enough lines of paper! I'll need to find a sheet! but I'm soo excited!"
       // OTHERWISE:

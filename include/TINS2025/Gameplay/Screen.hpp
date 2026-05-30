@@ -93,7 +93,7 @@ namespace TINS2025
          bool flag__showing_plant_now;
          int lottie__num_notebook_pages;
          int lottie__num_lines_written;
-         int lottie__excitement;
+         int lottie__excitement__DEP;
          bool initialized;
 
       protected:
