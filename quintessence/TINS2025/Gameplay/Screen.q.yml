@@ -1431,6 +1431,7 @@ methods:
          int tile_width = 16;
          int tile_height = 16;
          float object_x = object->x / (float)tile_width;
+         int tmj_id = object->id;
 
          float object_y = object->y / (float)tile_height;
          float object_w = object->width / (float)tile_width;
@@ -1456,6 +1457,7 @@ methods:
          e.aabb2d.set_y(object_y);
          e.aabb2d.set_w(1.0);
          e.aabb2d.set_h(1.0);
+         e.tmj_id = tmj_id;
          e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER;
 
          e.model = model_bin->auto_get("character_model-01.obj");

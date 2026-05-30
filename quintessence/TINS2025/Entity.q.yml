@@ -11,6 +11,11 @@ properties:
     init_with: nullptr
     exposed: true
 
+  - name: tmj_id
+    type: uint32_t
+    init_with: 0
+    exposed: true
+
   - name: type
     type: uint32_t
     init_with: TINS2025::Entity::ENTITY_TYPE_UNDEF

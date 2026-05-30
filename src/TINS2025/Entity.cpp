@@ -13,6 +13,7 @@ namespace TINS2025
 Entity::Entity()
    : sprite(nullptr)
    , model(nullptr)
+   , tmj_id(0)
    , type(TINS2025::Entity::ENTITY_TYPE_UNDEF)
    , animation_mode(TINS2025::Entity::ANIMATION_MODE_STANDING)
    , distance_to_player(9999.0f)

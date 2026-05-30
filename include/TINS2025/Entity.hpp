@@ -79,6 +79,7 @@ namespace TINS2025
    public:
       ALLEGRO_BITMAP* sprite;
       AllegroFlare::Model3D* model;
+      uint32_t tmj_id;
       uint32_t type;
       uint32_t animation_mode;
       float distance_to_player;
