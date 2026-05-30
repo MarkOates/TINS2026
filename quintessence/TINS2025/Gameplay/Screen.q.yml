@@ -890,9 +890,12 @@ methods:
 
       ALLEGRO_FONT *font = font_bin->auto_get("Quicksand-SemiBold.ttf -42");
       ALLEGRO_COLOR text_color = ALLEGRO_COLOR{1, 1, 1, 1};
+      ALLEGRO_COLOR fill_color = ALLEGRO_COLOR{0, 0, 0, 0.2};
+
+      al_draw_filled_rounded_rectangle(94, 380, 326, 696, 16, 16, fill_color);
 
       { // Draw the "Excitement meter"
-         int bar_x = 180;
+         int bar_x = 170;
          int bar_y = 1080/2;
          int bar_height = 8;
          int bar_margin = 4;
