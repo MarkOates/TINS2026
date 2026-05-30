@@ -1107,12 +1107,15 @@ void Screen::render_game_hud()
          if (entity.flags & TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER)
          {
             if (entity.distance_to_player >= max_distance) continue;
+            // Modify the value here
+            entity.distance_to_player = (float)(int)(entity.distance_to_player / 5);
             distance_entities.push_back(&entity);
          }
       }
       std::sort(distance_entities.begin(), distance_entities.end(),
          [](const TINS2025::Entity* a, const TINS2025::Entity* b)
          {
+            //return (int)(a->distance_to_player / 5) < (int)(b->distance_to_player / 5);
             return a->distance_to_player < b->distance_to_player;
          });
       float xx = 100 + 15;
@@ -2025,7 +2028,7 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
          //)}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
       )},
       { "get_notebook_paper", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
-            "A (em)Sheet of Notebook Paper(/em) increases your total number of blank lines by 6.",
+            "A (em)Sheet of Notebook Paper(/em) increases your total number of blank lines by 4.",
          }, { { "GoToNode", new AllegroFlare::DialogTree::NodeOptions::GoToNode("#collect_notebook_paper"), 0 } }
       )},
       { "character_intro_dialog", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {

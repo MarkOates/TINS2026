@@ -1,0 +1,19 @@
+properties:
+
+
+  - name: IDENTIFIER
+    type: std::string
+    init_with: '"TINS2026/Animal"'
+    exposed: true
+
+  - name: name
+    type: std::string
+    init_with: '"[unset-name]"'
+    exposed: true
+
+  - name: how_many_lines_needed
+    type: int
+    init_with: 3
+    exposed: true
+
+

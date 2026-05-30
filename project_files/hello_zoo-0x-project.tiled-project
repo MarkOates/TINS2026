@@ -10,5 +10,35 @@
     "properties": [
     ],
     "propertyTypes": [
+        {
+            "id": 1,
+            "name": "Enum0",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "NOTEBOOK_PAGE"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ff00fdff",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+            ],
+            "name": "NotebookPage",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        }
     ]
 }
