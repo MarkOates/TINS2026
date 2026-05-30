@@ -1063,10 +1063,12 @@ void Screen::render_game_hud()
       static std::vector<TINS2025::Entity*> distance_entities;
       distance_entities.reserve(32);
       distance_entities.clear();
+      float max_distance = 50;
       for (auto &entity : entities)
       {
          if (entity.flags & TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER)
          {
+            if (entity.distance_to_player >= max_distance) continue;
             distance_entities.push_back(&entity);
          }
       }
@@ -1081,15 +1083,25 @@ void Screen::render_game_hud()
       int line_height = al_get_font_line_height(font);
       int limit = 4;
       int count = 0;
-      for (auto &entity : distance_entities)
+      float y = yy + line * line_height;
+      if (distance_entities.empty())
       {
-         // entity name
-         float y = yy + line * line_height;
-         al_draw_text(font, text_color, xx, y, 0, entity->type_to_string().c_str());
-         al_draw_textf(font, text_color, xx+184, y, ALLEGRO_ALIGN_RIGHT, "%d", (int)entity->distance_to_player);
-         line++;
-         count++;
-         if (count > limit) break;
+         // TODO: test this
+         float lh = al_get_font_line_height(font);
+         al_draw_multiline_text(font, text_color, xx+91, y+58, 999, lh, ALLEGRO_ALIGN_CENTER, "NOTHING\nIN RANGE");
+      }
+      else
+      {
+         for (auto &entity : distance_entities)
+         {
+            // entity name
+            float y = yy + line * line_height;
+            al_draw_text(font, text_color, xx, y, 0, entity->type_to_string().c_str());
+            al_draw_textf(font, text_color, xx+184, y, ALLEGRO_ALIGN_RIGHT, "%d", (int)entity->distance_to_player);
+            line++;
+            count++;
+            if (count > limit) break;
+         }
       }
    }
 
