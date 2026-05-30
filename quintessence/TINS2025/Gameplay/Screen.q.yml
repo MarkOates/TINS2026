@@ -263,6 +263,7 @@ enums:
 
   - name: InputMode
     type: uint32_t
+    to_string: true
     enumerators:
       - INPUT_MODE_NONE
       - INPUT_MODE_PLAYING

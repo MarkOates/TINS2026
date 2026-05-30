@@ -142,6 +142,7 @@ namespace TINS2025
          bool get_flag__showing_plant_now() const;
          bool get_initialized() const;
          AllegroFlare::AssetStudio::Database* &get_asset_studio_database_ref();
+         static std::string to_string(InputMode value=InputMode::INPUT_MODE_NONE, bool throw_on_error=true);
          static std::string to_string(ProgressAndStateFlags value=ProgressAndStateFlags::NONE, bool throw_on_error=true);
          static ProgressAndStateFlags from_string(std::string value="[unset-value]", bool throw_on_error=true);
          void initialize();

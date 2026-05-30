@@ -45,8 +45,8 @@ R"({
     "y": -16.0
   },
   "progress_and_state_flags": [
-    1,
-    2
+    "flag_unlocked_giraffe",
+    "flag_unlocked_goat"
   ]
 })";
 
@@ -86,8 +86,8 @@ R"({
     "y": -16.0
   },
   "progress_and_state_flags": [
-    1,
-    2
+    "flag_unlocked_giraffe",
+    "flag_unlocked_goat"
   ]
 })";
 

@@ -300,6 +300,16 @@ AllegroFlare::AssetStudio::Database* &Screen::get_asset_studio_database_ref()
 }
 
 
+std::string Screen::to_string(InputMode value, bool throw_on_error)
+{
+   if (value == InputMode::INPUT_MODE_NONE) return "input_mode_none";
+   if (value == InputMode::INPUT_MODE_PLAYING) return "input_mode_playing";
+   if (value == InputMode::INPUT_MODE_EDITING) return "input_mode_editing";
+   // TODO: Implement "throw_on_error" argument
+   return "";
+}
+
+
 std::string Screen::to_string(ProgressAndStateFlags value, bool throw_on_error)
 {
    if (value == ProgressAndStateFlags::NONE) return "none";
