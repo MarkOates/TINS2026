@@ -431,23 +431,73 @@ void Screen::initialize()
 
 std::string Screen::build_full_progress_file_filename()
 {
-   return PROGRESS_FILE_FOLDER + progress_file_filename;
+   return data_folder_path + PROGRESS_FILE_FOLDER + progress_file_filename;
 }
 
 void Screen::load_progress_file()
 {
-   // HERE
    std::string full_progress_file_filename = build_full_progress_file_filename();
-   //std::filesystem::exists
-   //nlohmann::json j;
-   //j.parse(
-   //progress << 
+
+   if (!std::filesystem::exists(full_progress_file_filename))
+   {
+      std::cout << "NOTICE: A save file does not exist, and thus cannot be loaded." << std::endl;
+      return;
+   }
+
+   try
+   {
+      //if (!std::filesystem::exists(full_progress_file_filename))
+      //{
+         //throw std::runtime_error("The json file does not exist");
+      //}
+
+      std::string content = AllegroFlare::php::file_get_contents(full_progress_file_filename);
+
+      nlohmann::json j;
+      j.parse(content);
+
+      gameplay_progress = j;
+   }
+   catch (std::exception& e)
+   {
+      AllegroFlare::Logger::throw_error(
+         THIS_CLASS_AND_METHOD_NAME,
+         std::string("Could not load the progress json file... for reasons: ") + e.what()
+      );
+   }
+
+   // TODO: What to do after the content is loaded?
+
    return;
 }
 
 void Screen::save_progress_file()
 {
    std::string full_progress_file_filename = build_full_progress_file_filename();
+
+   try
+   {
+      //if (!std::filesystem::exists(full_progress_file_filename))
+      //{
+         //throw std::runtime_error("The json file does not exist");
+      //}
+
+      //std::string content = AllegroFlare::php::file_get_contents(full_progress_file_filename);
+
+      nlohmann::json j;
+      j = gameplay_progress;
+
+      AllegroFlare::php::file_put_contents(full_progress_file_filename, j.dump(2));
+   }
+   catch (std::exception& e)
+   {
+      AllegroFlare::Logger::throw_error(
+         THIS_CLASS_AND_METHOD_NAME,
+         std::string("Could not save the progress json file... for reasons: ") + e.what()
+      );
+   }
+
+
    return;
 }
 
@@ -1913,6 +1963,19 @@ void Screen::key_down_func(ALLEGRO_EVENT* ev)
    bool ctrl = ev->keyboard.modifiers & ALLEGRO_KEYMOD_COMMAND;
 
 
+
+   switch(ev->keyboard.keycode)
+   {
+      case ALLEGRO_KEY_9: {
+         save_progress_file();
+      } break;
+
+      case ALLEGRO_KEY_0: {
+         load_progress_file();
+      } break;
+   }
+
+
    if (in_test_or_development_mode)
    {
       if (ev->keyboard.keycode == ALLEGRO_KEY_BACKQUOTE)
@@ -1937,8 +2000,8 @@ void Screen::key_down_func(ALLEGRO_EVENT* ev)
       {
          switch (input_mode)
          {
-            case INPUT_MODE_PLAYING:
-            break;
+            case INPUT_MODE_PLAYING: {
+            } break;
 
             case INPUT_MODE_EDITING:
                view_motion_studio.on_key_down(ev);

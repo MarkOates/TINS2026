@@ -374,6 +374,9 @@
   "std/filesystem/exists": [
     "TINS2025/Gameplay/Screen"
   ],
+  "AllegroFlare/UsefulPHP": [
+    "TINS2025/Gameplay/Screen"
+  ],
   "Timeline/Keyframe": [
     "Timeline/Keyframe",
     "Timeline/Parameter"
