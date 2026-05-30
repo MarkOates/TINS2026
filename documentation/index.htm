@@ -1693,6 +1693,10 @@ table td
   <td class="property">float</td>
 </tr>
 <tr>
+  <td class="property">dip_to_black_color</td>
+  <td class="property">ALLEGRO_COLOR</td>
+</tr>
+<tr>
   <td class="property">dipping_to_black</td>
   <td class="property">bool</td>
 </tr>
@@ -1709,11 +1713,11 @@ table td
   <td class="property">bool</td>
 </tr>
 <tr>
-  <td class="property">lottie__num_notebook_pages</td>
+  <td class="property">lottie__num_notebook_pages__DEP</td>
   <td class="property">int</td>
 </tr>
 <tr>
-  <td class="property">lottie__num_lines_written</td>
+  <td class="property">lottie__num_lines_written__DEP</td>
   <td class="property">int</td>
 </tr>
 <tr>
@@ -1723,6 +1727,10 @@ table td
 <tr>
   <td class="property">initialized</td>
   <td class="property">bool</td>
+</tr>
+<tr>
+  <td class="property">LINES_PER_PAGE</td>
+  <td class="property">int</td>
 </tr>
 <tr>
   <td class="property">LOTTIE</td>
@@ -1814,6 +1822,10 @@ table td
 <tr>
   <td class="method">void</td>
   <td class="method"><b>update</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>white_flash</b>()</td>
 </tr>
 <tr>
   <td class="method">void</td>
@@ -1999,6 +2011,9 @@ table td
 </tr>
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;AllegroFlare::UsefulPHP&quot;, &quot;headers&quot;=&gt;[&quot;AllegroFlare/UsefulPHP.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;ALLEGRO_COLOR&quot;, &quot;headers&quot;=&gt;[&quot;allegro5/allegro.h&quot;]}</td>
 </tr>
     </table>
 </div>  </div>
@@ -2674,6 +2689,7 @@ table td
   ],
   "ALLEGRO_COLOR": [
     "DialControl/CameraInfoOverlay",
+    "TINS2025/Gameplay/Screen",
     "Timeline/ParameterView"
   ],
   "AllegroFlare/Vec3D": [

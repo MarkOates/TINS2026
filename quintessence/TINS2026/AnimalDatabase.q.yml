@@ -1,0 +1,24 @@
+properties:
+
+
+  - name: animals
+    type: std::vector<TINS2026::Animal>
+    init_with: '{}'
+
+
+methods:
+
+
+  - name: run
+    type: std::string
+    body: |
+      return "Hello World!";
+
+
+dependencies:
+
+
+  - symbol: TINS2026::Animal
+    headers: [ TINS2026/Animal.hpp ]
+
+

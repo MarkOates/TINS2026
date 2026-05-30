@@ -22,9 +22,7 @@ namespace TINS2025
          FLAG_COLLIDES_WITH_PLAYER = 0x0004,
          FLAG_COLLIDES_WITH_TILEMAP = 0x0008,
          FLAG_TRACKS_DISTANCE_TO_PLAYER = 0x0010,
-         FLAG_IS_COMMON_ANIMAL = 0x0020,
-         FLAG_IS_UNCOMMON_ANIMAL = 0x0040,
-         FLAG_IS_RARE_ANIMAL = 0x0080,
+         FLAG_COLLECTED = 0x0020,
       };
       enum Type
       {

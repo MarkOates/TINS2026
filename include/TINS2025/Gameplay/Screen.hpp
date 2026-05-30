@@ -33,6 +33,7 @@ namespace TINS2025
       class Screen : public AllegroFlare::Screens::Gameplay
       {
       public:
+         static constexpr int LINES_PER_PAGE = 4;
          static constexpr char* LOTTIE = (char*)"Lottie";
          static constexpr char* FRIEND_1 = (char*)"Frank";
          static constexpr char* FRIEND_2 = (char*)"Ditto";
@@ -87,12 +88,13 @@ namespace TINS2025
          bool QUEST__friend_3_requirements_asked;
          int current_chapter_number;
          float dip_to_black_overlay_opacity;
+         ALLEGRO_COLOR dip_to_black_color;
          bool dipping_to_black;
          bool in_test_or_development_mode;
          bool camera_is_tracking_player;
          bool flag__showing_plant_now;
-         int lottie__num_notebook_pages;
-         int lottie__num_lines_written;
+         int lottie__num_notebook_pages__DEP;
+         int lottie__num_lines_written__DEP;
          int lottie__excitement__DEP;
          bool initialized;
 
@@ -130,6 +132,7 @@ namespace TINS2025
          bool get_QUEST__friend_3_requirements_asked() const;
          int get_current_chapter_number() const;
          float get_dip_to_black_overlay_opacity() const;
+         ALLEGRO_COLOR get_dip_to_black_color() const;
          bool get_dipping_to_black() const;
          bool get_in_test_or_development_mode() const;
          bool get_camera_is_tracking_player() const;
@@ -153,6 +156,7 @@ namespace TINS2025
          virtual void on_activate() override;
          virtual void on_deactivate() override;
          void update();
+         void white_flash();
          void render_game_hud();
          void render();
          virtual void game_event_func(AllegroFlare::GameEvent* game_event=nullptr) override;

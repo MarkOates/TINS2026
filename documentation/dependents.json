@@ -48,6 +48,7 @@
   ],
   "ALLEGRO_COLOR": [
     "DialControl/CameraInfoOverlay",
+    "TINS2025/Gameplay/Screen",
     "Timeline/ParameterView"
   ],
   "AllegroFlare/Vec3D": [

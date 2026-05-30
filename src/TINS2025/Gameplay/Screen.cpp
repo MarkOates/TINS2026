@@ -64,12 +64,13 @@ Screen::Screen()
    , QUEST__friend_3_requirements_asked(false)
    , current_chapter_number(1)
    , dip_to_black_overlay_opacity(0.0f)
+   , dip_to_black_color(ALLEGRO_COLOR{0, 0, 0, 1})
    , dipping_to_black(false)
    , in_test_or_development_mode(true)
    , camera_is_tracking_player(true)
    , flag__showing_plant_now(false)
-   , lottie__num_notebook_pages(0)
-   , lottie__num_lines_written(0)
+   , lottie__num_notebook_pages__DEP(0)
+   , lottie__num_lines_written__DEP(0)
    , lottie__excitement__DEP(0)
    , initialized(false)
 {
@@ -247,6 +248,12 @@ int Screen::get_current_chapter_number() const
 float Screen::get_dip_to_black_overlay_opacity() const
 {
    return dip_to_black_overlay_opacity;
+}
+
+
+ALLEGRO_COLOR Screen::get_dip_to_black_color() const
+{
+   return dip_to_black_color;
 }
 
 
@@ -792,6 +799,8 @@ void Screen::on_deactivate()
 
 void Screen::update()
 {
+   auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
+
    if (!get_gameplay_suspended())
    {
       // Observe aabb2d <-> tile steps
@@ -844,7 +853,8 @@ void Screen::update()
             case TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE: {
                entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
                entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-               lottie__num_notebook_pages++;
+               entity.flags |= TINS2025::Entity::FLAG_COLLECTED;
+               lottie__total_lines_available += LINES_PER_PAGE;
                event_emitter->emit_activate_dialog_node_by_name_event("#collect_notebook_paper");
             } break;
 
@@ -1105,8 +1115,19 @@ void Screen::update()
    return;
 }
 
+void Screen::white_flash()
+{
+   dip_to_black_overlay_opacity = 1.0;
+   dip_to_black_color = ALLEGRO_COLOR{1, 1, 1, 1};
+   dipping_to_black = false;
+   return;
+}
+
 void Screen::render_game_hud()
 {
+   auto &lottie__num_lines_written = gameplay_progress.player_lines_filled;
+   auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
+
    AllegroFlare::Camera2D hud_camera;
    hud_camera.setup_dimensional_projection(al_get_target_bitmap());
    al_clear_depth_buffer(1);
@@ -1184,7 +1205,7 @@ void Screen::render_game_hud()
             //bar.set_max(20);
             //bar.set_value(10);
             bar.set_max(20);
-            bar.set_value((lottie__num_lines_written * (lottie__num_notebook_pages * 6) / 100.0) * bar.get_max());
+            bar.set_value((lottie__num_lines_written * (lottie__total_lines_available) / 100.0) * bar.get_max());
             // NOTE: These values are switched around because 
             bar.set_bar_width(bar_height);
             bar.set_bar_height(bar_width);
@@ -1261,7 +1282,8 @@ void Screen::render_game_hud()
    { // DEVELOPMENT
       float l=0;
       float lh = 40;
-      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_pages: %d", lottie__num_notebook_pages);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_pages: %d", lottie__total_lines_available / LINES_PER_PAGE);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_total_lines: %d", lottie__total_lines_available);
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_lines_written: %d", lottie__num_lines_written);
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %d", lottie__excitement);
    }
@@ -1376,7 +1398,12 @@ void Screen::render()
    {
       view_motion_studio.get_camera_studio_ref().setup_projection_on_hud_camera();
       float o = dip_to_black_overlay_opacity;
-      al_draw_filled_rectangle(0, 0, 1920, 1080, ALLEGRO_COLOR{0, 0, 0, o});
+      ALLEGRO_COLOR c = dip_to_black_color;
+      c.r *= o;
+      c.g *= o;
+      c.b *= o;
+      c.a = o;
+      al_draw_filled_rectangle(0, 0, 1920, 1080, c);
    }
 
 
@@ -1401,6 +1428,7 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
       throw std::runtime_error("[TINS2025::Gameplay::Screen::game_event_func]: error: guard \"game_event\" not met");
    }
+   auto &lottie__num_lines_written = gameplay_progress.player_lines_filled;
    //if (scripting) scripting->game_event_func(game_event);
 
    //if (game_event->is_type("trigger_central_core_cinematic"))
@@ -1898,7 +1926,7 @@ void Screen::display_switch_in_func()
 
    if (in_test_or_development_mode)
    {
-      refresh_environment_and_world();
+      refresh_environment_and_world(true);
    }
 
    return;
@@ -1972,10 +2000,14 @@ void Screen::key_down_func(ALLEGRO_EVENT* ev)
    {
       case ALLEGRO_KEY_9: {
          save_progress_file();
+         white_flash();
       } break;
 
       case ALLEGRO_KEY_0: {
          load_progress_file();
+         refresh_environment_and_world();
+         white_flash();
+         // TODO: White flash?
       } break;
    }
 
