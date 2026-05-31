@@ -781,9 +781,35 @@ void Screen::load_up_world()
          //player_entity->aabb2d.set_velocity_x(value.x * 0.01625 * 3);
          //player_entity->aabb2d.set_velocity_y(value.y * 0.01625 * 3);
 
-         player_entity->aabb2d.set_velocity_x(value.x * 0.01625 * 3.5);
-         player_entity->aabb2d.set_velocity_y(value.y * 0.01625 * 3.5);
-         //player_entity->position.z += value.y * 0.02;
+
+
+         bool relative_to_camera = true;
+         if (relative_to_camera)
+         {
+            // Relative to camera:
+            AllegroFlare::Camera3D &camera = view_motion_studio.get_camera_studio_ref().get_live_camera_ref();
+            //float angle = camera.spin;
+            //float x_prime = value.x * std::cos(angle) - value.y * std::sin(angle);
+            //float y_prime = value.x * std::sin(angle) + value.y * std::cos(angle);
+
+            // Convert unit spin (0.0 to 1.0) to radians (0.0 to 2*PI)
+            // Using a constant for TAU (2 * PI)
+            constexpr float TAU = 6.28318530718f; 
+            float angle_in_radians = camera.spin * TAU;
+
+            // Apply rotation matrix
+            float x_prime = value.x * std::cos(angle_in_radians) - value.y * std::sin(angle_in_radians);
+            float y_prime = value.x * std::sin(angle_in_radians) + value.y * std::cos(angle_in_radians);
+
+            player_entity->aabb2d.set_velocity_x(x_prime * 0.05); // Values?
+            player_entity->aabb2d.set_velocity_y(y_prime * 0.05);
+         }
+         else
+         {
+            player_entity->aabb2d.set_velocity_x(value.x * 0.01625 * 3.5);
+            player_entity->aabb2d.set_velocity_y(value.y * 0.01625 * 3.5);
+         }
+        
 
          float threshold = 0.1f; // example threshold
          if (std::abs(value.x) > threshold || std::abs(value.y) > threshold)
