@@ -1630,6 +1630,10 @@ table td
   <td class="property">AllegroFlare::CollisionObservers::Simple</td>
 </tr>
 <tr>
+  <td class="property">player_is_accumulating_hype</td>
+  <td class="property">bool</td>
+</tr>
+<tr>
   <td class="property">total_cumulative_hype_aura</td>
   <td class="property">double</td>
 </tr>
@@ -1835,6 +1839,10 @@ table td
 <tr>
   <td class="method">void</td>
   <td class="method"><b>mark_entity_collected</b>(TINS2025::Entity* entity=nullptr)</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>time_step_player_excitement</b>(double time_step=1.0/60.0)</td>
 </tr>
 <tr>
   <td class="method">void</td>
@@ -2162,7 +2170,7 @@ table td
 </tr>
 <tr>
   <td class="property">player_excitement</td>
-  <td class="property">int</td>
+  <td class="property">double</td>
 </tr>
 <tr>
   <td class="property">player_line_capacity</td>

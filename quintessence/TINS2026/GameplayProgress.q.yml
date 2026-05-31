@@ -12,8 +12,8 @@ properties:
     exposed: true
 
   - name: player_excitement
-    type: int
-    init_with: 0
+    type: double
+    init_with: 0.0
     exposed: true
 
   - name: player_line_capacity

@@ -48,6 +48,7 @@ Screen::Screen()
    , current_level_identifier("[unset-current_level]")
    , current_level(nullptr)
    , animal_aura_collision_observer({})
+   , player_is_accumulating_hype(true)
    , total_cumulative_hype_aura(0.0)
    , collision_observer({})
    , collision_tile_map({})
@@ -850,6 +851,29 @@ void Screen::mark_entity_collected(TINS2025::Entity* entity)
    return;
 }
 
+void Screen::time_step_player_excitement(double time_step)
+{
+   static int MAX_ALLOWED_HYPE = 100;
+
+   if (!player_is_accumulating_hype) return;
+   if (gameplay_progress.player_excitement >= MAX_ALLOWED_HYPE) // Player is already overstimulated
+   {
+      gameplay_progress.player_excitement = MAX_ALLOWED_HYPE;
+      return;
+   }
+
+   // Increment our hype
+   gameplay_progress.player_excitement += total_cumulative_hype_aura * time_step;
+   if (gameplay_progress.player_excitement >= MAX_ALLOWED_HYPE)
+   {
+      gameplay_progress.player_excitement = MAX_ALLOWED_HYPE;
+      //event_emitter->emit_game_event(AllegroFlare::GameEvent("player_became_overhyped"));
+      event_emitter->emit_activate_dialog_node_by_name_event("became_overhyped"); // DEVELOPMENT, for now
+   }
+
+   return;
+}
+
 void Screen::update()
 {
    auto &lottie__total_lines_available = gameplay_progress.player_line_capacity;
@@ -1173,6 +1197,12 @@ void Screen::update()
             total_cumulative_hype_aura += HARD_CODED_AURA_HYPE;
          }
       }
+
+
+      //
+      // Update the hype meter
+      //
+      time_step_player_excitement(1.0/60); // NOTE: HACK: hard-coded step rate
    }
 
    // Update the view motion
@@ -1229,7 +1259,7 @@ void Screen::render_game_hud()
    ALLEGRO_COLOR text_color = ALLEGRO_COLOR{1, 1, 1, 1};
    ALLEGRO_COLOR fill_color = ALLEGRO_COLOR{0, 0, 0, 0.2};
 
-   int &lottie__excitement = gameplay_progress.player_excitement;
+   double &lottie__excitement = gameplay_progress.player_excitement;
 
 
    //- name: lottie__num_notebook_pages
@@ -1535,9 +1565,15 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
       else { } // Not found
    }
+   //else if (game_event->is_type("player_became_overhyped"))
+   //{
+      // TODO: Consider what consequences are due here
+      // TODO: Note that there could be a race condition
+      //event_emitter->emit_activate_dialog_node_by_name_event("became_overhyped");
+   //}
    else if (game_event->is_type("document_giraffe"))
    {
-      int &lottie__excitement = gameplay_progress.player_excitement;
+      double &lottie__excitement = gameplay_progress.player_excitement;
       // TODO: Can document? if NOT, then output:
       //        "oh no! I don't have enough lines of paper! I'll need to find a sheet! but I'm soo excited!"
       // OTHERWISE:
@@ -2698,6 +2734,22 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             },
             {
                { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 }
+            }
+         )
+      },
+      { "became_overhyped", new AllegroFlare::DialogTree::Nodes::Interparsable(
+            LOTTIE,
+            {
+               "Aaayeeee!!!!",
+               "AAGH!",
+               "This is all too overstimulating!",
+               "*pfoo* *pfoo* *pfoo*",
+               "I'm getting overwhelmed with excitement. I, I need to take a break."
+               //"Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
+            },
+            {
+               { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } // DEVELOPMENT
+               //{ "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
             }
          )
       },

@@ -73,6 +73,7 @@ namespace TINS2025
          std::string current_level_identifier;
          TINS2025::Gameplay::Level* current_level;
          AllegroFlare::CollisionObservers::Simple animal_aura_collision_observer;
+         bool player_is_accumulating_hype;
          double total_cumulative_hype_aura;
          AllegroFlare::CollisionObservers::Simple collision_observer;
          AllegroFlare::TileMaps::TileMap<int> collision_tile_map;
@@ -162,6 +163,7 @@ namespace TINS2025
          virtual void on_activate() override;
          virtual void on_deactivate() override;
          void mark_entity_collected(TINS2025::Entity* entity=nullptr);
+         void time_step_player_excitement(double time_step=1.0/60.0);
          void update();
          void white_flash();
          void render_game_hud();
