@@ -1461,6 +1461,7 @@ methods:
          }
       );
 
+      AllegroFlare::Camera3D &camera = view_motion_studio.get_camera_studio_ref().get_live_camera_ref();
 
       AllegroFlare::Placement3D placement;
       //for (auto &entity : entities)
@@ -1508,7 +1509,54 @@ methods:
          placement.position.z = entity_center_y; //entity.aabb2d.get_y(); // + entity.aabb2d.get_h() * 0.5;
          placement.position.y = animation_y_offset + item_y_offset;
          placement.scale.x = 1.0; // + entity.aabb2d.get_w() * 0.5f;
-         placement.scale.y = 1.25; // + entity.aabb2d.get_w() * 0.5f;
+         placement.scale.y = 1.0; // + entity.aabb2d.get_w() * 0.5f;
+
+
+
+
+
+
+
+         // --- BILLBOARDING LOGIC START (Gemini, after reviwing my code from another project) ---
+         
+         // TODO: Swap these booleans with your actual entity flag checks when ready
+         bool renders_with_billboarding = true; // e.g., (entity.flags & TINS2025::Entity::FLAG_RENDERS_WITH_BILLBOARDING)
+         bool renders_with_y_only = false;      // e.g., (entity.flags & TINS2025::Entity::FLAG_RENDERS_WITH_BILLBOARDING_Y_ONLY)
+
+         // Reset rotations to default (Crucial because 'placement' is reused!)
+         placement.rotation.x = 0;
+         placement.rotation.y = 0;
+         placement.rotation.z = 0;
+
+         if (renders_with_billboarding || renders_with_y_only)
+         {
+            placement.rotation_order = AllegroFlare::Placement3D::RotationOrder::XZY;
+
+            // Note: If your older Camera3D doesn't have the `_in_unit_values` booleans, 
+            // you can just remove the ternary checks and use `-camera.tilt`, `-camera.spin`, etc.
+            float cam_rot_x = -(camera.tilt_in_unit_values ? camera.tilt : camera.tilt / AllegroFlare::TAU);
+            float cam_rot_y = -(camera.spin_in_unit_values ? camera.spin : camera.spin / AllegroFlare::TAU);
+            float cam_rot_z = -(camera.roll_in_unit_values ? camera.roll : camera.roll / AllegroFlare::TAU);
+
+            if (renders_with_y_only)
+            {
+               placement.rotation.y = cam_rot_y;
+            }
+            else
+            {
+               placement.rotation.x = cam_rot_x;
+               placement.rotation.y = cam_rot_y;
+               placement.rotation.z = cam_rot_z;
+            }
+         }
+         // --- BILLBOARDING LOGIC END ---
+
+
+
+
+
+
+
          //placement.size.x = entity.aabb2d.get_w(); // + entity.aabb2d.get_w() * 0.5f;
          //placement.size.z = entity.aabb2d.get_h(); // + entity.aabb2d.get_h() * 0.5;
          /*
