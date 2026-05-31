@@ -89,7 +89,7 @@
         "x": 0.0,
         "y": 0.0
       },
-      "spin": 0.125,
+      "spin": -0.125,
       "spin_in_unit_values": true,
       "stepout": {
         "x": 0.0,

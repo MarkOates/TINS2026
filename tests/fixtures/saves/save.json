@@ -1,15 +1,18 @@
 {
   "documented_entity_types": [
-    "entity_type_giraffe",
     "entity_type_goat"
   ],
-  "items_collected_tmj_ids": [],
-  "player_excitement": 6.249999999999989,
-  "player_line_capacity": 0,
-  "player_lines_filled": 6,
+  "items_collected_tmj_ids": [
+    71,
+    81,
+    89
+  ],
+  "player_excitement": 100.0,
+  "player_line_capacity": 12,
+  "player_lines_filled": 3,
   "player_location": {
-    "x": 32.27250671386719,
-    "y": 16.232521057128906
+    "x": 1.976874828338623,
+    "y": 15.470010757446289
   },
   "progress_and_state_flags": []
 }
