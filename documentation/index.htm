@@ -1626,6 +1626,14 @@ table td
   <td class="property">TINS2025::Gameplay::Level*</td>
 </tr>
 <tr>
+  <td class="property">animal_aura_collision_observer</td>
+  <td class="property">AllegroFlare::CollisionObservers::Simple</td>
+</tr>
+<tr>
+  <td class="property">total_cumulative_hype_aura</td>
+  <td class="property">double</td>
+</tr>
+<tr>
   <td class="property">collision_observer</td>
   <td class="property">AllegroFlare::CollisionObservers::Simple</td>
 </tr>
@@ -2060,6 +2068,10 @@ table td
   <td class="property">std::string</td>
 </tr>
 <tr>
+  <td class="property">entity_type</td>
+  <td class="property">TINS2025::Entity::Type</td>
+</tr>
+<tr>
   <td class="property">interesting_facts_dialog_pages</td>
   <td class="property">std::vector&lt;std::string&gt;</td>
 </tr>
@@ -2071,18 +2083,25 @@ table td
   <td class="property">hype_rate_per_sec</td>
   <td class="property">double</td>
 </tr>
+<tr>
+  <td class="property">hype_aura_radius</td>
+  <td class="property">double</td>
+</tr>
     </table>
 </div>    <h3>Methods</h3>
 <div class="property-box methods">     <table>
 <tr>
   <td class="method">TINS2026::Animal</td>
-  <td class="method"><b>build</b>(std::string identifier=&quot;[unset-identifier]&quot;, std::string name=&quot;[unset-name]&quot;, std::vector&lt;std::string&gt; interesting_facts_dialog_pages={}, int how_many_lines_needed_for_notetaking=3, double hype_rate_per_sec=15.0)</td>
+  <td class="method"><b>build</b>(std::string identifier=&quot;[unset-identifier]&quot;, std::string name=&quot;[unset-name]&quot;, TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF, std::vector&lt;std::string&gt; interesting_facts_dialog_pages={}, int how_many_lines_needed_for_notetaking=3, double hype_rate_per_sec=15.0, double hype_aura_radius=5.0)</td>
 </tr>
     </table>
 </div>    <h3>Dependencies</h3>
 <div class="property-box dependencies">     <table>
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::Animal&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/Animal.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2025::Entity::Type&quot;, &quot;headers&quot;=&gt;[&quot;TINS2025/Entity.hpp&quot;]}</td>
 </tr>
     </table>
 </div>  </div>
@@ -2097,20 +2116,30 @@ table td
 <div class="property-box properties">     <table>
 <tr>
   <td class="property">animals</td>
-  <td class="property">std::vector&lt;TINS2026::Animal&gt;</td>
+  <td class="property">std::map&lt;TINS2025::Entity::Type, TINS2026::Animal&gt;</td>
 </tr>
     </table>
 </div>    <h3>Methods</h3>
 <div class="property-box methods">     <table>
 <tr>
-  <td class="method">std::vector&lt;TINS2026::Animal&gt;</td>
+  <td class="method">const TINS2026::Animal&amp;</td>
+  <td class="method"><b>get_record_by_entity_type</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::map&lt;TINS2025::Entity::Type, TINS2026::Animal&gt;</td>
   <td class="method"><b>build_animal_database</b>()</td>
 </tr>
     </table>
 </div>    <h3>Dependencies</h3>
 <div class="property-box dependencies">     <table>
 <tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;AllegroFlare::Logger&quot;, &quot;headers&quot;=&gt;[&quot;AllegroFlare/Logger.hpp&quot;]}</td>
+</tr>
+<tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::Animal&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/Animal.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2025::Entity::Type&quot;, &quot;headers&quot;=&gt;[&quot;TINS2025/Entity.hpp&quot;]}</td>
 </tr>
     </table>
 </div>  </div>
@@ -2992,7 +3021,8 @@ table td
     "Timeline/MotionStudio"
   ],
   "AllegroFlare/Logger": [
-    "DialControl/ViewMotionStudio"
+    "DialControl/ViewMotionStudio",
+    "TINS2026/AnimalDatabase"
   ],
   "AllegroFlare/php": [
     "DialControl/ViewMotionStudio",
@@ -3090,6 +3120,10 @@ table td
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [
+    "TINS2026/Animal",
+    "TINS2026/AnimalDatabase"
+  ],
+  "TINS2025/Entity/Type": [
     "TINS2026/Animal",
     "TINS2026/AnimalDatabase"
   ],

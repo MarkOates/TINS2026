@@ -281,7 +281,8 @@
     "Timeline/MotionStudio"
   ],
   "AllegroFlare/Logger": [
-    "DialControl/ViewMotionStudio"
+    "DialControl/ViewMotionStudio",
+    "TINS2026/AnimalDatabase"
   ],
   "AllegroFlare/php": [
     "DialControl/ViewMotionStudio",
@@ -379,6 +380,10 @@
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [
+    "TINS2026/Animal",
+    "TINS2026/AnimalDatabase"
+  ],
+  "TINS2025/Entity/Type": [
     "TINS2026/Animal",
     "TINS2026/AnimalDatabase"
   ],

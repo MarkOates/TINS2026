@@ -72,6 +72,8 @@ namespace TINS2025
          bool hide_view_motion_studio_hud;
          std::string current_level_identifier;
          TINS2025::Gameplay::Level* current_level;
+         AllegroFlare::CollisionObservers::Simple animal_aura_collision_observer;
+         double total_cumulative_hype_aura;
          AllegroFlare::CollisionObservers::Simple collision_observer;
          AllegroFlare::TileMaps::TileMap<int> collision_tile_map;
          AllegroFlare::Placement3D environment_overlay_placement;

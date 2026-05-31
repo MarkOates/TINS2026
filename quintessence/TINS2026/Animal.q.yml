@@ -11,6 +11,11 @@ properties:
     init_with: '"[unset-name]"'
     exposed: true
 
+  - name: entity_type
+    type: TINS2025::Entity::Type
+    init_with: TINS2025::Entity::Type::ENTITY_TYPE_UNDEF
+    exposed: true
+
   - name: interesting_facts_dialog_pages
     type: std::vector<std::string>
     init_with: '{}'
@@ -24,6 +29,11 @@ properties:
   - name: hype_rate_per_sec
     type: double
     init_with: 15.0
+    exposed: true
+
+  - name: hype_aura_radius
+    type: double
+    init_with: 5.0
     exposed: true
 
 
@@ -40,6 +50,9 @@ methods:
       - name: name
         type: std::string
         default_argument: '"[unset-name]"'
+      - name: entity_type
+        type: TINS2025::Entity::Type
+        default_argument: TINS2025::Entity::Type::ENTITY_TYPE_UNDEF
       - name: interesting_facts_dialog_pages
         type: std::vector<std::string>
         default_argument: '{}'
@@ -49,13 +62,18 @@ methods:
       - name: hype_rate_per_sec
         type: double
         default_argument: 15.0
+      - name: hype_aura_radius
+        type: double
+        default_argument: 5.0
     body: |
       TINS2026::Animal result;
       result.identifier = identifier;
-      result.name= name;
+      result.name = name;
+      result.entity_type = entity_type;
       result.interesting_facts_dialog_pages = interesting_facts_dialog_pages;
       result.how_many_lines_needed_for_notetaking = how_many_lines_needed_for_notetaking;
       result.hype_rate_per_sec = hype_rate_per_sec;
+      result.hype_aura_radius = hype_aura_radius;
       return result;
 
 
@@ -64,5 +82,7 @@ dependencies:
 
   - symbol: TINS2026::Animal
     headers: [ TINS2026/Animal.hpp ]
+  - symbol: TINS2025::Entity::Type
+    headers: [ TINS2025/Entity.hpp ]
 
 

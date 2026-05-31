@@ -47,6 +47,8 @@ Screen::Screen()
    , hide_view_motion_studio_hud(false)
    , current_level_identifier("[unset-current_level]")
    , current_level(nullptr)
+   , animal_aura_collision_observer({})
+   , total_cumulative_hype_aura(0.0)
    , collision_observer({})
    , collision_tile_map({})
    , environment_overlay_placement()
@@ -513,7 +515,7 @@ void Screen::save_progress_file()
       //}
    //}
 
-   gameplay_progress.player_location.y = player_entity->aabb2d.get_y(); // HERE
+   //gameplay_progress.player_location.y = player_entity->aabb2d.get_y();
 
 
    std::string full_progress_file_filename = build_full_progress_file_filename();
@@ -626,6 +628,7 @@ void Screen::gameplay_resume_func()
 void Screen::load_up_world()
 {
    collision_observer.clear();
+   animal_aura_collision_observer.clear();
 
 
    // Load up the world model
@@ -849,7 +852,7 @@ void Screen::mark_entity_collected(TINS2025::Entity* entity)
 
 void Screen::update()
 {
-   auto &lottie__total_lines_available = gameplay_progress.player_line_capacity; // HERE
+   auto &lottie__total_lines_available = gameplay_progress.player_line_capacity;
 
    if (!get_gameplay_suspended())
    {
@@ -1131,12 +1134,45 @@ void Screen::update()
          }
       }
 
-      // Update entity animations
-      //for (auto &entity : entities)
-      //{
-          //float bounce_counter = sin(time_now*34)*0.5 + 0.5;
-          //get_bitmap_placement_ref().anchor = { 0, -(bounce_counter * 3.0f) };
-      //}
+
+      //
+      // Update the animal_aura_collision_observer
+      //
+      {
+         total_cumulative_hype_aura = 0.0;
+
+         animal_aura_collision_observer.set_subject(player_entity);
+         std::set<void*> collidables;
+         for (auto &entity : entities)
+         {
+            // If it does not track distance to player, don't include
+            if (!(entity.flags & TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER)) continue;
+
+            // If it does not emit a hype aura, don't include
+            if (!(entity.flags & TINS2025::Entity::FLAG_EMITS_HYPE_AURA)) continue;
+
+            // If it's already been documented, don't include
+            if (entity.flags & TINS2025::Entity::FLAG_DOCUMENTED) continue;
+
+            collidables.insert((void*)&entity);
+         }
+         animal_aura_collision_observer.set_collidables(collidables);
+         animal_aura_collision_observer.set_on_test_collide([](void* subject_v, void* collidable_v) -> bool {
+            TINS2025::Entity &subject = *static_cast<TINS2025::Entity*>(subject_v);
+            TINS2025::Entity &collidable = *static_cast<TINS2025::Entity*>(collidable_v);
+
+            int HARD_CODED_AURA_RADIUS = 5; // DEVELOPMENT, TODO: Use value from database for this animal
+            return (collidable.distance_to_player <= HARD_CODED_AURA_RADIUS);
+         });
+
+         animal_aura_collision_observer.process();
+
+         for (auto &currently_colliding_animal : animal_aura_collision_observer.get_currently_colliding())
+         {
+            int HARD_CODED_AURA_HYPE = 5; // DEVELOPMENT, TODO: Use value from database for this animal
+            total_cumulative_hype_aura += HARD_CODED_AURA_HYPE;
+         }
+      }
    }
 
    // Update the view motion
@@ -1333,7 +1369,7 @@ void Screen::render_game_hud()
    }
 
 
-   if (false)
+   if (true)
    { // DEVELOPMENT
       float l=0;
       float lh = 40;
@@ -1341,6 +1377,7 @@ void Screen::render_game_hud()
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_total_lines: %d", lottie__total_lines_available);
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_lines_written: %d", lottie__num_lines_written);
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %d", lottie__excitement);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "total_hype_aura: %f.2", total_cumulative_hype_aura);
    }
 
 
@@ -1719,6 +1756,7 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-giraffe.obj");
          e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+         e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
       }
       else if (object->name == "goat")
       {
@@ -1726,6 +1764,7 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-goat.obj");
          e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+         e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
       }
       else if (object->name == "leopard")
       {
@@ -1733,6 +1772,7 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-leopard.obj");
          e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+         e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
       }
       else if (object->name == "tiger")
       {
@@ -1740,6 +1780,7 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-tiger.obj");
          e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+         e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
       }
       else if (object->name == "zebrah")
       {
@@ -1747,13 +1788,12 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
          e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
          e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+         e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
       }
       else if (object->name == "notebook_page")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
          e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
-         //e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
-         //e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
       }
       else if (object->name == "friend_2")
       {
