@@ -19,6 +19,7 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
    gameplay_progress.player_excitement = 42;
    gameplay_progress.player_line_capacity = 64;
    gameplay_progress.player_lines_filled = 28;
+   gameplay_progress.player_freakouts = 4;
    gameplay_progress.progress_and_state_flags = {
      TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1,
      TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2
@@ -46,6 +47,7 @@ R"({
     32
   ],
   "player_excitement": 42.0,
+  "player_freakouts": 4,
   "player_line_capacity": 64,
   "player_lines_filled": 28,
   "player_location": {
@@ -70,6 +72,7 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
    gameplay_progress.items_collected_tmj_ids = { 4, 32, 8 };
    gameplay_progress.player_location = AllegroFlare::Vec2D(32, -16);
    gameplay_progress.player_excitement = 42.125;
+   gameplay_progress.player_freakouts = 4;
    gameplay_progress.player_line_capacity = 64;
    gameplay_progress.player_lines_filled = 28;
    gameplay_progress.progress_and_state_flags = {
@@ -97,6 +100,7 @@ R"({
   "player_line_capacity": 64,
   "player_lines_filled": 28,
   "player_excitement": 42.125,
+  "player_freakouts": 4,
   "player_location": {
     "x": 32.0,
     "y": -16.0

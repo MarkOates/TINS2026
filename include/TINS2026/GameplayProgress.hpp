@@ -23,6 +23,7 @@ namespace TINS2026
       int player_lines_filled;
       std::set<uint32_t> documented_entity_types;
       std::set<uint32_t> progress_and_state_flags;
+      int player_freakouts;
       GameplayProgress();
       ~GameplayProgress();
 

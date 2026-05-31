@@ -36,6 +36,11 @@ properties:
     init_with: '{}'
     exposed: true
 
+  - name: player_freakouts
+    type: int
+    init_with: 0
+    exposed: true
+
 
 dependencies:
 

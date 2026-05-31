@@ -71,6 +71,7 @@ Screen::Screen()
    , QUEST__friend_3_requirements_asked(false)
    , current_chapter_number(1)
    , dip_to_black_overlay_opacity(0.0f)
+   , dip_to_black_rate(0.02f)
    , dip_to_black_color(ALLEGRO_COLOR{0, 0, 0, 1})
    , dipping_to_black(false)
    , in_test_or_development_mode(true)
@@ -261,6 +262,12 @@ int Screen::get_current_chapter_number() const
 float Screen::get_dip_to_black_overlay_opacity() const
 {
    return dip_to_black_overlay_opacity;
+}
+
+
+float Screen::get_dip_to_black_rate() const
+{
+   return dip_to_black_rate;
 }
 
 
@@ -1263,7 +1270,7 @@ void Screen::update()
    // Update dipping to black
    if (dipping_to_black)
    {
-      dip_to_black_overlay_opacity += 0.02;
+      dip_to_black_overlay_opacity += dip_to_black_rate;
       if (dip_to_black_overlay_opacity > 1.0)
       {
          dip_to_black_overlay_opacity = 1.0f;
@@ -1273,7 +1280,7 @@ void Screen::update()
    }
    else
    {
-      dip_to_black_overlay_opacity -= 0.02;
+      dip_to_black_overlay_opacity -= dip_to_black_rate;
       if (dip_to_black_overlay_opacity < 0.0) dip_to_black_overlay_opacity = 0.0f;
    }
 
@@ -1283,8 +1290,18 @@ void Screen::update()
 
 void Screen::white_flash()
 {
+   dip_to_black_rate = 0.03125;
    dip_to_black_overlay_opacity = 1.0;
    dip_to_black_color = ALLEGRO_COLOR{1, 1, 1, 1};
+   dipping_to_black = false;
+   return;
+}
+
+void Screen::black_dip_out()
+{
+   dip_to_black_rate = 0.015625;
+   dip_to_black_overlay_opacity = 1.0;
+   dip_to_black_color = ALLEGRO_COLOR{0, 0, 0, 1};
    dipping_to_black = false;
    return;
 }
@@ -1587,6 +1604,28 @@ void Screen::render()
    return;
 }
 
+TINS2025::Entity* Screen::find_last_activated_safe_point()
+{
+   TINS2025::Entity* result = nullptr;
+   for (auto &entity : entities)
+   {
+      if (entity.type == TINS2025::Entity::ENTITY_TYPE_LOCATION_POINT) return &entity;
+   }
+   AllegroFlare::Logger::throw_error(
+      THIS_CLASS_AND_METHOD_NAME,
+      "Could not find any location point."
+   );
+   return nullptr;
+}
+
+void Screen::move_player_to_last_safe_point()
+{
+   TINS2025::Entity* safe_point = find_last_activated_safe_point();
+   player_entity->aabb2d.set_x(safe_point->aabb2d.get_x());
+   player_entity->aabb2d.set_y(safe_point->aabb2d.get_y());
+   return;
+}
+
 void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
 {
    if (!(game_event))
@@ -1718,6 +1757,15 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       //view_motion_studio.get_motion_studio_ref().set_playback_speed(true);
       //amera_is_tracking_player = false;
    }
+   else if (game_event->is_type("restart_to_safe_point"))
+   {
+      black_dip_out();
+      move_player_to_last_safe_point();
+      gameplay_progress.player_excitement = 0;
+      //black_dip_out();
+      //dipping_to_black = false;
+      //suspend_gameplay();
+   }
    else if (game_event->is_type("end_chapter_1"))
    {
       dipping_to_black = true;
@@ -1839,6 +1887,14 @@ void Screen::refresh_environment_and_world(bool set_player_position)
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_1;
          e.sprite = bitmap_bin->auto_get("friend_1.png");
+      }
+      else if (object->type == "location")
+      {
+         e.type = TINS2025::Entity::ENTITY_TYPE_LOCATION_POINT;
+         e.sprite = nullptr;
+         e.model = nullptr;
+         e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+         e.flags |= TINS2025::Entity::FLAG_INACTIVE;
       }
       else if (object->name == "giraffe")
       {
@@ -2979,6 +3035,10 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             }
          )
       },
+
+
+
+
       { "became_overhyped", new AllegroFlare::DialogTree::Nodes::Interparsable(
             LOTTIE,
             {
@@ -2989,10 +3049,16 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
                "I'm getting overwhelmed with excitement. I, I need to take a break."
                //"Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
             },
-            {
-               { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } // DEVELOPMENT
-               //{ "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
-            }
+            { { "End Ch1", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_restart_to_safe_point"), 0 } }
+            //{
+               //{ "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } // DEVELOPMENT
+               ////{ "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
+            //}
+         )
+      },
+      { "->trigger_restart_to_safe_point", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+            "restart_to_safe_point",
+            "exit_dialog"
          )
       },
 

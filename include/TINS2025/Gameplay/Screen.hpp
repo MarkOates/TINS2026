@@ -97,6 +97,7 @@ namespace TINS2025
          bool QUEST__friend_3_requirements_asked;
          int current_chapter_number;
          float dip_to_black_overlay_opacity;
+         float dip_to_black_rate;
          ALLEGRO_COLOR dip_to_black_color;
          bool dipping_to_black;
          bool in_test_or_development_mode;
@@ -142,6 +143,7 @@ namespace TINS2025
          bool get_QUEST__friend_3_requirements_asked() const;
          int get_current_chapter_number() const;
          float get_dip_to_black_overlay_opacity() const;
+         float get_dip_to_black_rate() const;
          ALLEGRO_COLOR get_dip_to_black_color() const;
          bool get_dipping_to_black() const;
          bool get_in_test_or_development_mode() const;
@@ -173,8 +175,11 @@ namespace TINS2025
          bool is_documented(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          void update();
          void white_flash();
+         void black_dip_out();
          void render_game_hud();
          void render();
+         TINS2025::Entity* find_last_activated_safe_point();
+         void move_player_to_last_safe_point();
          virtual void game_event_func(AllegroFlare::GameEvent* game_event=nullptr) override;
          void refresh_environment_and_world(bool set_player_position=false);
          virtual void display_switch_in_func() override;

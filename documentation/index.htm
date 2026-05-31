@@ -1717,6 +1717,10 @@ table td
   <td class="property">float</td>
 </tr>
 <tr>
+  <td class="property">dip_to_black_rate</td>
+  <td class="property">float</td>
+</tr>
+<tr>
   <td class="property">dip_to_black_color</td>
   <td class="property">ALLEGRO_COLOR</td>
 </tr>
@@ -1873,11 +1877,23 @@ table td
 </tr>
 <tr>
   <td class="method">void</td>
+  <td class="method"><b>black_dip_out</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
   <td class="method"><b>render_game_hud</b>()</td>
 </tr>
 <tr>
   <td class="method">void</td>
   <td class="method"><b>render</b>()</td>
+</tr>
+<tr>
+  <td class="method">TINS2025::Entity*</td>
+  <td class="method"><b>find_last_activated_safe_point</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>move_player_to_last_safe_point</b>()</td>
 </tr>
 <tr>
   <td class="method">void</td>
@@ -2255,6 +2271,10 @@ table td
 <tr>
   <td class="property">progress_and_state_flags</td>
   <td class="property">std::set&lt;uint32_t&gt;</td>
+</tr>
+<tr>
+  <td class="property">player_freakouts</td>
+  <td class="property">int</td>
 </tr>
     </table>
 </div>    <h3>Methods</h3>

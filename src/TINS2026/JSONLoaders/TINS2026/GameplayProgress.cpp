@@ -34,6 +34,7 @@ void to_json(nlohmann::json& j, const GameplayProgress& object)
       { "items_collected_tmj_ids", object.items_collected_tmj_ids },
       { "player_location", object.player_location },
       { "player_excitement", object.player_excitement },
+      { "player_freakouts", object.player_freakouts },
       { "player_line_capacity", object.player_line_capacity },
       { "player_lines_filled", object.player_lines_filled },
       { "progress_and_state_flags", progress_and_state_flags },
@@ -48,6 +49,7 @@ void from_json(const nlohmann::json& j, GameplayProgress& object)
    j.at("player_excitement").get_to(object.player_excitement);
    j.at("player_line_capacity").get_to(object.player_line_capacity);
    j.at("player_lines_filled").get_to(object.player_lines_filled);
+   j.at("player_freakouts").get_to(object.player_freakouts);
 
    // Fill the progress_and_state_flags
    std::set<std::string> progress_and_state_flags_str;

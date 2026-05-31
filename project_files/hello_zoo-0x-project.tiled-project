@@ -11,6 +11,26 @@
     ],
     "propertyTypes": [
         {
+            "color": "#ff945200",
+            "drawFill": true,
+            "id": 4,
+            "members": [
+            ],
+            "name": "animal",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
             "id": 1,
             "name": "Enum0",
             "storageType": "string",
@@ -19,6 +39,26 @@
                 "NOTEBOOK_PAGE"
             ],
             "valuesAsFlags": false
+        },
+        {
+            "color": "#ffd4fb79",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+            ],
+            "name": "location",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
         },
         {
             "color": "#ff00fdff",
