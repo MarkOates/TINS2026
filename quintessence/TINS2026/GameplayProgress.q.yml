@@ -26,6 +26,11 @@ properties:
     init_with: 0
     exposed: true
 
+  - name: documented_entity_types
+    type: std::set<uint32_t>
+    init_with: '{}'
+    exposed: true
+
   - name: progress_and_state_flags
     type: std::set<uint32_t>
     init_with: '{}'

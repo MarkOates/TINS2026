@@ -1155,7 +1155,7 @@ table td
 </tr>
 <tr>
   <td class="property">type</td>
-  <td class="property">uint32_t</td>
+  <td class="property">TINS2025::Entity::Type</td>
 </tr>
 <tr>
   <td class="property">animation_mode</td>
@@ -1198,6 +1198,9 @@ table td
 </tr>
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;AllegroFlare::Model3D&quot;, &quot;headers&quot;=&gt;[&quot;AllegroFlare/Model3D.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2025::Entity::Type&quot;, &quot;headers&quot;=&gt;[&quot;TINS2025/Entity.hpp&quot;]}</td>
 </tr>
     </table>
 </div>  </div>
@@ -1846,6 +1849,14 @@ table td
 </tr>
 <tr>
   <td class="method">void</td>
+  <td class="method"><b>document_animal_type</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">bool</td>
+  <td class="method"><b>is_documented</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">void</td>
   <td class="method"><b>update</b>()</td>
 </tr>
 <tr>
@@ -2056,6 +2067,9 @@ table td
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;ALLEGRO_COLOR&quot;, &quot;headers&quot;=&gt;[&quot;allegro5/allegro.h&quot;]}</td>
 </tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2025::Entity::Type&quot;, &quot;headers&quot;=&gt;[&quot;TINS2025/Entity.hpp&quot;]}</td>
+</tr>
     </table>
 </div>  </div>
 </ul>
@@ -2179,6 +2193,10 @@ table td
 <tr>
   <td class="property">player_lines_filled</td>
   <td class="property">int</td>
+</tr>
+<tr>
+  <td class="property">documented_entity_types</td>
+  <td class="property">std::set&lt;uint32_t&gt;</td>
 </tr>
 <tr>
   <td class="property">progress_and_state_flags</td>
@@ -3049,6 +3067,12 @@ table td
     "TINS2025/Entity",
     "TINS2025/Gameplay/Screen"
   ],
+  "TINS2025/Entity/Type": [
+    "TINS2025/Entity",
+    "TINS2025/Gameplay/Screen",
+    "TINS2026/Animal",
+    "TINS2026/AnimalDatabase"
+  ],
   "TINS2025/Gameplay/Level": [
     "TINS2025/Game/Configurations/Main",
     "TINS2025/Gameplay/Screen"
@@ -3128,10 +3152,6 @@ table td
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [
-    "TINS2026/Animal",
-    "TINS2026/AnimalDatabase"
-  ],
-  "TINS2025/Entity/Type": [
     "TINS2026/Animal",
     "TINS2026/AnimalDatabase"
   ],

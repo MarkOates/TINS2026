@@ -1,13 +1,16 @@
 {
-  "items_collected_tmj_ids": [
-    84
+  "documented_entity_types": [
+    "entity_type_giraffe"
   ],
-  "player_excitement": 0,
+  "items_collected_tmj_ids": [
+    71
+  ],
+  "player_excitement": 49.66666666666709,
   "player_line_capacity": 4,
-  "player_lines_filled": 0,
+  "player_lines_filled": 6,
   "player_location": {
-    "x": 32.585174560546875,
-    "y": 13.874372482299805
+    "x": 34.945552825927734,
+    "y": 10.146871566772461
   },
   "progress_and_state_flags": []
 }

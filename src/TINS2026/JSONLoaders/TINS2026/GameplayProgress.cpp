@@ -3,7 +3,9 @@
 #include <TINS2026/JSONLoaders/TINS2026/GameplayProgress.hpp>
 #include <AllegroFlare/JSONLoaders/AllegroFlare/Vec2D.hpp>
 #include <TINS2025/Gameplay/ProgressAndStateFlagsJSONLoader.hpp>
+#include <TINS2026/JSONLoaders/TINS2025/Entity/Type.hpp>
 //#include <TINS2025/Gameplay/Screen.hpp>
+#include <TINS2025/Entity.hpp>
 
 
 namespace TINS2026
@@ -12,13 +14,6 @@ namespace TINS2026
 
 void to_json(nlohmann::json& j, const GameplayProgress& object)
 {
-   //std::set<std::string> flags_s;
-   //std::set<uint32_t> flags_i;
-
-   //for (auto &flag : object.progress_and_state_flags)
-   //{
-      //flags_s.push_back(to_string());
-   //}
    std::set<TINS2025::Gameplay::Screen::ProgressAndStateFlags> progress_and_state_flags;
    for (auto &f : object.progress_and_state_flags)
    {
@@ -26,12 +21,14 @@ void to_json(nlohmann::json& j, const GameplayProgress& object)
          static_cast<TINS2025::Gameplay::Screen::ProgressAndStateFlags>(f)
       );
    }
-//TINS2025::Gameplay::Screen::ProgressAndStateFlags
 
-//for (uint32_t v : raw_values)
-//{
-   //flags.insert(static_cast<TINS2026ProgressAndStateFlags>(v));
-//}
+   std::set<TINS2025::Entity::Type> documented_entity_types;
+   for (auto &t : object.documented_entity_types)
+   {
+      documented_entity_types.insert(
+         static_cast<TINS2025::Entity::Type>(t)
+      );
+   }
 
    j = nlohmann::json{
       { "items_collected_tmj_ids", object.items_collected_tmj_ids },
@@ -40,6 +37,7 @@ void to_json(nlohmann::json& j, const GameplayProgress& object)
       { "player_line_capacity", object.player_line_capacity },
       { "player_lines_filled", object.player_lines_filled },
       { "progress_and_state_flags", progress_and_state_flags },
+      { "documented_entity_types", documented_entity_types },
    };
 }
 
@@ -64,6 +62,22 @@ void from_json(const nlohmann::json& j, GameplayProgress& object)
    {
       progress_and_state_flags.insert(
          static_cast<TINS2025::Gameplay::Screen::ProgressAndStateFlags>(f)
+      );
+   }
+
+   // Fill the documented_entity_types
+   std::set<std::string> documented_entity_types_str;
+   j.at("documented_entity_types").get_to(documented_entity_types_str);
+   std::set<uint32_t> documented_entity_types;
+   object.documented_entity_types.clear();
+   for (auto &progress_and_state_flag_str : documented_entity_types_str)
+   {
+      object.documented_entity_types.insert(TINS2025::Entity::from_string(progress_and_state_flag_str));
+   }
+   for (auto &f : object.documented_entity_types)
+   {
+      documented_entity_types.insert(
+         static_cast<TINS2025::Entity::Type>(f)
       );
    }
 }

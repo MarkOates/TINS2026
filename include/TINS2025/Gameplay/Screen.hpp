@@ -48,8 +48,8 @@ namespace TINS2025
          enum ProgressAndStateFlags : uint32_t
          {
             NONE = 0,
-            FLAG_UNLOCKED_GIRAFFE,
-            FLAG_UNLOCKED_GOAT,
+            FLAG_FOO_TEST_FLAG_1,
+            FLAG_FOO_TEST_FLAG_2,
          };
       private:
          enum InputMode : uint32_t
@@ -164,6 +164,8 @@ namespace TINS2025
          virtual void on_deactivate() override;
          void mark_entity_collected(TINS2025::Entity* entity=nullptr);
          void time_step_player_excitement(double time_step=1.0/60.0);
+         void document_animal_type(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         bool is_documented(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          void update();
          void white_flash();
          void render_game_hud();

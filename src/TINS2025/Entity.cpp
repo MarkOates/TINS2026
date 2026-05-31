@@ -70,6 +70,47 @@ std::string Entity::to_string(Type value, bool throw_on_error)
 }
 
 
+Entity::Type Entity::from_string(std::string value, bool throw_on_error)
+{
+   if (value == "entity_type_undef") return Type::ENTITY_TYPE_UNDEF;
+   if (value == "entity_type_player") return Type::ENTITY_TYPE_PLAYER;
+   if (value == "entity_type_friend_1") return Type::ENTITY_TYPE_FRIEND_1;
+   if (value == "entity_type_friend_2") return Type::ENTITY_TYPE_FRIEND_2;
+   if (value == "entity_type_friend_3") return Type::ENTITY_TYPE_FRIEND_3;
+   if (value == "entity_type_apple") return Type::ENTITY_TYPE_APPLE;
+   if (value == "entity_type_carrot") return Type::ENTITY_TYPE_CARROT;
+   if (value == "entity_type_red_carrot") return Type::ENTITY_TYPE_RED_CARROT;
+   if (value == "entity_type_dialog_trigger_1") return Type::ENTITY_TYPE_DIALOG_TRIGGER_1;
+   if (value == "entity_type_dialog_trigger_2") return Type::ENTITY_TYPE_DIALOG_TRIGGER_2;
+   if (value == "entity_type_dialog_trigger_3") return Type::ENTITY_TYPE_DIALOG_TRIGGER_3;
+   if (value == "entity_type_dialog_trigger_4") return Type::ENTITY_TYPE_DIALOG_TRIGGER_4;
+   if (value == "entity_type_dialog_trigger_5") return Type::ENTITY_TYPE_DIALOG_TRIGGER_5;
+   if (value == "entity_type_bunbucks_cake") return Type::ENTITY_TYPE_BUNBUCKS_CAKE;
+   if (value == "entity_type_cake_1") return Type::ENTITY_TYPE_CAKE_1;
+   if (value == "entity_type_cake_2") return Type::ENTITY_TYPE_CAKE_2;
+   if (value == "entity_type_cake_3") return Type::ENTITY_TYPE_CAKE_3;
+   if (value == "entity_type_composite_cake") return Type::ENTITY_TYPE_COMPOSITE_CAKE;
+   if (value == "entity_type_the_plant") return Type::ENTITY_TYPE_THE_PLANT;
+   if (value == "entity_type_camera_0") return Type::ENTITY_TYPE_CAMERA_0;
+   if (value == "entity_type_camera_1") return Type::ENTITY_TYPE_CAMERA_1;
+   if (value == "entity_type_camera_2") return Type::ENTITY_TYPE_CAMERA_2;
+   if (value == "entity_type_camera_3") return Type::ENTITY_TYPE_CAMERA_3;
+   if (value == "entity_type_camera_4") return Type::ENTITY_TYPE_CAMERA_4;
+   if (value == "entity_type_camera_5") return Type::ENTITY_TYPE_CAMERA_5;
+   if (value == "entity_type_camera_6") return Type::ENTITY_TYPE_CAMERA_6;
+   if (value == "entity_type_camera_7") return Type::ENTITY_TYPE_CAMERA_7;
+   if (value == "entity_type_camera_8") return Type::ENTITY_TYPE_CAMERA_8;
+   if (value == "entity_type_camera_9") return Type::ENTITY_TYPE_CAMERA_9;
+   if (value == "entity_type_notebook_page") return Type::ENTITY_TYPE_NOTEBOOK_PAGE;
+   if (value == "entity_type_giraffe") return Type::ENTITY_TYPE_GIRAFFE;
+   if (value == "entity_type_goat") return Type::ENTITY_TYPE_GOAT;
+   if (value == "entity_type_leopard") return Type::ENTITY_TYPE_LEOPARD;
+   if (value == "entity_type_tiger") return Type::ENTITY_TYPE_TIGER;
+   if (value == "entity_type_zebrah") return Type::ENTITY_TYPE_ZEBRAH;
+   throw std::runtime_error("Blast/Cpp/EnumClass: ERROR: Could not find enum for \" + value + \"");
+}
+
+
 std::string Entity::type_to_string()
 {
    static std::map<uint32_t, std::string> names = {

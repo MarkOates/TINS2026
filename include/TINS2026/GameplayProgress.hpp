@@ -21,6 +21,7 @@ namespace TINS2026
       double player_excitement;
       int player_line_capacity;
       int player_lines_filled;
+      std::set<uint32_t> documented_entity_types;
       std::set<uint32_t> progress_and_state_flags;
       GameplayProgress();
       ~GameplayProgress();

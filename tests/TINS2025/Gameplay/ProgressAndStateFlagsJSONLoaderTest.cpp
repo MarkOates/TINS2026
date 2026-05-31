@@ -8,8 +8,8 @@ TEST(TINS2025_Gameplay_ProgressAndStateFlagsJSONLoaderTest,
    to_json__returns_the_object_as_json_with_the_expected_values)
 {
    std::set<TINS2025::Gameplay::Screen::ProgressAndStateFlags> flags = {
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE,
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GOAT
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1,
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2
    };
 
    nlohmann::json j = flags;
@@ -17,8 +17,8 @@ TEST(TINS2025_Gameplay_ProgressAndStateFlagsJSONLoaderTest,
 
    std::string expected_values =
 R"([
-  "flag_unlocked_giraffe",
-  "flag_unlocked_goat"
+  "flag_foo_test_flag_1",
+  "flag_foo_test_flag_2"
 ])";
 
    std::string actual_values = j.dump(2);
@@ -30,15 +30,15 @@ TEST(TINS2025_Gameplay_ProgressAndStateFlagsJSONLoaderTest,
    from_json__loads_json_data_into_the_object)
 {
    std::set<TINS2025::Gameplay::Screen::ProgressAndStateFlags> expected_flags = {
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE,
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GOAT
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1,
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2
    };
    std::set<TINS2025::Gameplay::Screen::ProgressAndStateFlags> actual_flags;
 
    std::string json =
 R"([
-  "flag_unlocked_giraffe",
-  "flag_unlocked_goat"
+  "flag_foo_test_flag_1",
+  "flag_foo_test_flag_2"
 ])";
 
    nlohmann::json parsed_json = nlohmann::json::parse(json);

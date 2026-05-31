@@ -301,6 +301,12 @@
     "TINS2025/Entity",
     "TINS2025/Gameplay/Screen"
   ],
+  "TINS2025/Entity/Type": [
+    "TINS2025/Entity",
+    "TINS2025/Gameplay/Screen",
+    "TINS2026/Animal",
+    "TINS2026/AnimalDatabase"
+  ],
   "TINS2025/Gameplay/Level": [
     "TINS2025/Game/Configurations/Main",
     "TINS2025/Gameplay/Screen"
@@ -380,10 +386,6 @@
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [
-    "TINS2026/Animal",
-    "TINS2026/AnimalDatabase"
-  ],
-  "TINS2025/Entity/Type": [
     "TINS2026/Animal",
     "TINS2026/AnimalDatabase"
   ],

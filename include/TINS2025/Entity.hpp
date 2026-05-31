@@ -3,6 +3,7 @@
 
 #include <AllegroFlare/Model3D.hpp>
 #include <AllegroFlare/Physics/AABB2D.hpp>
+#include <TINS2025/Entity.hpp>
 #include <allegro5/allegro.h>
 #include <cstdint>
 #include <string>
@@ -23,8 +24,7 @@ namespace TINS2025
          FLAG_COLLIDES_WITH_TILEMAP = 0x0008,
          FLAG_TRACKS_DISTANCE_TO_PLAYER = 0x0010,
          FLAG_EMITS_HYPE_AURA = 0x0020,
-         FLAG_DOCUMENTED = 0x0040,
-         FLAG_COLLECTED = 0x0080,
+         FLAG_COLLECTED = 0x0040,
       };
       enum Type
       {
@@ -80,7 +80,7 @@ namespace TINS2025
       ALLEGRO_BITMAP* sprite;
       AllegroFlare::Model3D* model;
       uint32_t tmj_id;
-      uint32_t type;
+      TINS2025::Entity::Type type;
       uint32_t animation_mode;
       float distance_to_player;
       AllegroFlare::Physics::AABB2D aabb2d;
@@ -89,6 +89,7 @@ namespace TINS2025
       ~Entity();
 
       static std::string to_string(Type value=Type::ENTITY_TYPE_UNDEF, bool throw_on_error=true);
+      static Type from_string(std::string value="[unset-value]", bool throw_on_error=true);
       std::string type_to_string();
       void draw();
    };

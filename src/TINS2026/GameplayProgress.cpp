@@ -15,6 +15,7 @@ GameplayProgress::GameplayProgress()
    , player_excitement(0.0)
    , player_line_capacity(0)
    , player_lines_filled(0)
+   , documented_entity_types({})
    , progress_and_state_flags({})
 {
 }

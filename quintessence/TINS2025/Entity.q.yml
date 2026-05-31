@@ -17,7 +17,7 @@ properties:
     exposed: true
 
   - name: type
-    type: uint32_t
+    type: TINS2025::Entity::Type
     init_with: TINS2025::Entity::ENTITY_TYPE_UNDEF
     exposed: true
 
@@ -56,12 +56,12 @@ enums:
       - FLAG_COLLIDES_WITH_TILEMAP
       - FLAG_TRACKS_DISTANCE_TO_PLAYER
       - FLAG_EMITS_HYPE_AURA
-      - FLAG_DOCUMENTED
       - FLAG_COLLECTED
 
 
   - name: Type
     to_string: true
+    from_string: true
     scope: public
     enumerators:
        - ENTITY_TYPE_UNDEF
@@ -175,5 +175,7 @@ dependencies:
     headers: [ allegro5/allegro_primitives.h ]
   - symbol: AllegroFlare::Model3D
     headers: [ AllegroFlare/Model3D.hpp ]
+  - symbol: TINS2025::Entity::Type
+    headers: [ TINS2025/Entity.hpp ]
 
 

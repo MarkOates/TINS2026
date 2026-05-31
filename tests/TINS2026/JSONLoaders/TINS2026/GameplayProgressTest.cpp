@@ -20,8 +20,12 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
    gameplay_progress.player_line_capacity = 64;
    gameplay_progress.player_lines_filled = 28;
    gameplay_progress.progress_and_state_flags = {
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE,
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GOAT
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1,
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2
+   };
+   gameplay_progress.documented_entity_types = {
+     TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE,
+     TINS2025::Entity::Type::ENTITY_TYPE_GOAT,
    };
 
 
@@ -32,6 +36,10 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
 
    std::string expected_values =
 R"({
+  "documented_entity_types": [
+    "entity_type_giraffe",
+    "entity_type_goat"
+  ],
   "items_collected_tmj_ids": [
     4,
     8,
@@ -45,8 +53,8 @@ R"({
     "y": -16.0
   },
   "progress_and_state_flags": [
-    "flag_unlocked_giraffe",
-    "flag_unlocked_goat"
+    "flag_foo_test_flag_1",
+    "flag_foo_test_flag_2"
   ]
 })";
 
@@ -65,14 +73,22 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
    gameplay_progress.player_line_capacity = 64;
    gameplay_progress.player_lines_filled = 28;
    gameplay_progress.progress_and_state_flags = {
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE,
-     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_UNLOCKED_GOAT
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1,
+     TINS2025::Gameplay::Screen::ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2
+   };
+   gameplay_progress.documented_entity_types = {
+     TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE,
+     TINS2025::Entity::Type::ENTITY_TYPE_GOAT,
    };
 
    TINS2026::GameplayProgress actual_gameplay_progress;
 
    std::string json =
 R"({
+  "documented_entity_types": [
+    "entity_type_giraffe",
+    "entity_type_goat"
+  ],
   "items_collected_tmj_ids": [
     4,
     8,
@@ -86,8 +102,8 @@ R"({
     "y": -16.0
   },
   "progress_and_state_flags": [
-    "flag_unlocked_giraffe",
-    "flag_unlocked_goat"
+    "flag_foo_test_flag_1",
+    "flag_foo_test_flag_2"
   ]
 })";
 

@@ -316,8 +316,8 @@ std::string Screen::to_string(InputMode value, bool throw_on_error)
 std::string Screen::to_string(ProgressAndStateFlags value, bool throw_on_error)
 {
    if (value == ProgressAndStateFlags::NONE) return "none";
-   if (value == ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE) return "flag_unlocked_giraffe";
-   if (value == ProgressAndStateFlags::FLAG_UNLOCKED_GOAT) return "flag_unlocked_goat";
+   if (value == ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1) return "flag_foo_test_flag_1";
+   if (value == ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2) return "flag_foo_test_flag_2";
    // TODO: Implement "throw_on_error" argument
    return "";
 }
@@ -326,8 +326,8 @@ std::string Screen::to_string(ProgressAndStateFlags value, bool throw_on_error)
 Screen::ProgressAndStateFlags Screen::from_string(std::string value, bool throw_on_error)
 {
    if (value == "none") return ProgressAndStateFlags::NONE;
-   if (value == "flag_unlocked_giraffe") return ProgressAndStateFlags::FLAG_UNLOCKED_GIRAFFE;
-   if (value == "flag_unlocked_goat") return ProgressAndStateFlags::FLAG_UNLOCKED_GOAT;
+   if (value == "flag_foo_test_flag_1") return ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_1;
+   if (value == "flag_foo_test_flag_2") return ProgressAndStateFlags::FLAG_FOO_TEST_FLAG_2;
    throw std::runtime_error("Blast/Cpp/EnumClass: ERROR: Could not find enum for \" + value + \"");
 }
 
@@ -874,6 +874,34 @@ void Screen::time_step_player_excitement(double time_step)
    return;
 }
 
+void Screen::document_animal_type(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::document_animal_type]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::document_animal_type]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   gameplay_progress.documented_entity_types.insert(entity_type);
+
+   // TODO: Find all en
+   //gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE);
+   return;
+}
+
+bool Screen::is_documented(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::is_documented]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::is_documented]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   return (gameplay_progress.documented_entity_types.count(entity_type) > 0);
+}
+
 void Screen::update()
 {
    auto &lottie__total_lines_available = gameplay_progress.player_line_capacity;
@@ -1176,7 +1204,8 @@ void Screen::update()
             if (!(entity.flags & TINS2025::Entity::FLAG_EMITS_HYPE_AURA)) continue;
 
             // If it's already been documented, don't include
-            if (entity.flags & TINS2025::Entity::FLAG_DOCUMENTED) continue;
+            if (is_documented(entity.type)) continue;
+            //if (entity.flags & TINS2025::Entity::FLAG_DOCUMENTED) continue;
 
             collidables.insert((void*)&entity);
          }
@@ -1306,6 +1335,7 @@ void Screen::render_game_hud()
             bar_place.start_transform();
             bar.render();
 
+            //al_draw_text(font, text_color, 0, text_offset_y, 0, "OVERSTIMULATION");
             al_draw_text(font, text_color, 0, text_offset_y, 0, "EXCITEMENT");
 
             bar_place.restore_transform();
@@ -1406,8 +1436,8 @@ void Screen::render_game_hud()
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_pages: %d", lottie__total_lines_available / LINES_PER_PAGE);
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_total_lines: %d", lottie__total_lines_available);
       al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_lines_written: %d", lottie__num_lines_written);
-      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %d", lottie__excitement);
-      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "total_hype_aura: %f.2", total_cumulative_hype_aura);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %.2", lottie__excitement);
+      al_draw_textf(font, text_color, 20, 20+l++*40, 0, "total_hype_aura: %.2", total_cumulative_hype_aura);
    }
 
 
@@ -1581,6 +1611,7 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
 
       lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
       lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
+      gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE); // HERE
    }
    else if (game_event->is_type("show_cake_1"))
    {

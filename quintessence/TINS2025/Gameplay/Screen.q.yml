@@ -289,8 +289,8 @@ enums:
     from_string: true
     enumerators:
       - NONE
-      - FLAG_UNLOCKED_GIRAFFE
-      - FLAG_UNLOCKED_GOAT
+      - FLAG_FOO_TEST_FLAG_1
+      - FLAG_FOO_TEST_FLAG_2
 
 
 methods:
@@ -801,6 +801,33 @@ methods:
       return;
 
 
+  - name: document_animal_type
+    parameters:
+      - name: entity_type
+        type: TINS2025::Entity::Type
+        default_argument: TINS2025::Entity::Type::ENTITY_TYPE_UNDEF
+    guards:
+      - (entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)
+    body: |
+      gameplay_progress.documented_entity_types.insert(entity_type);
+
+      // TODO: Find all en
+      //gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE);
+      return;
+
+
+  - name: is_documented
+    type: bool
+    parameters:
+      - name: entity_type
+        type: TINS2025::Entity::Type
+        default_argument: TINS2025::Entity::Type::ENTITY_TYPE_UNDEF
+    guards:
+      - (entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)
+    body: |
+      return (gameplay_progress.documented_entity_types.count(entity_type) > 0);
+
+
   - name: update
     body: |
       auto &lottie__total_lines_available = gameplay_progress.player_line_capacity;
@@ -1103,7 +1130,8 @@ methods:
                if (!(entity.flags & TINS2025::Entity::FLAG_EMITS_HYPE_AURA)) continue;
 
                // If it's already been documented, don't include
-               if (entity.flags & TINS2025::Entity::FLAG_DOCUMENTED) continue;
+               if (is_documented(entity.type)) continue;
+               //if (entity.flags & TINS2025::Entity::FLAG_DOCUMENTED) continue;
 
                collidables.insert((void*)&entity);
             }
@@ -1235,6 +1263,7 @@ methods:
                bar_place.start_transform();
                bar.render();
 
+               //al_draw_text(font, text_color, 0, text_offset_y, 0, "OVERSTIMULATION");
                al_draw_text(font, text_color, 0, text_offset_y, 0, "EXCITEMENT");
 
                bar_place.restore_transform();
@@ -1335,8 +1364,8 @@ methods:
          al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_pages: %d", lottie__total_lines_available / LINES_PER_PAGE);
          al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_total_lines: %d", lottie__total_lines_available);
          al_draw_textf(font, text_color, 20, 20+l++*40, 0, "num_lines_written: %d", lottie__num_lines_written);
-         al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %d", lottie__excitement);
-         al_draw_textf(font, text_color, 20, 20+l++*40, 0, "total_hype_aura: %f.2", total_cumulative_hype_aura);
+         al_draw_textf(font, text_color, 20, 20+l++*40, 0, "excitement: %.2", lottie__excitement);
+         al_draw_textf(font, text_color, 20, 20+l++*40, 0, "total_hype_aura: %.2", total_cumulative_hype_aura);
       }
 
 
@@ -1516,6 +1545,7 @@ methods:
 
          lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
          lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
+         gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE); // HERE
       }
       else if (game_event->is_type("show_cake_1"))
       {
@@ -3010,5 +3040,7 @@ dependencies:
     headers: [ AllegroFlare/UsefulPHP.hpp ]
   - symbol: ALLEGRO_COLOR
     headers: [ allegro5/allegro.h ]
+  - symbol: TINS2025::Entity::Type
+    headers: [ TINS2025/Entity.hpp ]
 
 
