@@ -98,3 +98,29 @@ TEST_F(TINS2025_Gameplay_ScreenTestWithAllegroFrameworksFullFixture,
 }
 
 
+
+
+         /*
+         { "meet_goat", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               build_interesting_facts_dialog_pages(Entity::Type::ENTITY_TYPE_GOAT),
+               {
+                  { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_goat"), 0 }
+               }
+            )
+         },
+         { "->document_goat", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               build_need_to_document_dialog_pages(Entity::Type::ENTITY_TYPE_GOAT),
+               {
+                  { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->emit_document_goat"), 0 }
+               }
+            )
+         },
+         { "->emit_document_goat", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "document_goat",
+               "exit_dialog"
+            )
+         },
+         */
+

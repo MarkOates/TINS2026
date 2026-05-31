@@ -388,6 +388,9 @@
   "TINS2026/AnimalDatabase": [
     "TINS2025/Gameplay/Screen"
   ],
+  "AllegroFlare/DialogTree/Nodes/Base": [
+    "TINS2025/Gameplay/Screen"
+  ],
   "TINS2026/Animal": [
     "TINS2026/Animal",
     "TINS2026/AnimalDatabase"

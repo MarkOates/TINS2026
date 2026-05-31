@@ -6,6 +6,7 @@
 #include <AllegroFlare/CollisionObservers/Simple.hpp>
 #include <AllegroFlare/DialogSystem/DialogSystem.hpp>
 #include <AllegroFlare/DialogTree/NodeBank.hpp>
+#include <AllegroFlare/DialogTree/Nodes/Base.hpp>
 #include <AllegroFlare/EventEmitter.hpp>
 #include <AllegroFlare/FontBin.hpp>
 #include <AllegroFlare/GameEvent.hpp>
@@ -25,6 +26,7 @@
 #include <cstdint>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -167,6 +169,7 @@ namespace TINS2025
          void mark_entity_collected(TINS2025::Entity* entity=nullptr);
          void time_step_player_excitement(double time_step=1.0/60.0);
          void document_animal_type(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         void review_documented_animals_for_win_condition();
          bool is_documented(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          void update();
          void white_flash();
@@ -189,10 +192,14 @@ namespace TINS2025
          void DEVELOPMENT__render_tile_map();
          static std::vector<std::string> build_need_to_document_dialog_pages(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static std::vector<std::string> build_interesting_facts_dialog_pages(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::string build_emit_document_event_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static std::string build_meet_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static std::string build_document_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static std::string build_emit_document_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static std::string build_emit_document_event_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::pair<std::string, AllegroFlare::DialogTree::Nodes::Base*> build_meet_node(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::pair<std::string, AllegroFlare::DialogTree::Nodes::Base*> build_document_node(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::pair<std::string, AllegroFlare::DialogTree::Nodes::Base*> build_emit_document_event_node(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static AllegroFlare::DialogTree::NodeBank build_dialog_node_bank();
       };
    }

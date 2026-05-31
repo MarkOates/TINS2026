@@ -1856,6 +1856,10 @@ table td
   <td class="method"><b>document_animal_type</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
 </tr>
 <tr>
+  <td class="method">void</td>
+  <td class="method"><b>review_documented_animals_for_win_condition</b>()</td>
+</tr>
+<tr>
   <td class="method">bool</td>
   <td class="method"><b>is_documented</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
 </tr>
@@ -1945,6 +1949,10 @@ table td
 </tr>
 <tr>
   <td class="method">std::string</td>
+  <td class="method"><b>build_emit_document_event_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::string</td>
   <td class="method"><b>build_meet_node_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
 </tr>
 <tr>
@@ -1958,6 +1966,18 @@ table td
 <tr>
   <td class="method">std::string</td>
   <td class="method"><b>build_emit_document_event_node_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::pair&lt;std::string, AllegroFlare::DialogTree::Nodes::Base*&gt;</td>
+  <td class="method"><b>build_meet_node</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::pair&lt;std::string, AllegroFlare::DialogTree::Nodes::Base*&gt;</td>
+  <td class="method"><b>build_document_node</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::pair&lt;std::string, AllegroFlare::DialogTree::Nodes::Base*&gt;</td>
+  <td class="method"><b>build_emit_document_event_node</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
 </tr>
 <tr>
   <td class="method">AllegroFlare::DialogTree::NodeBank</td>
@@ -2100,6 +2120,9 @@ table td
 </tr>
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::AnimalDatabase&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/AnimalDatabase.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;AllegroFlare::DialogTree::Nodes::Base&quot;, &quot;headers&quot;=&gt;[&quot;AllegroFlare/DialogTree/Nodes/Base.hpp&quot;]}</td>
 </tr>
     </table>
 </div>  </div>
@@ -3183,6 +3206,9 @@ table td
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/AnimalDatabase": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "AllegroFlare/DialogTree/Nodes/Base": [
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [
