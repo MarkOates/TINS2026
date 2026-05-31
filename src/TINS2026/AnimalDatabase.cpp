@@ -63,6 +63,23 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
          HYPE_AURA_RADIUS
       ),
 
+      Animal::build(
+         "goat",
+         "Goat",
+         TINS2025::Entity::Type::ENTITY_TYPE_GOAT,
+         {
+            "O...",
+            "M...",
+            "G.",
+            "This goat... ",
+            "IS SOOO CUUUTEE!",
+            "This has to be the CUTEST GOAT in the ENTIRE WORLD!",
+         },
+         LINES_OF_NOTES_NEEDED,
+         HYPE_RATE,
+         HYPE_AURA_RADIUS
+      ),
+
    };
 
    // Build a map

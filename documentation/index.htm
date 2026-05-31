@@ -1601,6 +1601,10 @@ table td
   <td class="property">AllegroFlare::DialogSystem::DialogSystem*</td>
 </tr>
 <tr>
+  <td class="property">animal_database</td>
+  <td class="property">TINS2026::AnimalDatabase</td>
+</tr>
+<tr>
   <td class="property">gameplay_progress</td>
   <td class="property">TINS2026::GameplayProgress</td>
 </tr>
@@ -1932,6 +1936,30 @@ table td
   <td class="method"><b>DEVELOPMENT__render_tile_map</b>()</td>
 </tr>
 <tr>
+  <td class="method">std::vector&lt;std::string&gt;</td>
+  <td class="method"><b>build_need_to_document_dialog_pages</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::vector&lt;std::string&gt;</td>
+  <td class="method"><b>build_interesting_facts_dialog_pages</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::string</td>
+  <td class="method"><b>build_meet_node_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::string</td>
+  <td class="method"><b>build_document_node_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::string</td>
+  <td class="method"><b>build_emit_document_node_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
+  <td class="method">std::string</td>
+  <td class="method"><b>build_emit_document_event_node_identifier</b>(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)</td>
+</tr>
+<tr>
   <td class="method">AllegroFlare::DialogTree::NodeBank</td>
   <td class="method"><b>build_dialog_node_bank</b>()</td>
 </tr>
@@ -2069,6 +2097,9 @@ table td
 </tr>
 <tr>
   <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2025::Entity::Type&quot;, &quot;headers&quot;=&gt;[&quot;TINS2025/Entity.hpp&quot;]}</td>
+</tr>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::AnimalDatabase&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/AnimalDatabase.hpp&quot;]}</td>
 </tr>
     </table>
 </div>  </div>
@@ -3149,6 +3180,9 @@ table td
     "TINS2025/Gameplay/Screen"
   ],
   "AllegroFlare/UsefulPHP": [
+    "TINS2025/Gameplay/Screen"
+  ],
+  "TINS2026/AnimalDatabase": [
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [

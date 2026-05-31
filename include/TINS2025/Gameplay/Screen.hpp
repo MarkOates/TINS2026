@@ -19,6 +19,7 @@
 #include <DialControl/ViewMotionStudio.hpp>
 #include <TINS2025/Entity.hpp>
 #include <TINS2025/Gameplay/Level.hpp>
+#include <TINS2026/AnimalDatabase.hpp>
 #include <TINS2026/GameplayProgress.hpp>
 #include <allegro5/allegro.h>
 #include <cstdint>
@@ -65,6 +66,7 @@ namespace TINS2025
          AllegroFlare::FontBin* font_bin;
          AllegroFlare::ModelBin* model_bin;
          AllegroFlare::DialogSystem::DialogSystem* dialog_system;
+         static TINS2026::AnimalDatabase animal_database;
          TINS2026::GameplayProgress gameplay_progress;
          std::string progress_file_filename;
          std::set<uint32_t>& items_collected_tmj_ids;
@@ -185,6 +187,12 @@ namespace TINS2025
          virtual void virtual_control_axis_change_func(ALLEGRO_EVENT* ev=nullptr) override;
          ALLEGRO_FONT* obtain_font();
          void DEVELOPMENT__render_tile_map();
+         static std::vector<std::string> build_need_to_document_dialog_pages(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::vector<std::string> build_interesting_facts_dialog_pages(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::string build_meet_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::string build_document_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::string build_emit_document_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
+         static std::string build_emit_document_event_node_identifier(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          static AllegroFlare::DialogTree::NodeBank build_dialog_node_bank();
       };
    }

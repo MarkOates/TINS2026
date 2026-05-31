@@ -31,6 +31,9 @@ namespace Gameplay
 {
 
 
+TINS2026::AnimalDatabase Screen::animal_database = {};
+
+
 Screen::Screen()
    : AllegroFlare::Screens::Gameplay()
    , data_folder_path(DEFAULT_DATA_FOLDER_PATH)
@@ -975,7 +978,7 @@ void Screen::update()
             } break;
 
             case TINS2025::Entity::ENTITY_TYPE_GOAT: {
-               event_emitter->emit_activate_dialog_node_by_name_event("meet_giraffe");
+               event_emitter->emit_activate_dialog_node_by_name_event("meet_goat");
             } break;
 
             case TINS2025::Entity::ENTITY_TYPE_APPLE:
@@ -1604,14 +1607,18 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
    else if (game_event->is_type("document_giraffe"))
    {
       double &lottie__excitement = gameplay_progress.player_excitement;
-      // TODO: Can document? if NOT, then output:
-      //        "oh no! I don't have enough lines of paper! I'll need to find a sheet! but I'm soo excited!"
-      // OTHERWISE:
       int num_giraffe_lines = 3;
-
       lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
       lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
       gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE); // HERE
+   }
+   else if (game_event->is_type("document_goat"))
+   {
+      double &lottie__excitement = gameplay_progress.player_excitement;
+      int num_giraffe_lines = 3;
+      lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
+      lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
+      gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GOAT); // HERE
    }
    else if (game_event->is_type("show_cake_1"))
    {
@@ -2377,9 +2384,97 @@ void Screen::DEVELOPMENT__render_tile_map()
    return;
 }
 
+std::vector<std::string> Screen::build_need_to_document_dialog_pages(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::build_need_to_document_dialog_pages]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::build_need_to_document_dialog_pages]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   const TINS2026::Animal& record = animal_database.get_record_by_entity_type(entity_type);
+   std::vector<std::string> result = {
+      "This is such an amazing creature!",
+      "For the (em)"
+         + record.name
+         + "(/em), I'll need to write (em)"
+         + std::to_string(record.how_many_lines_needed_for_notetaking)
+         + " lines of notes(/em)!",
+   };
+   return result;
+}
+
+std::vector<std::string> Screen::build_interesting_facts_dialog_pages(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::build_interesting_facts_dialog_pages]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::build_interesting_facts_dialog_pages]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   const TINS2026::Animal& record = animal_database.get_record_by_entity_type(entity_type);
+   return record.interesting_facts_dialog_pages;
+}
+
+std::string Screen::build_meet_node_identifier(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::build_meet_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::build_meet_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   const TINS2026::Animal& record = animal_database.get_record_by_entity_type(entity_type);
+   return "meet_" + record.name;
+}
+
+std::string Screen::build_document_node_identifier(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::build_document_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::build_document_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   const TINS2026::Animal& record = animal_database.get_record_by_entity_type(entity_type);
+   return "->document_" + record.name;
+}
+
+std::string Screen::build_emit_document_node_identifier(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::build_emit_document_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::build_emit_document_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   const TINS2026::Animal& record = animal_database.get_record_by_entity_type(entity_type);
+   return "->emit_document_" + record.name;
+}
+
+std::string Screen::build_emit_document_event_node_identifier(TINS2025::Entity::Type entity_type)
+{
+   if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Gameplay::Screen::build_emit_document_event_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Gameplay::Screen::build_emit_document_event_node_identifier]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
+   }
+   const TINS2026::Animal& record = animal_database.get_record_by_entity_type(entity_type);
+   return "->emit_document_" + record.name;
+}
+
 AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
 {
    AllegroFlare::DialogTree::NodeBank result;
+
+   //TINS2026::AnimalDatabase animal_db;
 
    //std::string LOTTIE = "Lottie";
    //std::string FRIEND_1 = "Ditto";
@@ -2402,11 +2497,16 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             "A (em)Sheet of Notebook Paper(/em) increases your total number of blank lines by 4.",
          }, { { "GoToNode", new AllegroFlare::DialogTree::NodeOptions::GoToNode("#collect_notebook_paper"), 0 } }
       )},
+      //{ "get_notebook_paper", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+            //"A (em)Sheet of Notebook Paper(/em) increases your total number of blank lines by 4.",
+         //}, { { "GoToNode", new AllegroFlare::DialogTree::NodeOptions::GoToNode("#collect_notebook_paper"), 0 } }
+      //)},
       { "character_intro_dialog", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
             "Whew!",
             "I made it!",
-            "As a botanist, I can't wait to check out the (em)mysterious flower(/em).",
-            "I came all the way to this small town just to see it!",
+            "As a botanist, I don't normally get time to check out cool places like the (em)Zoo(/em)!",
+            "But today is my lucky day.",
+            "I've brought my notepad so I can take a bunch of notes and..."
          }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
       )},
       { "character_attempts_to_leave", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
@@ -2784,34 +2884,74 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             }
          )
       },
-      { "meet_giraffe", new AllegroFlare::DialogTree::Nodes::Interparsable(
+
+
+
+      { build_meet_node_identifier(Entity::Type::ENTITY_TYPE_GIRAFFE),
+         new AllegroFlare::DialogTree::Nodes::Interparsable(
             LOTTIE,
+            build_interesting_facts_dialog_pages(Entity::Type::ENTITY_TYPE_GIRAFFE),
+            //{
+               //"Amazing! A giraffe!",
+               //"They have huge long necks!",
+               ////"Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
+            //},
             {
-               "Amazing! A giraffe!",
-               "They have huge long necks!",
-               //"Also, they hardly ever sleep, getting only 30 to 4.5 hours of sleep a day!",
-            },
-            {
-               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
+               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode(
+                  build_document_node_identifier(Entity::Type::ENTITY_TYPE_GIRAFFE)
+                  ), 0 }
             }
          )
       },
-      { "->document_giraffe", new AllegroFlare::DialogTree::Nodes::Interparsable(
+      { build_document_node_identifier(Entity::Type::ENTITY_TYPE_GIRAFFE),
+         new AllegroFlare::DialogTree::Nodes::Interparsable(
+      //{ "->document_giraffe", new AllegroFlare::DialogTree::Nodes::Interparsable(
             LOTTIE,
+            build_need_to_document_dialog_pages(Entity::Type::ENTITY_TYPE_GIRAFFE),
+            //{
+               //"This is such an amazing creature!",
+               //"For the (em)Giraffe(/em), I'll need to write (em)3 lines of notes(/em)!",
+            //},
             {
-               "This is such an amazing creature!",
-               "For the (em)Giraffe(/em), I'll need to write (em)3 lines of notes(/em)!",
-            },
-            {
-               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->emit_document_giraffe"), 0 }
+               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode(
+                  build_emit_document_node_identifier(Entity::Type::ENTITY_TYPE_GIRAFFE)
+                           //"->emit_document_giraffe"
+                  ), 0 }
             }
          )
       },
-      { "->emit_document_giraffe", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+      //{ "->emit_document_giraffe", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+      { build_emit_document_node_identifier(Entity::Type::ENTITY_TYPE_GIRAFFE),
+         new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
             "document_giraffe",
             "exit_dialog"
          )
       },
+
+
+      { "meet_goat", new AllegroFlare::DialogTree::Nodes::Interparsable(
+            LOTTIE,
+            build_interesting_facts_dialog_pages(Entity::Type::ENTITY_TYPE_GOAT),
+            {
+               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_goat"), 0 }
+            }
+         )
+      },
+      { "->document_goat", new AllegroFlare::DialogTree::Nodes::Interparsable(
+            LOTTIE,
+            build_need_to_document_dialog_pages(Entity::Type::ENTITY_TYPE_GOAT),
+            {
+               { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->emit_document_goat"), 0 }
+            }
+         )
+      },
+      { "->emit_document_goat", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+            "document_goat",
+            "exit_dialog"
+         )
+      },
+
+
       { "inspect_apple", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE,
             {
                "A reeeeally nice juicy apple!",
