@@ -1866,6 +1866,22 @@ table td
 </tr>
 <tr>
   <td class="method">void</td>
+  <td class="method"><b>mouse_axes_func</b>(ALLEGRO_EVENT* ev=nullptr)</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>mouse_down_func</b>(ALLEGRO_EVENT* ev=nullptr)</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>action__save_progress</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>action__load_progress</b>()</td>
+</tr>
+<tr>
+  <td class="method">void</td>
   <td class="method"><b>key_down_func</b>(ALLEGRO_EVENT* ev=nullptr)</td>
 </tr>
 <tr>
@@ -2036,7 +2052,7 @@ table td
     <h3>Properties</h3>
 <div class="property-box properties">     <table>
 <tr>
-  <td class="property">IDENTIFIER</td>
+  <td class="property">identifier</td>
   <td class="property">std::string</td>
 </tr>
 <tr>
@@ -2044,15 +2060,32 @@ table td
   <td class="property">std::string</td>
 </tr>
 <tr>
-  <td class="property">how_many_lines_needed</td>
+  <td class="property">interesting_facts_dialog_pages</td>
+  <td class="property">std::vector&lt;std::string&gt;</td>
+</tr>
+<tr>
+  <td class="property">how_many_lines_needed_for_notetaking</td>
   <td class="property">int</td>
+</tr>
+<tr>
+  <td class="property">hype_rate_per_sec</td>
+  <td class="property">double</td>
 </tr>
     </table>
 </div>    <h3>Methods</h3>
 <div class="property-box methods">     <table>
+<tr>
+  <td class="method">TINS2026::Animal</td>
+  <td class="method"><b>build</b>(std::string identifier=&quot;[unset-identifier]&quot;, std::string name=&quot;[unset-name]&quot;, std::vector&lt;std::string&gt; interesting_facts_dialog_pages={}, int how_many_lines_needed_for_notetaking=3, double hype_rate_per_sec=15.0)</td>
+</tr>
     </table>
 </div>    <h3>Dependencies</h3>
-<p>This class contains no dependencies</p>  </div>
+<div class="property-box dependencies">     <table>
+<tr>
+  <td class="dependency">{&quot;symbol&quot;=&gt;&quot;TINS2026::Animal&quot;, &quot;headers&quot;=&gt;[&quot;TINS2026/Animal.hpp&quot;]}</td>
+</tr>
+    </table>
+</div>  </div>
 </ul>
 <br><br><br>
 <br><br><br>
@@ -2070,8 +2103,8 @@ table td
 </div>    <h3>Methods</h3>
 <div class="property-box methods">     <table>
 <tr>
-  <td class="method">std::string</td>
-  <td class="method"><b>run</b>()</td>
+  <td class="method">std::vector&lt;TINS2026::Animal&gt;</td>
+  <td class="method"><b>build_animal_database</b>()</td>
 </tr>
     </table>
 </div>    <h3>Dependencies</h3>
@@ -3057,6 +3090,7 @@ table td
     "TINS2025/Gameplay/Screen"
   ],
   "TINS2026/Animal": [
+    "TINS2026/Animal",
     "TINS2026/AnimalDatabase"
   ],
   "Timeline/Keyframe": [

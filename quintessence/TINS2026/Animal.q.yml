@@ -1,9 +1,9 @@
 properties:
 
 
-  - name: IDENTIFIER
+  - name: identifier
     type: std::string
-    init_with: '"TINS2026/Animal"'
+    init_with: '"[unset-identifier]"'
     exposed: true
 
   - name: name
@@ -11,9 +11,58 @@ properties:
     init_with: '"[unset-name]"'
     exposed: true
 
-  - name: how_many_lines_needed
+  - name: interesting_facts_dialog_pages
+    type: std::vector<std::string>
+    init_with: '{}'
+    exposed: true
+
+  - name: how_many_lines_needed_for_notetaking
     type: int
     init_with: 3
     exposed: true
+
+  - name: hype_rate_per_sec
+    type: double
+    init_with: 15.0
+    exposed: true
+
+
+methods:
+
+
+  - name: build
+    static: true
+    type: TINS2026::Animal
+    parameters:
+      - name: identifier
+        type: std::string
+        default_argument: '"[unset-identifier]"'
+      - name: name
+        type: std::string
+        default_argument: '"[unset-name]"'
+      - name: interesting_facts_dialog_pages
+        type: std::vector<std::string>
+        default_argument: '{}'
+      - name: how_many_lines_needed_for_notetaking
+        type: int
+        default_argument: 3
+      - name: hype_rate_per_sec
+        type: double
+        default_argument: 15.0
+    body: |
+      TINS2026::Animal result;
+      result.identifier = identifier;
+      result.name= name;
+      result.interesting_facts_dialog_pages = interesting_facts_dialog_pages;
+      result.how_many_lines_needed_for_notetaking = how_many_lines_needed_for_notetaking;
+      result.hype_rate_per_sec = hype_rate_per_sec;
+      return result;
+
+
+dependencies:
+
+
+  - symbol: TINS2026::Animal
+    headers: [ TINS2026/Animal.hpp ]
 
 

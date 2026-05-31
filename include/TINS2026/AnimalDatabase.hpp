@@ -2,7 +2,6 @@
 
 
 #include <TINS2026/Animal.hpp>
-#include <string>
 #include <vector>
 
 
@@ -20,7 +19,7 @@ namespace TINS2026
       AnimalDatabase();
       ~AnimalDatabase();
 
-      std::string run();
+      std::vector<TINS2026::Animal> build_animal_database();
    };
 }
 

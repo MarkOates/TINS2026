@@ -169,6 +169,10 @@ namespace TINS2025
          virtual void display_switch_in_func() override;
          virtual void primary_update_func(double time_now=0.0f, double delta_time=1.0f) override;
          virtual void primary_render_func() override;
+         virtual void mouse_axes_func(ALLEGRO_EVENT* ev=nullptr) override;
+         virtual void mouse_down_func(ALLEGRO_EVENT* ev=nullptr) override;
+         void action__save_progress();
+         void action__load_progress();
          virtual void key_down_func(ALLEGRO_EVENT* ev=nullptr) override;
          virtual void virtual_control_button_up_func(AllegroFlare::Player* player=nullptr, AllegroFlare::VirtualControllers::Base* virtual_controller=nullptr, int virtual_controller_button_num=0, bool is_repeat=false) override;
          virtual void virtual_control_button_down_func(AllegroFlare::Player* player=nullptr, AllegroFlare::VirtualControllers::Base* virtual_controller=nullptr, int virtual_controller_button_num=0, bool is_repeat=false) override;

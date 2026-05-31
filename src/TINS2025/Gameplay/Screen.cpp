@@ -2026,6 +2026,45 @@ void Screen::primary_render_func()
    return;
 }
 
+void Screen::mouse_axes_func(ALLEGRO_EVENT* ev)
+{
+   AllegroFlare::Screens::Gameplay::mouse_axes_func(ev);
+   return;
+}
+
+void Screen::mouse_down_func(ALLEGRO_EVENT* ev)
+{
+   AllegroFlare::Screens::Gameplay::mouse_down_func(ev);
+   return;
+}
+
+void Screen::action__save_progress()
+{
+   save_progress_file();
+   white_flash();
+   return;
+}
+
+void Screen::action__load_progress()
+{
+   load_progress_file();
+   refresh_environment_and_world();
+
+   // Set the player location
+   player_entity->aabb2d.set_x(gameplay_progress.player_location.x);
+   player_entity->aabb2d.set_y(gameplay_progress.player_location.y);
+
+   // mark collected items as collected
+   for (auto &entity : entities)
+   {
+      if (items_collected_tmj_ids.count(entity.tmj_id) == 0) continue;
+      mark_entity_collected(&entity);
+   }
+
+   white_flash();
+   return;
+}
+
 void Screen::key_down_func(ALLEGRO_EVENT* ev)
 {
    if (!(initialized))
@@ -2054,11 +2093,11 @@ void Screen::key_down_func(ALLEGRO_EVENT* ev)
    switch(ev->keyboard.keycode)
    {
       case ALLEGRO_KEY_9: {
-         save_progress_file();
-         white_flash();
+         action__save_progress();
       } break;
 
       case ALLEGRO_KEY_0: {
+         action__load_progress();
          load_progress_file();
          refresh_environment_and_world();
 

@@ -3,16 +3,29 @@ properties:
 
   - name: animals
     type: std::vector<TINS2026::Animal>
-    init_with: '{}'
+    init_with: build_animal_database()
 
 
 methods:
 
 
-  - name: run
-    type: std::string
+  - name: build_animal_database
+    type: std::vector<TINS2026::Animal>
     body: |
-      return "Hello World!";
+      int LINES_OF_NOTES_NEEDED = 3;
+      double HYPE_RATE = 15.0;
+
+      std::vector<TINS2026::Animal> result = {
+         Animal::build("giraffe",
+            "Giraffe", {
+               "Amazing! A giraffe!",
+               "They have huge long necks!",
+            },
+            LINES_OF_NOTES_NEEDED,
+            HYPE_RATE
+         )
+      };
+      return result;
 
 
 dependencies:

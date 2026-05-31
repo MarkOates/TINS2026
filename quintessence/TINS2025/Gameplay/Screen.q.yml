@@ -1950,6 +1950,57 @@ methods:
       return;
 
 
+  - name: mouse_axes_func
+    virtual: true
+    override: true
+    parameters:
+      - name: ev
+        type: ALLEGRO_EVENT*
+        default_argument: nullptr
+    body: |
+      AllegroFlare::Screens::Gameplay::mouse_axes_func(ev);
+      return;
+
+
+  - name: mouse_down_func
+    virtual: true
+    override: true
+    parameters:
+      - name: ev
+        type: ALLEGRO_EVENT*
+        default_argument: nullptr
+    body: |
+      AllegroFlare::Screens::Gameplay::mouse_down_func(ev);
+      return;
+
+
+  - name: action__save_progress
+    body: |
+      save_progress_file();
+      white_flash();
+      return;
+
+
+  - name: action__load_progress
+    body: |
+      load_progress_file();
+      refresh_environment_and_world();
+
+      // Set the player location
+      player_entity->aabb2d.set_x(gameplay_progress.player_location.x);
+      player_entity->aabb2d.set_y(gameplay_progress.player_location.y);
+
+      // mark collected items as collected
+      for (auto &entity : entities)
+      {
+         if (items_collected_tmj_ids.count(entity.tmj_id) == 0) continue;
+         mark_entity_collected(&entity);
+      }
+
+      white_flash();
+      return;
+
+
   - name: key_down_func
     virtual: true
     override: true
@@ -1971,11 +2022,11 @@ methods:
       switch(ev->keyboard.keycode)
       {
          case ALLEGRO_KEY_9: {
-            save_progress_file();
-            white_flash();
+            action__save_progress();
          } break;
 
          case ALLEGRO_KEY_0: {
+            action__load_progress();
             load_progress_file();
             refresh_environment_and_world();
 
