@@ -39,6 +39,7 @@ void to_json(nlohmann::json& j, const GameplayProgress& object)
       { "player_lines_filled", object.player_lines_filled },
       { "progress_and_state_flags", progress_and_state_flags },
       { "documented_entity_types", documented_entity_types },
+      { "triggered_dialog_names", object.triggered_dialog_names },
    };
 }
 
@@ -50,6 +51,7 @@ void from_json(const nlohmann::json& j, GameplayProgress& object)
    j.at("player_line_capacity").get_to(object.player_line_capacity);
    j.at("player_lines_filled").get_to(object.player_lines_filled);
    j.at("player_freakouts").get_to(object.player_freakouts);
+   j.at("triggered_dialog_names").get_to(object.triggered_dialog_names);
 
    // Fill the progress_and_state_flags
    std::set<std::string> progress_and_state_flags_str;

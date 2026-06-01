@@ -68,7 +68,7 @@
       "spin_in_unit_values": true,
       "stepout": {
         "x": 0.0,
-        "y": 0.25,
+        "y": 0.5,
         "z": 55.0
       },
       "tilt": 0.015625,

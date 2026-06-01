@@ -3,7 +3,10 @@
 #include <TINS2025/Entity.hpp>
 
 #include <allegro5/allegro_primitives.h>
+#include <iostream>
 #include <map>
+#include <sstream>
+#include <stdexcept>
 
 
 namespace TINS2025
@@ -38,6 +41,7 @@ std::string Entity::to_string(Type value, bool throw_on_error)
    if (value == Type::ENTITY_TYPE_FRIEND_3) return "entity_type_friend_3";
    if (value == Type::ENTITY_TYPE_APPLE) return "entity_type_apple";
    if (value == Type::ENTITY_TYPE_CARROT) return "entity_type_carrot";
+   if (value == Type::ENTITY_TYPE_INFO_SIGN) return "entity_type_info_sign";
    if (value == Type::ENTITY_TYPE_RED_CARROT) return "entity_type_red_carrot";
    if (value == Type::ENTITY_TYPE_DIALOG_TRIGGER) return "entity_type_dialog_trigger";
    if (value == Type::ENTITY_TYPE_DIALOG_TRIGGER_1) return "entity_type_dialog_trigger_1";
@@ -67,7 +71,7 @@ std::string Entity::to_string(Type value, bool throw_on_error)
    if (value == Type::ENTITY_TYPE_GOAT) return "entity_type_goat";
    if (value == Type::ENTITY_TYPE_LEOPARD) return "entity_type_leopard";
    if (value == Type::ENTITY_TYPE_TIGER) return "entity_type_tiger";
-   if (value == Type::ENTITY_TYPE_ZEBRAH) return "entity_type_zebrah";
+   if (value == Type::ENTITY_TYPE_ZEBRA) return "entity_type_zebra";
    // TODO: Implement "throw_on_error" argument
    return "";
 }
@@ -82,6 +86,7 @@ Entity::Type Entity::from_string(std::string value, bool throw_on_error)
    if (value == "entity_type_friend_3") return Type::ENTITY_TYPE_FRIEND_3;
    if (value == "entity_type_apple") return Type::ENTITY_TYPE_APPLE;
    if (value == "entity_type_carrot") return Type::ENTITY_TYPE_CARROT;
+   if (value == "entity_type_info_sign") return Type::ENTITY_TYPE_INFO_SIGN;
    if (value == "entity_type_red_carrot") return Type::ENTITY_TYPE_RED_CARROT;
    if (value == "entity_type_dialog_trigger") return Type::ENTITY_TYPE_DIALOG_TRIGGER;
    if (value == "entity_type_dialog_trigger_1") return Type::ENTITY_TYPE_DIALOG_TRIGGER_1;
@@ -111,7 +116,7 @@ Entity::Type Entity::from_string(std::string value, bool throw_on_error)
    if (value == "entity_type_goat") return Type::ENTITY_TYPE_GOAT;
    if (value == "entity_type_leopard") return Type::ENTITY_TYPE_LEOPARD;
    if (value == "entity_type_tiger") return Type::ENTITY_TYPE_TIGER;
-   if (value == "entity_type_zebrah") return Type::ENTITY_TYPE_ZEBRAH;
+   if (value == "entity_type_zebra") return Type::ENTITY_TYPE_ZEBRA;
    throw std::runtime_error("Blast/Cpp/EnumClass: ERROR: Could not find enum for \" + value + \"");
 }
 
@@ -123,13 +128,25 @@ std::string Entity::type_to_string()
       { ENTITY_TYPE_GOAT, "Goat" },
       { ENTITY_TYPE_LEOPARD, "Leopard", },
       { ENTITY_TYPE_TIGER, "Tiger", },
-      { ENTITY_TYPE_ZEBRAH, "Zebrah", },
+      { ENTITY_TYPE_ZEBRA, "Zebra", },
    };
    if (names.count(type) == 0)
    {
       throw std::runtime_error("AAAAAAAAAAAAA! Entity: No name found for this entity type.");
    }
    return names[type];
+}
+
+bool Entity::has_flag(uint32_t flag)
+{
+   if (!((flag != 0)))
+   {
+      std::stringstream error_message;
+      error_message << "[TINS2025::Entity::has_flag]: error: guard \"(flag != 0)\" not met.";
+      std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
+      throw std::runtime_error("[TINS2025::Entity::has_flag]: error: guard \"(flag != 0)\" not met");
+   }
+   return (flags & flag) != 0;
 }
 
 void Entity::draw()

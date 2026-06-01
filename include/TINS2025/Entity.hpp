@@ -36,6 +36,7 @@ namespace TINS2025
          ENTITY_TYPE_FRIEND_3,
          ENTITY_TYPE_APPLE,
          ENTITY_TYPE_CARROT,
+         ENTITY_TYPE_INFO_SIGN,
          ENTITY_TYPE_RED_CARROT,
          ENTITY_TYPE_DIALOG_TRIGGER,
          ENTITY_TYPE_DIALOG_TRIGGER_1,
@@ -65,7 +66,7 @@ namespace TINS2025
          ENTITY_TYPE_GOAT,
          ENTITY_TYPE_LEOPARD,
          ENTITY_TYPE_TIGER,
-         ENTITY_TYPE_ZEBRAH,
+         ENTITY_TYPE_ZEBRA,
       };
       enum AnimationMode
       {
@@ -95,6 +96,7 @@ namespace TINS2025
       static std::string to_string(Type value=Type::ENTITY_TYPE_UNDEF, bool throw_on_error=true);
       static Type from_string(std::string value="[unset-value]", bool throw_on_error=true);
       std::string type_to_string();
+      bool has_flag(uint32_t flag=0);
       void draw();
    };
 }

@@ -23,6 +23,11 @@ AnimalDatabase::~AnimalDatabase()
 }
 
 
+int AnimalDatabase::total_number_of_animals()
+{
+   return (int)animals.size();
+}
+
 const TINS2026::Animal& AnimalDatabase::get_record_by_entity_type(TINS2025::Entity::Type entity_type)
 {
    if (!((entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)))
@@ -74,6 +79,50 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
             "This goat... ",
             "IS SOOO CUUUTEE!",
             "This has to be the CUTEST GOAT in the ENTIRE WORLD!",
+         },
+         LINES_OF_NOTES_NEEDED,
+         HYPE_RATE,
+         HYPE_AURA_RADIUS
+      ),
+
+      Animal::build(
+         "leopard",
+         "Leopard",
+         TINS2025::Entity::Type::ENTITY_TYPE_LEOPARD,
+         {
+            "Leopards. Another cutie!",
+            "These guys have exceptional night vision.",
+            "Leopards can see up to seven times better in the dark than humans."
+         },
+         LINES_OF_NOTES_NEEDED,
+         HYPE_RATE,
+         HYPE_AURA_RADIUS
+      ),
+
+      Animal::build(
+         "tiger",
+         "Tiger",
+         TINS2025::Entity::Type::ENTITY_TYPE_TIGER,
+         {
+            "Whoa, a tiger!",
+            "Look at those magnificent stripes!",
+            "Did you know that no two tigers have the exact same stripe pattern?",
+            "They're totally unique, just like human fingerprints!"
+         },
+         LINES_OF_NOTES_NEEDED,
+         HYPE_RATE,
+         HYPE_AURA_RADIUS
+      ),
+
+      Animal::build(
+         "zebra",
+         "Zebra",
+         TINS2025::Entity::Type::ENTITY_TYPE_ZEBRA,
+         {
+            "Oh wow, a zebra!",
+            "Are they white with black stripes, or black with white stripes?",
+            "Actually, underneath all that hair, their skin is totally black!",
+            "Nature is so wild."
          },
          LINES_OF_NOTES_NEEDED,
          HYPE_RATE,

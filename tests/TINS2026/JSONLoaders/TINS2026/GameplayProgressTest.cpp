@@ -28,6 +28,10 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
      TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE,
      TINS2025::Entity::Type::ENTITY_TYPE_GOAT,
    };
+   gameplay_progress.triggered_dialog_names = {
+     "zoo_entrance_reaction",
+     "zoo_intro_dialog",
+   };
 
 
    nlohmann::json j = gameplay_progress;
@@ -57,6 +61,10 @@ R"({
   "progress_and_state_flags": [
     "flag_foo_test_flag_1",
     "flag_foo_test_flag_2"
+  ],
+  "triggered_dialog_names": [
+    "zoo_entrance_reaction",
+    "zoo_intro_dialog"
   ]
 })";
 
@@ -83,6 +91,10 @@ TEST(TINS2026_JSONLoaders_TINS2026_GameplayProgressTest,
      TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE,
      TINS2025::Entity::Type::ENTITY_TYPE_GOAT,
    };
+   gameplay_progress.triggered_dialog_names = {
+     "zoo_entrance_reaction",
+     "zoo_intro_dialog",
+   };
 
    TINS2026::GameplayProgress actual_gameplay_progress;
 
@@ -108,6 +120,10 @@ R"({
   "progress_and_state_flags": [
     "flag_foo_test_flag_1",
     "flag_foo_test_flag_2"
+  ],
+  "triggered_dialog_names": [
+    "zoo_entrance_reaction",
+    "zoo_intro_dialog"
   ]
 })";
 

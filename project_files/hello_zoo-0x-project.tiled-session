@@ -30,6 +30,7 @@
     },
     "last.imagePath": "/Users/markoates/Desktop",
     "map.height": 32,
+    "map.lastUsedFormat": "json",
     "map.tileHeight": 8,
     "map.tileWidth": 8,
     "map.width": 64,
@@ -40,6 +41,7 @@
     "recentFiles": [
         "/Users/markoates/Repos/TINS2026/bin/data/maps/hello_zoo-world_map-02.tmj"
     ],
+    "resizeMap.removeObjects": false,
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
         "height": 8,

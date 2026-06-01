@@ -77,6 +77,7 @@ enums:
        - ENTITY_TYPE_FRIEND_3
        - ENTITY_TYPE_APPLE
        - ENTITY_TYPE_CARROT
+       - ENTITY_TYPE_INFO_SIGN
        - ENTITY_TYPE_RED_CARROT
        - ENTITY_TYPE_DIALOG_TRIGGER
        - ENTITY_TYPE_DIALOG_TRIGGER_1
@@ -106,7 +107,7 @@ enums:
        - ENTITY_TYPE_GOAT
        - ENTITY_TYPE_LEOPARD
        - ENTITY_TYPE_TIGER
-       - ENTITY_TYPE_ZEBRAH
+       - ENTITY_TYPE_ZEBRA
 
 
   - name: AnimationMode
@@ -129,7 +130,7 @@ methods:
          { ENTITY_TYPE_GOAT, "Goat" },
          { ENTITY_TYPE_LEOPARD, "Leopard", },
          { ENTITY_TYPE_TIGER, "Tiger", },
-         { ENTITY_TYPE_ZEBRAH, "Zebrah", },
+         { ENTITY_TYPE_ZEBRA, "Zebra", },
       };
       if (names.count(type) == 0)
       {
@@ -138,6 +139,17 @@ methods:
       return names[type];
     body_dependency_symbols:
       - std::map
+
+
+  - name: has_flag
+    type: bool
+    parameters:
+      - name: flag
+        type: uint32_t
+        default_argument: 0
+    guards: [ (flag != 0) ]
+    body: |
+      return (flags & flag) != 0;
 
 
   - name: draw

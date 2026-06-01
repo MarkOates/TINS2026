@@ -1,18 +1,14 @@
 {
-  "documented_entity_types": [
-    "entity_type_goat"
-  ],
-  "items_collected_tmj_ids": [
-    71,
-    81,
-    89
-  ],
-  "player_excitement": 100.0,
-  "player_line_capacity": 12,
-  "player_lines_filled": 3,
+  "documented_entity_types": [],
+  "items_collected_tmj_ids": [],
+  "player_excitement": 0.0,
+  "player_freakouts": 0,
+  "player_line_capacity": 0,
+  "player_lines_filled": 0,
   "player_location": {
-    "x": 1.976874828338623,
-    "y": 15.470010757446289
+    "x": 29.085247039794922,
+    "y": 49.695865631103516
   },
-  "progress_and_state_flags": []
+  "progress_and_state_flags": [],
+  "triggered_dialog_names": []
 }

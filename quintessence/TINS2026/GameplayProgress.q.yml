@@ -31,8 +31,8 @@ properties:
     init_with: '{}'
     exposed: true
 
-  - name: triggered_dialogs
-    type: std::set<uint32_t>
+  - name: triggered_dialog_names
+    type: std::set<std::string>
     init_with: '{}'
     exposed: true
 

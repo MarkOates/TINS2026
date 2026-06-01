@@ -237,6 +237,12 @@ properties:
     static: true
     constexpr: true
 
+  - name: NARRATOR
+    type: char*
+    init_with: '(char*)""'
+    static: true
+    constexpr: true
+
   - name: LOTTIE
     type: char*
     init_with: '(char*)"Lottie"'
@@ -357,6 +363,7 @@ methods:
          }
 
          if (speaker == LOTTIE) customize_dialog_for_DOTTIE();
+         else if (speaker == NARRATOR) customize_dialog_for_NARRATOR();
          else if (speaker == FRIEND_1) customize_dialog_for_FRIEND_1();
          else if (speaker == FRIEND_2) customize_dialog_for_FRIEND_2();
          else if (speaker == FRIEND_3) customize_dialog_for_FRIEND_3();
@@ -477,6 +484,26 @@ methods:
       dialog_system->set_standard_dialog_box_background_color(al_color_html("fdf5e6"));
       dialog_system->set_standard_dialog_box_text_color(al_color_html("9f6b32"));
       dialog_system->set_standard_dialog_box_label_color(al_color_html("fdf5e6"));
+      dialog_system->set_standard_dialog_box_y(1080/5*4);
+
+      //dialog_system->set_standard_dialog_box_frame_color(al_color_html("c4b067"));
+      //dialog_system->set_standard_dialog_box_background_color(al_color_html("c4b067"));
+      //dialog_system->set_standard_dialog_box_text_color(al_color_html("60541f"));
+      //dialog_system->set_standard_dialog_box_label_color(al_color_html("60541f"));
+      return;
+
+
+  - name: customize_dialog_for_NARRATOR
+    body: |
+      dialog_system->set_standard_dialog_box_frame_color(al_color_html("6dbacc"));
+      dialog_system->set_standard_dialog_box_background_color(al_color_html("6dbacc"));
+      dialog_system->set_standard_dialog_box_text_color(al_color_html("4270a2"));
+      dialog_system->set_standard_dialog_box_label_color(al_color_html("4270a2"));
+      dialog_system->set_standard_dialog_box_y(1080/2);
+      //dialog_system->set_standard_dialog_box_frame_color(al_color_html("c6987e"));
+      //dialog_system->set_standard_dialog_box_background_color(al_color_html("fdf5e6"));
+      //dialog_system->set_standard_dialog_box_text_color(al_color_html("9f6b32"));
+      //dialog_system->set_standard_dialog_box_label_color(al_color_html("fdf5e6"));
       //dialog_system->set_standard_dialog_box_frame_color(al_color_html("c4b067"));
       //dialog_system->set_standard_dialog_box_background_color(al_color_html("c4b067"));
       //dialog_system->set_standard_dialog_box_text_color(al_color_html("60541f"));
@@ -831,18 +858,14 @@ methods:
       return;
 
 
-  - name: is_dialog_already_triggered
+  - name: is_only_once_dialog_already_triggered
     type: bool
     parameters:
       - name: dialog_identifier
         type: std::string
         default_argument: '"[unset-dialog_identifier]"'
     body: |
-      // TODO: HERE
-
-      //gameplay_progress.triggered_dialogs.insert(entity_type);
-      //review_documented_animals_for_win_condition(); // DEVELOPMENT
-      return false;
+      return (gameplay_progress.triggered_dialog_names.count(dialog_identifier) > 0);
 
 
   - name: mark_dialog_as_triggered
@@ -851,6 +874,7 @@ methods:
         type: std::string
         default_argument: '"[unset-dialog_identifier]"'
     body: |
+      gameplay_progress.triggered_dialog_names.insert(dialog_identifier);
       // TODO: HERE
 
       //gameplay_progress.triggered_dialogs.insert(entity_type);
@@ -877,7 +901,8 @@ methods:
   - name: review_documented_animals_for_win_condition
     body: |
       // TODO: Expand what happens here. Probably a new scene?
-      if (gameplay_progress.documented_entity_types.size() >= 2) // DEVELOPMENT
+      int total_animals = animal_database.total_number_of_animals();
+      if (gameplay_progress.documented_entity_types.size() >= total_animals) // DEVELOPMENT
       {
          //event_emitter->emit_activate_dialog_node_by_name_event("emit_win_game");
          event_emitter->emit_play_music_track_event("closer");
@@ -954,10 +979,22 @@ methods:
             switch (entity.type)
             {
                case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER: {
-                  //if (!is_dialog_already_triggered(entity.name))
-                  //{
+                  bool is_only_once = entity.has_flag(Entity::FLAG_DIALOG_TRIGGERS_ONLY_ONCE);
+                  if (is_only_once && !is_only_once_dialog_already_triggered(entity.name))
+                  {
                      event_emitter->emit_activate_dialog_node_by_name_event(entity.name); // HERE
-                     mark_dialog_as_triggered(entity.name);
+                     if (is_only_once) mark_dialog_as_triggered(entity.name);
+                  }
+               } break;
+
+               case TINS2025::Entity::ENTITY_TYPE_INFO_SIGN: {
+                  event_emitter->emit_activate_dialog_node_by_name_event("meet_" + entity.name);
+                  //entity.name
+                  //bool is_only_once = entity.has_flag(Entity::FLAG_DIALOG_TRIGGERS_ONLY_ONCE);
+                  //if (is_only_once && !is_only_once_dialog_already_triggered(entity.name))
+                  //{
+                     //event_emitter->emit_activate_dialog_node_by_name_event(entity.name); // HERE
+                     //if (is_only_once) mark_dialog_as_triggered(entity.name);
                   //}
                } break;
 
@@ -1264,8 +1301,8 @@ methods:
       view_motion_studio.setup_camera_projection_on_live_camera();
 
       AllegroFlare::Placement3D environment_model_displacement;
-      environment_model_displacement.position.x = 0.5;
-      environment_model_displacement.position.z = 0.5;
+      //environment_model_displacement.position.x = 0.5;
+      //environment_model_displacement.position.z = 0.5;
       environment_model_displacement.start_transform();
       environment_model->draw();
       environment_model_displacement.restore_transform();
@@ -1727,6 +1764,8 @@ methods:
          e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER;
 
 
+         e.model = model_bin->auto_get("character_model-01.obj");
+
          // BY TYPE
          int dialog_trigger_count = 0;
          if (object->type == "dialog_trigger")
@@ -1756,14 +1795,24 @@ methods:
             e.aabb2d.set_h(object_h);
             dialog_trigger_count++;
          }
+         else if (object->type == "info_sign")
+         {
+            e.type = TINS2025::Entity::ENTITY_TYPE_INFO_SIGN;
+            e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+            e.model = model_bin->auto_get("hello_zoo-entities-0x-info_sign.obj");
+            e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER;
+            //continue;
+            //e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+            //e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
+         }
 
-         std::cout << "DIALOG TRIGGERS ACCUMULATED: " << dialog_trigger_count << std::endl;
+         //std::cout << "DIALOG TRIGGERS ACCUMULATED: " << dialog_trigger_count << std::endl;
 
 
 
          // BY NAME
-         e.model = model_bin->auto_get("character_model-01.obj");
-         if (object->name == "friend_1")
+         //e.model = model_bin->auto_get("character_model-01.obj");
+         else if (object->name == "friend_1")
          {
             e.type = TINS2025::Entity::ENTITY_TYPE_FRIEND_1;
             e.sprite = bitmap_bin->auto_get("friend_1.png");
@@ -1816,9 +1865,9 @@ methods:
             e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
             e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
          }
-         else if (object->name == "zebrah")
+         else if (object->name == "zebra")
          {
-            e.type = TINS2025::Entity::ENTITY_TYPE_ZEBRAH;
+            e.type = TINS2025::Entity::ENTITY_TYPE_ZEBRA;
             e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
             e.model = model_bin->auto_get("hello_zoo-entities-0x-zebrah.obj");
             e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
@@ -2965,7 +3014,7 @@ methods:
                "I made it!",
                "I may be a botanist by trade, but I like to think of myself as a bit of an amateur zoologist, too!",
                "I LOVE THE ZOO!!",
-               "I can't wait to check out the (em)mysterious animals(/em).",
+               "I can't wait to check out the mysterious animals.",
                //"I came all the way to this zoo just to see them!",
             }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
          )},
@@ -2981,21 +3030,65 @@ methods:
                "They're in the presence of some of the most majestic creatures...",
                "like...",
                "...ever!",
+               "It's a good thing I brought my (em)notebook(/em) with all of the (em)blank pages(/em) in it.",
+               "With these (em)blank pages(/em), I can write down my thoughts so I don't get overwhelmed!"
                //"I bet they're pretty cool and relaxed just knowing they're nearby!",
             }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
          )},
          { "zoo_mechanic_setup", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
-               "Oooh! And there's the first exhibit! The Red Panda!",
+               "Oooh! And there's the first exhibit! The Goat!",
                "EEEeeee!! It's so cute I can't even stand it!",
                "Wait... oh no! My notebook!",
-               "The wind just blew all of my notebook pages all over the zoo!",
-               "What am I gonna do!?",
-               "I need to find those pages. I can't possibly document these animals without my notes.",
-               "And I have to stay focused...",
-               "If I get too close to the animals without writing my notes, I'll get way too overstimulated!",
-               "Deep breaths, Lottie. Find the pages, approach the animals, and write, write, write!",
-               "That's the only way to keep my cool."
+
+            //}, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("start_plant_reveal"), 0 } }
+
+               //"The wind just blew all of my notebook pages all over the zoo!",
+               //"What am I gonna do!?",
+               //"I need to find those pages. I can't possibly document these animals without my notes.",
+               //"And I have to stay focused...",
+               //"If I get too close to the animals without writing my notes, I'll get way too overstimulated!",
+               //"Deep breaths, Lottie. Find the pages, approach the animals, and write, write, write!",
+               //"That's the only way to keep my cool."
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("zoo_wind_blows_notebook"), 0 } }
+         )},
+         { "zoo_mechanic__after_wind", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+               //"Oooh! And there's the first exhibit! The Red Panda!",
+               //"EEEeeee!! It's so cute I can't even stand it!",
+               //"Wait... oh no! My notebook!",
+
+            //}, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("start_plant_reveal"), 0 } }
+
+               "AAgh! The wind just blew all of my (em)blank pages(/em) all over the zoo!",
+               "Wha... what am I gonna do!?",
+               "I need to find those (em)blank pages(/em). I can't possibly document all these animals without them!",
+               //"And, if I can't write stuff down... (em)I'll get overwhelmed from all the excitement(/em).",
+
+               //"And I have to stay focused...",
+               "If I get too close to the animals without being able to write stuff down, I'll get (em)overstimulated(/em)!",
+               "Writing notes is how I keep my mind clear.",
+               "Deep breaths...",
+               "*pfoo* *pfoo*",
+               //"If I find the pages, approach the animals!",
+               //"That's the only way to keep my cool."
             }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         )},
+         { "zoo_wind_blows_notebook", new AllegroFlare::DialogTree::Nodes::Interparsable(NARRATOR, {
+               "Suddenly, an unexpected gust of wind blew through the zoo.",
+               "It was so fierce, all of Lottie's blank pages soared into the air and were spread all over the zoo!",
+               //"",
+               //"Oooh! And there's the first exhibit! The Red Panda!",
+               //"EEEeeee!! It's so cute I can't even stand it!",
+               //"Wait... oh no! My notebook!",
+               //"The wind just blew all of my notebook pages all over the zoo!",
+               //"What am I gonna do!?",
+               //"I need to find those pages. I can't possibly document these animals without my notes.",
+               //"And I have to stay focused...",
+               //"If I get too close to the animals without writing my notes, I'll get way too overstimulated!",
+               //"Deep breaths, Lottie. Find the pages, approach the animals, and write, write, write!",
+               //"That's the only way to keep my cool."
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("zoo_mechanic__after_wind"), 0 } }
+            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
          )},
 
 
@@ -3036,6 +3129,20 @@ methods:
          build_document_node(Entity::Type::ENTITY_TYPE_GOAT),
          build_emit_document_event_node(Entity::Type::ENTITY_TYPE_GOAT),
 
+
+         build_meet_node(Entity::Type::ENTITY_TYPE_ZEBRA),
+         build_document_node(Entity::Type::ENTITY_TYPE_ZEBRA),
+         build_emit_document_event_node(Entity::Type::ENTITY_TYPE_ZEBRA),
+
+
+         build_meet_node(Entity::Type::ENTITY_TYPE_TIGER),
+         build_document_node(Entity::Type::ENTITY_TYPE_TIGER),
+         build_emit_document_event_node(Entity::Type::ENTITY_TYPE_TIGER),
+
+
+         build_meet_node(Entity::Type::ENTITY_TYPE_LEOPARD),
+         build_document_node(Entity::Type::ENTITY_TYPE_LEOPARD),
+         build_emit_document_event_node(Entity::Type::ENTITY_TYPE_LEOPARD),
 
 
          //{ build_meet_node_identifier(Entity::Type::ENTITY_TYPE_GIRAFFE),

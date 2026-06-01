@@ -38,6 +38,7 @@ namespace TINS2025
       {
       public:
          static constexpr int LINES_PER_PAGE = 4;
+         static constexpr char* NARRATOR = (char*)"";
          static constexpr char* LOTTIE = (char*)"Lottie";
          static constexpr char* FRIEND_1 = (char*)"Frank";
          static constexpr char* FRIEND_2 = (char*)"Ditto";
@@ -159,6 +160,7 @@ namespace TINS2025
          void load_progress_file();
          void save_progress_file();
          void customize_dialog_for_DOTTIE();
+         void customize_dialog_for_NARRATOR();
          void customize_dialog_for_FRIEND_1();
          void customize_dialog_for_FRIEND_2();
          void customize_dialog_for_FRIEND_3();
@@ -170,7 +172,7 @@ namespace TINS2025
          virtual void on_deactivate() override;
          void mark_entity_collected(TINS2025::Entity* entity=nullptr);
          void time_step_player_excitement(double time_step=1.0/60.0);
-         bool is_dialog_already_triggered(std::string dialog_identifier="[unset-dialog_identifier]");
+         bool is_only_once_dialog_already_triggered(std::string dialog_identifier="[unset-dialog_identifier]");
          void mark_dialog_as_triggered(std::string dialog_identifier="[unset-dialog_identifier]");
          void document_animal_type(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          void review_documented_animals_for_win_condition();

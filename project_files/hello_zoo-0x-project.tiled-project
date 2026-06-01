@@ -11,7 +11,7 @@
     ],
     "propertyTypes": [
         {
-            "color": "#ff945200",
+            "color": "#ffff9300",
             "drawFill": true,
             "id": 4,
             "members": [
@@ -64,6 +64,26 @@
                 "NOTEBOOK_PAGE"
             ],
             "valuesAsFlags": false
+        },
+        {
+            "color": "#ff945200",
+            "drawFill": true,
+            "id": 6,
+            "members": [
+            ],
+            "name": "info_sign",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
         },
         {
             "color": "#ffd4fb79",
