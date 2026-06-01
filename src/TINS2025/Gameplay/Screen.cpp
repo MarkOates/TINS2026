@@ -867,6 +867,29 @@ void Screen::on_activate()
       std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
       throw std::runtime_error("[TINS2025::Gameplay::Screen::on_activate]: error: guard \"initialized\" not met");
    }
+   std::vector<std::string> tokens = {
+      "W", "%SPACE", "A", "%SPACE", "S", "%SPACE", "D", "%SPACER", "LABEL>>", "Move", 
+      "%SEPARATOR",
+      "ENTER", "%SPACER", "LABEL>>", "Advance dialog", 
+      "%SEPARATOR",
+      "9", "%SPACER", "LABEL>>", "Quick save", 
+      "%SEPARATOR",
+      "0", "%SPACER", "LABEL>>", "Quick load", 
+      //"%SEPARATOR",
+      //"P", "%SPACER", "LABEL>>", "Pause", 
+      //"%SEPARATOR",
+      //"SHIFT", "%SPACE", "%PLUS", "%SPACE", "ESC", "%SPACER", "LABEL>>", "Exit program", 
+   };
+   //std::vector<std::string> tokens = {
+      //"ESC", "%SPACER", "LABEL>>", "Exit test",
+      //"%SEPARATOR",
+      //"N", "%SPACER", "LABEL>>", "Post a notification"
+      //"%SEPARATOR",
+      //"F", "%SPACER", "LABEL>>", "Toggle fullscreen"
+   //};
+   event_emitter->emit_set_input_hints_bar_event(tokens);
+   event_emitter->emit_show_input_hints_bar_event();
+   event_emitter->emit_set_input_hints_bar_text_opacity_event(0.75);
    //emit_event_to_update_input_hints_bar();
    //emit_show_and_size_input_hints_bar_event();
    return;
@@ -881,6 +904,7 @@ void Screen::on_deactivate()
       std::cerr << "\033[1;31m" << error_message.str() << " An exception will be thrown to halt the program.\033[0m" << std::endl;
       throw std::runtime_error("[TINS2025::Gameplay::Screen::on_deactivate]: error: guard \"initialized\" not met");
    }
+   event_emitter->emit_hide_input_hints_bar_event();
    //emit_hide_and_restore_size_input_hints_bar_event();
    return;
 }
