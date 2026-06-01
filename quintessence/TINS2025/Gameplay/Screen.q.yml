@@ -1582,6 +1582,10 @@ methods:
          if (it != entities.end()) { (*it).flags &= ~TINS2025::Entity::FLAG_HIDDEN; }
          else { } // Not found
       }
+      else if (game_event->is_type("wind_blow"))
+      {
+         reveal_all_notebook_pages();
+      }
       else if (game_event->is_type("bakeoff_begins"))
       {
          //event_emitter->emit_play_music_track_event("sad_theme");
@@ -1877,6 +1881,7 @@ methods:
          {
             e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
             e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
+            e.flags |= TINS2025::Entity::FLAG_HIDDEN; // HIDE Notebook pages by default
          }
          else if (object->name == "friend_2")
          {
@@ -2134,6 +2139,21 @@ methods:
       }
 
       update();
+      return;
+
+
+  - name: reveal_all_notebook_pages
+    body: |
+      for (auto &entity : entities)
+      {
+         if (entity.type == TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE)
+         {
+            //e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
+            //e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
+            //e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
+         }
+      }
       return;
 
 
@@ -3039,57 +3059,32 @@ methods:
                "Oooh! And there's the first exhibit! The Goat!",
                "EEEeeee!! It's so cute I can't even stand it!",
                "Wait... oh no! My notebook!",
-
-            //}, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("start_plant_reveal"), 0 } }
-
-               //"The wind just blew all of my notebook pages all over the zoo!",
-               //"What am I gonna do!?",
-               //"I need to find those pages. I can't possibly document these animals without my notes.",
-               //"And I have to stay focused...",
-               //"If I get too close to the animals without writing my notes, I'll get way too overstimulated!",
-               //"Deep breaths, Lottie. Find the pages, approach the animals, and write, write, write!",
-               //"That's the only way to keep my cool."
-            //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
             }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("zoo_wind_blows_notebook"), 0 } }
          )},
          { "zoo_mechanic__after_wind", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
-               //"Oooh! And there's the first exhibit! The Red Panda!",
-               //"EEEeeee!! It's so cute I can't even stand it!",
-               //"Wait... oh no! My notebook!",
-
-            //}, { { "plant spawn", new AllegroFlare::DialogTree::NodeOptions::GoToNode("start_plant_reveal"), 0 } }
-
                "AAgh! The wind just blew all of my (em)blank pages(/em) all over the zoo!",
                "Wha... what am I gonna do!?",
                "I need to find those (em)blank pages(/em). I can't possibly document all these animals without them!",
-               //"And, if I can't write stuff down... (em)I'll get overwhelmed from all the excitement(/em).",
-
-               //"And I have to stay focused...",
-               "If I get too close to the animals without being able to write stuff down, I'll get (em)overstimulated(/em)!",
-               "Writing notes is how I keep my mind clear.",
+               "If I get too close to the animals without being able to write stuff down, I'll get (em)overwhelmed "
+                  "with excitement(/em)!",
+               "Writing notes is how I keep my mind calm.",
                "Deep breaths...",
                "*pfoo* *pfoo*",
-               //"If I find the pages, approach the animals!",
-               //"That's the only way to keep my cool."
             }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
          )},
          { "zoo_wind_blows_notebook", new AllegroFlare::DialogTree::Nodes::Interparsable(NARRATOR, {
                "Suddenly, an unexpected gust of wind blew through the zoo.",
-               "It was so fierce, all of Lottie's blank pages soared into the air and were spread all over the zoo!",
-               //"",
-               //"Oooh! And there's the first exhibit! The Red Panda!",
-               //"EEEeeee!! It's so cute I can't even stand it!",
-               //"Wait... oh no! My notebook!",
-               //"The wind just blew all of my notebook pages all over the zoo!",
-               //"What am I gonna do!?",
-               //"I need to find those pages. I can't possibly document these animals without my notes.",
-               //"And I have to stay focused...",
-               //"If I get too close to the animals without writing my notes, I'll get way too overstimulated!",
-               //"Deep breaths, Lottie. Find the pages, approach the animals, and write, write, write!",
-               //"That's the only way to keep my cool."
-            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("zoo_mechanic__after_wind"), 0 } }
+               "It was so fierce, all of Lottie's blank pages soared into the air!",
+               "When Lottie finally got her footing, she saw that her notebook pages had been spread out all over the zoo!",
+            }, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_wind_blow"), 0 } }
+            //}, { { "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("zoo_mechanic__after_wind"), 0 } }
             //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
          )},
+         { "->trigger_wind_blow", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+               "wind_blow",
+               "zoo_mechanic__after_wind"
+            )
+         },
 
 
 

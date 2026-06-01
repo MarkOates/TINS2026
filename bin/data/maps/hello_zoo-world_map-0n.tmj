@@ -216,8 +216,8 @@
                  "type":"info_sign",
                  "visible":true,
                  "width":0,
-                 "x":544,
-                 "y":816
+                 "x":536,
+                 "y":808
                 }, 
                 {
                  "height":0,
@@ -557,8 +557,8 @@
                  "type":"info_sign",
                  "visible":true,
                  "width":0,
-                 "x":696,
-                 "y":128
+                 "x":704,
+                 "y":136
                 }, 
                 {
                  "height":0,
@@ -569,8 +569,8 @@
                  "type":"info_sign",
                  "visible":true,
                  "width":0,
-                 "x":880,
-                 "y":336
+                 "x":888,
+                 "y":344
                 }, 
                 {
                  "height":0,
@@ -582,7 +582,7 @@
                  "visible":true,
                  "width":0,
                  "x":136,
-                 "y":256
+                 "y":264
                 }, 
                 {
                  "height":0,
@@ -593,8 +593,8 @@
                  "type":"info_sign",
                  "visible":true,
                  "width":0,
-                 "x":192,
-                 "y":576
+                 "x":200,
+                 "y":584
                 }, 
                 {
                  "height":48,
