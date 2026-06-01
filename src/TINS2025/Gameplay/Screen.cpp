@@ -2985,8 +2985,8 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
       { "zoo_intro_dialog", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
             "Whew!",
             "I made it!",
-            "The Pumpkin City Zoo!",
             "I may be a botanist by trade, but I like to think of myself as a bit of an amateur zoologist, too!",
+            "I LOVE THE ZOO!!",
             "I can't wait to check out the (em)mysterious animals(/em).",
             //"I came all the way to this zoo just to see them!",
          }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
