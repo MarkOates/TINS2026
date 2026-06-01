@@ -36,6 +36,7 @@
     "openFiles": [
     ],
     "project": "hello_zoo-0x-project.tiled-project",
+    "property.type": "bool",
     "recentFiles": [
         "/Users/markoates/Repos/TINS2026/bin/data/maps/hello_zoo-world_map-02.tmj"
     ],

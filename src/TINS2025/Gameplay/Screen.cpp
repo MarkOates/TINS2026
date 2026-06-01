@@ -626,7 +626,7 @@ void Screen::gameplay_suspend_func()
 
 void Screen::gameplay_resume_func()
 {
-   if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(3); // ???
+   if (current_chapter_number == 1) view_motion_studio.set_current_camera_to_camera_at_index(1); // ???
    // Function that is called immediately after the gameplay is resumed.
    //AllegroFlare::Logger::warn_from_once(
       //"AllegroFlare::Screens::Gameplay::gameplay_suspend_func",
@@ -651,37 +651,29 @@ void Screen::load_up_world()
    environment_overlay_placement.rotation.x = 0.25;
    environment_overlay_placement.position.y = 0.25;
 
-   // Setup the tile map
-   ////collision_tile_map.resize(1000, 1000);
-   //collision_tile_map.initialize();
-   //AllegroFlare::Tiled::TMJDataLoader tmj_data_loader;
-   //tmj_data_loader.set_filename(data_folder_path + "maps/hello_friend-world_map-0n.tmj");
-   //tmj_data_loader.load();
-
-   ////get_tilelayers_tile_data
-   //auto data = tmj_data_loader.get_tilelayer_data_by_name_as_2d_vector("collision");
-
-   //collision_tile_map.resize(tmj_data_loader.get_num_columns(), tmj_data_loader.get_num_rows());
-   //collision_tile_map.fill_with_data(data);
-
-   //collision_tile_map.set_tile(69, 34, 1);
 
 
    // Setup the entities
    entities.reserve(256);
 
-   Entity e;
-   e.aabb2d.set_x(9.0);
-   e.aabb2d.set_y(5.0);
-   e.aabb2d.set_w(0.75);
-   e.aabb2d.set_h(0.25);
-   //e.sprite = bitmap_bin->auto_get("character_a-01.png");
-   e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_TILEMAP;
-   e.type = TINS2025::Entity::ENTITY_TYPE_PLAYER;
-   e.model = model_bin->auto_get("character_model-01.obj");
-   e.sprite = bitmap_bin->auto_get("player_character.png");
-   e.model->texture = e.sprite;
-   entities.push_back(e);
+
+
+   { // create teh player character
+      Entity e;
+      e.aabb2d.set_x(9.0);
+      e.aabb2d.set_y(5.0);
+      e.aabb2d.set_w(0.75);
+      e.aabb2d.set_h(0.25);
+      //e.sprite = bitmap_bin->auto_get("character_a-01.png");
+      e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_TILEMAP;
+      e.type = TINS2025::Entity::ENTITY_TYPE_PLAYER;
+      //e.model = model_bin->auto_get("character_model-01.obj");
+      //e.sprite = bitmap_bin->auto_get("player_character.png");
+      e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+      e.model = model_bin->auto_get("hello_zoo-entities-0x-lottie.obj");
+      e.model->texture = e.sprite;
+      entities.push_back(e);
+   }
 
    player_entity = &entities.back();
 
@@ -703,7 +695,7 @@ void Screen::load_up_world()
    view_motion_studio.load_json(file_content);
 
 
-   view_motion_studio.set_current_camera_to_camera_at_index(3); // Set camera to 3 by default
+   view_motion_studio.set_current_camera_to_camera_at_index(1); // Set camera to 1 by default
 
 
    input_mode = INPUT_MODE_PLAYING;
@@ -904,9 +896,30 @@ void Screen::time_step_player_excitement(double time_step)
    {
       gameplay_progress.player_excitement = MAX_ALLOWED_HYPE;
       //event_emitter->emit_game_event(AllegroFlare::GameEvent("player_became_overhyped"));
+      //event_emitter->emit_activate_dialog_node_by_name_event("became_overhyped"); // HERE
+      view_motion_studio.set_current_camera_to_camera_at_index(2);
+      gameplay_progress.player_freakouts++;
       event_emitter->emit_activate_dialog_node_by_name_event("became_overhyped"); // DEVELOPMENT, for now
    }
 
+   return;
+}
+
+bool Screen::is_dialog_already_triggered(std::string dialog_identifier)
+{
+   // TODO: HERE
+
+   //gameplay_progress.triggered_dialogs.insert(entity_type);
+   //review_documented_animals_for_win_condition(); // DEVELOPMENT
+   return false;
+}
+
+void Screen::mark_dialog_as_triggered(std::string dialog_identifier)
+{
+   // TODO: HERE
+
+   //gameplay_progress.triggered_dialogs.insert(entity_type);
+   //review_documented_animals_for_win_condition(); // DEVELOPMENT
    return;
 }
 
@@ -1002,8 +1015,18 @@ void Screen::update()
          TINS2025::Entity &entity = *static_cast<TINS2025::Entity*>(entered);
          if (entity.flags & TINS2025::Entity::FLAG_INACTIVE) continue;
 
+     
+
          switch (entity.type)
          {
+            case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER: {
+               //if (!is_dialog_already_triggered(entity.name))
+               //{
+                  event_emitter->emit_activate_dialog_node_by_name_event(entity.name); // HERE
+                  mark_dialog_as_triggered(entity.name);
+               //}
+            } break;
+
             case TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE: {
                //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
                //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
@@ -1026,212 +1049,6 @@ void Screen::update()
             case TINS2025::Entity::ENTITY_TYPE_GOAT: {
                event_emitter->emit_activate_dialog_node_by_name_event("meet_goat");
             } break;
-
-            case TINS2025::Entity::ENTITY_TYPE_APPLE:
-               if (QUEST__friend_1_requirements_asked)
-               {
-                  entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-                  entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
-                  QUEST__collected_apple = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("inspect_apple");
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CARROT:
-               //if (QUEST__friend_3_requirements_asked)
-               //{
-                  //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-                  //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  //event_emitter->emit_activate_dialog_node_by_name_event("pickup_food"); // DEVELOPMENT
-                  //lottie__num_notebook_pages++;
-                  //event_emitter->emit_activate_dialog_node_by_name_event("#collect_notebook_paper"); // DEVELOPMENT
-                  //QUEST__collected_red_carrot = true;
-               //}
-               //else
-               //{
-                  //event_emitter->emit_activate_dialog_node_by_name_event("inspect_red_carrot");
-               //}
-               //if (QUEST__friend_2_requirements_asked)
-               //{
-                  //entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-                  //entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  //event_emitter->emit_activate_dialog_node_by_name_event("pickup_food");
-                  //QUEST__collected_carrot = true;
-               //}
-               //else
-               //{
-                  //event_emitter->emit_activate_dialog_node_by_name_event("inspect_carrot");
-               //}
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_RED_CARROT:
-               //if (QUEST__friend_3_requirements_asked)
-               //{
-                  entity.flags |= TINS2025::Entity::FLAG_HIDDEN;
-                  entity.flags |= TINS2025::Entity::FLAG_INACTIVE;
-                  //event_emitter->emit_activate_dialog_node_by_name_event("pickup_food"); // DEVELOPMENT
-                  //event_emitter->emit_activate_dialog_node_by_name_event("get_notebook_paper"); // DEVELOPMENT
-                  //QUEST__collected_red_carrot = true;
-               //}
-               //else
-               //{
-                  //event_emitter->emit_activate_dialog_node_by_name_event("inspect_red_carrot");
-               //}
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_1:
-               if (!QUEST__dialog_1_triggered)
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("character_intro_dialog");
-                  QUEST__dialog_1_triggered = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("character_attempts_to_leave");
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_2:
-               if (!QUEST__dialog_2_triggered)
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("character_enters_town");
-                  QUEST__dialog_2_triggered = true;
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_3:
-               if (QUEST__collected_apple && QUEST__collected_carrot && QUEST__collected_red_carrot)
-               {
-                  event_emitter->emit_play_music_track_event("sad_theme");
-                  event_emitter->emit_activate_dialog_node_by_name_event("character_suspicious_of_plant");
-               }
-               else
-               {
-                  if (!QUEST__dialog_3_triggered)
-                  {
-                     event_emitter->emit_activate_dialog_node_by_name_event("character_sees_plant");
-                     QUEST__dialog_3_triggered = true;
-                  }
-                  else
-                  {
-                     event_emitter->emit_activate_dialog_node_by_name_event("character_sees_plant_again");
-                  }
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_4:
-               //if (!QUEST__dialog_2_triggered)
-               //{
-               event_emitter->emit_play_music_track_event("chipper_tune");
-               event_emitter->emit_activate_dialog_node_by_name_event("character_starts_bakeoff");
-               //event_emitter->emit_activate_dialog_node_by_name_event("character_starts_bakeoff");
-               //start_chapter_2
-               //QUEST__dialog_2_triggered = true;
-               //}
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER_5:
-               //if (!QUEST__dialog_2_triggered)
-               //{
-               event_emitter->emit_activate_dialog_node_by_name_event("start_chapter_3");
-               //QUEST__dialog_2_triggered = true;
-               //}
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_FRIEND_1:
-               //if (QUEST__apple_collected)
-               //{
-                  //event_emitter->emit_activate_dialog_node_by_name_event("celebrate_won_game");
-               //}
-               //else
-               //{
-               if (!QUEST__collected_apple)
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("friend_1_requirements");
-                  QUEST__friend_1_requirements_asked = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("friend_1_requirements_met");
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_FRIEND_2:
-               if (!QUEST__collected_carrot)
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("friend_2_requirements");
-                  QUEST__friend_2_requirements_asked = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("friend_2_requirements_met");
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_FRIEND_3:
-               if (!QUEST__collected_red_carrot)
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("friend_3_requirements");
-                  QUEST__friend_3_requirements_asked = true;
-               }
-               else
-               {
-                  event_emitter->emit_activate_dialog_node_by_name_event("friend_3_requirements_met");
-               }
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_0:
-               view_motion_studio.set_current_camera_to_camera_at_index(0);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_1:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(1);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_2:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(2);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_3:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(3);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_4:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(4);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_5:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(5);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_6:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(6);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_7:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(7);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_8:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(8);
-            break;
-
-            case TINS2025::Entity::ENTITY_TYPE_CAMERA_9:
-               view_motion_studio.
-               set_current_camera_to_camera_at_index(9);
-            break;
          }
       }
 
@@ -1488,7 +1305,7 @@ void Screen::render_game_hud()
    }
 
 
-   if (true)
+   if (false)
    { // DEVELOPMENT
       float l=0;
       float lh = 40;
@@ -1836,6 +1653,8 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       black_dip_out();
       move_player_to_last_safe_point();
       gameplay_progress.player_excitement = 0;
+      //view_motion_studio.set_current_camera_to_camera_at_index(2);
+      //gameplay_progress.player_freakouts++;
       //black_dip_out();
       //dipping_to_black = false;
       //suspend_gameplay();
@@ -1908,7 +1727,9 @@ void Screen::refresh_environment_and_world(bool set_player_position)
 
    // Clear the bitmap bin, except, restore the player entities sprite
    bitmap_bin->clear();
-   player_entity->sprite = bitmap_bin->auto_get("player_character.png");
+   player_entity->sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+   //player_entity->sprite = bitmap_bin->auto_get("player_character.png");
+      //e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
 
 
    // Relad the TMJ and refill the tile layer data
@@ -1928,6 +1749,7 @@ void Screen::refresh_environment_and_world(bool set_player_position)
       int tile_height = 16;
       float object_x = object->x / (float)tile_width;
       int tmj_id = object->id;
+      std::string tmj_name = object->name;
 
       float object_y = object->y / (float)tile_height;
       float object_w = object->width / (float)tile_width;
@@ -1954,8 +1776,45 @@ void Screen::refresh_environment_and_world(bool set_player_position)
       e.aabb2d.set_w(1.0);
       e.aabb2d.set_h(1.0);
       e.tmj_id = tmj_id;
+      e.name = tmj_name;
       e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER;
 
+
+      // BY TYPE
+      int dialog_trigger_count = 0;
+      if (object->type == "dialog_trigger")
+      {
+         auto &custom_properties = object->custom_properties;
+         if (custom_properties.exists("play_only_once"))
+         {
+            if (!custom_properties.is_bool("play_only_once"))
+            {
+               throw std::runtime_error("####!!!!!! play_only_once is not bool.");
+            }
+            if (custom_properties.get_bool("play_only_once") == true)
+            {
+               e.flags |= TINS2025::Entity::FLAG_DIALOG_TRIGGERS_ONLY_ONCE;
+            }
+         }
+         //bool triggered_once = true;
+         //if (custom_
+         //object->name; //custom_properties.exists("");
+         // HERE
+         e.sprite = nullptr;
+         e.model = nullptr;
+         e.type = TINS2025::Entity::ENTITY_TYPE_DIALOG_TRIGGER;
+         e.flags |= TINS2025::Entity::FLAG_COLLIDES_WITH_PLAYER;
+         e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+         e.aabb2d.set_w(object_w);
+         e.aabb2d.set_h(object_h);
+         dialog_trigger_count++;
+      }
+
+      std::cout << "DIALOG TRIGGERS ACCUMULATED: " << dialog_trigger_count << std::endl;
+
+
+
+      // BY NAME
       e.model = model_bin->auto_get("character_model-01.obj");
       if (object->name == "friend_1")
       {
@@ -1970,6 +1829,14 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.flags |= TINS2025::Entity::FLAG_HIDDEN;
          e.flags |= TINS2025::Entity::FLAG_INACTIVE;
       }
+      //else if (object->name == "player_character")
+      //{
+         //e.type = TINS2025::Entity::ENTITY_TYPE_GIRAFFE;
+         //e.sprite = bitmap_bin->auto_get("hello_zoo-animals-0x-2x.png");
+         //e.model = model_bin->auto_get("hello_zoo-entities-0x-lottie.obj");
+         //e.flags |= TINS2025::Entity::FLAG_TRACKS_DISTANCE_TO_PLAYER;
+         //e.flags |= TINS2025::Entity::FLAG_EMITS_HYPE_AURA;
+      //}
       else if (object->name == "giraffe")
       {
          e.type = TINS2025::Entity::ENTITY_TYPE_GIRAFFE;
@@ -3109,6 +2976,50 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             }
          )
       },
+
+
+
+
+
+
+      { "zoo_intro_dialog", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+            "Whew!",
+            "I made it!",
+            "The Pumpkin City Zoo!",
+            "I may be a botanist by trade, but I like to think of myself as a bit of an amateur zoologist, too!",
+            "I can't wait to check out the (em)mysterious animals(/em).",
+            //"I came all the way to this zoo just to see them!",
+         }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+      )},
+      { "zoo_entrance_reaction", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+            "WOAH! What a massive zoo!",
+            "I had no idea this place would be so big.",
+            "There must be at least...",
+            "1...",
+            "2...",
+            "3...",
+            "A thousand animals here!",
+            "I bet the zookeepers are THRILLED to be working here.",
+            "They're in the presence of some of the most majestic creatures...",
+            "like...",
+            "...ever!",
+            //"I bet they're pretty cool and relaxed just knowing they're nearby!",
+         }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+      )},
+      { "zoo_mechanic_setup", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
+            "Oooh! And there's the first exhibit! The Red Panda!",
+            "EEEeeee!! It's so cute I can't even stand it!",
+            "Wait... oh no! My notebook!",
+            "The wind just blew all of my notebook pages all over the zoo!",
+            "What am I gonna do!?",
+            "I need to find those pages. I can't possibly document these animals without my notes.",
+            "And I have to stay focused...",
+            "If I get too close to the animals without writing my notes, I'll get way too overstimulated!",
+            "Deep breaths, Lottie. Find the pages, approach the animals, and write, write, write!",
+            "That's the only way to keep my cool."
+         }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+      )},
+
 
 
 

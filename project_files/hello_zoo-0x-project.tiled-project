@@ -31,6 +31,31 @@
             ]
         },
         {
+            "color": "#ff7d7c00",
+            "drawFill": true,
+            "id": 5,
+            "members": [
+                {
+                    "name": "play_only_once",
+                    "type": "bool",
+                    "value": false
+                }
+            ],
+            "name": "dialog_trigger",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
             "id": 1,
             "name": "Enum0",
             "storageType": "string",

@@ -11,6 +11,11 @@ properties:
     init_with: nullptr
     exposed: true
 
+  - name: name
+    type: std::string
+    init_with: '"[unset-name]"'
+    exposed: true
+
   - name: tmj_id
     type: uint32_t
     init_with: 0
@@ -56,6 +61,7 @@ enums:
       - FLAG_COLLIDES_WITH_TILEMAP
       - FLAG_TRACKS_DISTANCE_TO_PLAYER
       - FLAG_EMITS_HYPE_AURA
+      - FLAG_DIALOG_TRIGGERS_ONLY_ONCE
       - FLAG_COLLECTED
 
 
@@ -72,6 +78,7 @@ enums:
        - ENTITY_TYPE_APPLE
        - ENTITY_TYPE_CARROT
        - ENTITY_TYPE_RED_CARROT
+       - ENTITY_TYPE_DIALOG_TRIGGER
        - ENTITY_TYPE_DIALOG_TRIGGER_1
        - ENTITY_TYPE_DIALOG_TRIGGER_2
        - ENTITY_TYPE_DIALOG_TRIGGER_3

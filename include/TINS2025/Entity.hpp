@@ -24,7 +24,8 @@ namespace TINS2025
          FLAG_COLLIDES_WITH_TILEMAP = 0x0008,
          FLAG_TRACKS_DISTANCE_TO_PLAYER = 0x0010,
          FLAG_EMITS_HYPE_AURA = 0x0020,
-         FLAG_COLLECTED = 0x0040,
+         FLAG_DIALOG_TRIGGERS_ONLY_ONCE = 0x0040,
+         FLAG_COLLECTED = 0x0080,
       };
       enum Type
       {
@@ -36,6 +37,7 @@ namespace TINS2025
          ENTITY_TYPE_APPLE,
          ENTITY_TYPE_CARROT,
          ENTITY_TYPE_RED_CARROT,
+         ENTITY_TYPE_DIALOG_TRIGGER,
          ENTITY_TYPE_DIALOG_TRIGGER_1,
          ENTITY_TYPE_DIALOG_TRIGGER_2,
          ENTITY_TYPE_DIALOG_TRIGGER_3,
@@ -80,6 +82,7 @@ namespace TINS2025
    public:
       ALLEGRO_BITMAP* sprite;
       AllegroFlare::Model3D* model;
+      std::string name;
       uint32_t tmj_id;
       TINS2025::Entity::Type type;
       uint32_t animation_mode;

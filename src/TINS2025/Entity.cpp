@@ -13,6 +13,7 @@ namespace TINS2025
 Entity::Entity()
    : sprite(nullptr)
    , model(nullptr)
+   , name("[unset-name]")
    , tmj_id(0)
    , type(TINS2025::Entity::ENTITY_TYPE_UNDEF)
    , animation_mode(TINS2025::Entity::ANIMATION_MODE_STANDING)
@@ -38,6 +39,7 @@ std::string Entity::to_string(Type value, bool throw_on_error)
    if (value == Type::ENTITY_TYPE_APPLE) return "entity_type_apple";
    if (value == Type::ENTITY_TYPE_CARROT) return "entity_type_carrot";
    if (value == Type::ENTITY_TYPE_RED_CARROT) return "entity_type_red_carrot";
+   if (value == Type::ENTITY_TYPE_DIALOG_TRIGGER) return "entity_type_dialog_trigger";
    if (value == Type::ENTITY_TYPE_DIALOG_TRIGGER_1) return "entity_type_dialog_trigger_1";
    if (value == Type::ENTITY_TYPE_DIALOG_TRIGGER_2) return "entity_type_dialog_trigger_2";
    if (value == Type::ENTITY_TYPE_DIALOG_TRIGGER_3) return "entity_type_dialog_trigger_3";
@@ -81,6 +83,7 @@ Entity::Type Entity::from_string(std::string value, bool throw_on_error)
    if (value == "entity_type_apple") return Type::ENTITY_TYPE_APPLE;
    if (value == "entity_type_carrot") return Type::ENTITY_TYPE_CARROT;
    if (value == "entity_type_red_carrot") return Type::ENTITY_TYPE_RED_CARROT;
+   if (value == "entity_type_dialog_trigger") return Type::ENTITY_TYPE_DIALOG_TRIGGER;
    if (value == "entity_type_dialog_trigger_1") return Type::ENTITY_TYPE_DIALOG_TRIGGER_1;
    if (value == "entity_type_dialog_trigger_2") return Type::ENTITY_TYPE_DIALOG_TRIGGER_2;
    if (value == "entity_type_dialog_trigger_3") return Type::ENTITY_TYPE_DIALOG_TRIGGER_3;

@@ -1150,6 +1150,10 @@ table td
   <td class="property">AllegroFlare::Model3D*</td>
 </tr>
 <tr>
+  <td class="property">name</td>
+  <td class="property">std::string</td>
+</tr>
+<tr>
   <td class="property">tmj_id</td>
   <td class="property">uint32_t</td>
 </tr>
@@ -1854,6 +1858,14 @@ table td
 <tr>
   <td class="method">void</td>
   <td class="method"><b>time_step_player_excitement</b>(double time_step=1.0/60.0)</td>
+</tr>
+<tr>
+  <td class="method">bool</td>
+  <td class="method"><b>is_dialog_already_triggered</b>(std::string dialog_identifier=&quot;[unset-dialog_identifier]&quot;)</td>
+</tr>
+<tr>
+  <td class="method">void</td>
+  <td class="method"><b>mark_dialog_as_triggered</b>(std::string dialog_identifier=&quot;[unset-dialog_identifier]&quot;)</td>
 </tr>
 <tr>
   <td class="method">void</td>

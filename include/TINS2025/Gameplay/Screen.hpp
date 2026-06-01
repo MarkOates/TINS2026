@@ -170,6 +170,8 @@ namespace TINS2025
          virtual void on_deactivate() override;
          void mark_entity_collected(TINS2025::Entity* entity=nullptr);
          void time_step_player_excitement(double time_step=1.0/60.0);
+         bool is_dialog_already_triggered(std::string dialog_identifier="[unset-dialog_identifier]");
+         void mark_dialog_as_triggered(std::string dialog_identifier="[unset-dialog_identifier]");
          void document_animal_type(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
          void review_documented_animals_for_win_condition();
          bool is_documented(TINS2025::Entity::Type entity_type=TINS2025::Entity::Type::ENTITY_TYPE_UNDEF);
