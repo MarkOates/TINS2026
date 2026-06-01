@@ -975,7 +975,7 @@ void Screen::document_animal_type(TINS2025::Entity::Type entity_type)
       throw std::runtime_error("[TINS2025::Gameplay::Screen::document_animal_type]: error: guard \"(entity_type != TINS2025::Entity::Type::ENTITY_TYPE_UNDEF)\" not met");
    }
    gameplay_progress.documented_entity_types.insert(entity_type);
-   review_documented_animals_for_win_condition(); // DEVELOPMENT
+   //review_documented_animals_for_win_condition(); // DEVELOPMENT
 
    // TODO: Find all en
    //gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE);
@@ -1811,6 +1811,18 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
       black_dip_out();
       move_player_to_last_safe_point();
       gameplay_progress.player_excitement = 0;
+      //view_motion_studio.set_current_camera_to_camera_at_index(2);
+      //gameplay_progress.player_freakouts++;
+      //black_dip_out();
+      //dipping_to_black = false;
+      //suspend_gameplay();
+   }
+   else if (game_event->is_type("test_win_condition"))
+   {
+      review_documented_animals_for_win_condition();
+      //black_dip_out();
+      //move_player_to_last_safe_point();
+      //gameplay_progress.player_excitement = 0;
       //view_motion_studio.set_current_camera_to_camera_at_index(2);
       //gameplay_progress.player_freakouts++;
       //black_dip_out();
@@ -3245,7 +3257,8 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
                "I've documented the animal.",
                "Aahh. I feel more relaxed now."
             //},
-         }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         //}, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+         }, { { "test_win", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->test_win_condition"), 0 } }
             //{ { "End Ch1", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_restart_to_safe_point"), 0 } }
             //{
                //{ "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } // DEVELOPMENT
@@ -3253,6 +3266,11 @@ AllegroFlare::DialogTree::NodeBank Screen::build_dialog_node_bank()
             //}
          //)
       )},
+      { "->test_win_condition", new AllegroFlare::DialogTree::Nodes::EmitGameEvent(
+            "test_win_condition",
+            "exit_dialog"
+         )
+      },
 
 
 
