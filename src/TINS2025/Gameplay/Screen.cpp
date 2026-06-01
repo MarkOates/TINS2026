@@ -936,7 +936,7 @@ void Screen::time_step_player_excitement(double time_step)
    }
 
    // Increment our hype
-   gameplay_progress.player_excitement += total_cumulative_hype_aura * time_step;
+   gameplay_progress.player_excitement += total_cumulative_hype_aura * 2 * time_step;
    if (gameplay_progress.player_excitement >= MAX_ALLOWED_HYPE)
    {
       gameplay_progress.player_excitement = MAX_ALLOWED_HYPE;
