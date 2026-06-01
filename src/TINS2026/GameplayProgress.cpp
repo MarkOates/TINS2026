@@ -28,6 +28,10 @@ GameplayProgress::~GameplayProgress()
 }
 
 
+int GameplayProgress::lines_available()
+{
+   return player_line_capacity - player_lines_filled;
+}
 
 
 } // namespace TINS2026

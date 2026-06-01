@@ -1075,7 +1075,7 @@ methods:
                TINS2025::Entity &subject = *static_cast<TINS2025::Entity*>(subject_v);
                TINS2025::Entity &collidable = *static_cast<TINS2025::Entity*>(collidable_v);
 
-               int HARD_CODED_AURA_RADIUS = 5; // DEVELOPMENT, TODO: Use value from database for this animal
+               int HARD_CODED_AURA_RADIUS = 10; // DEVELOPMENT, TODO: Use value from database for this animal
                return (collidable.distance_to_player <= HARD_CODED_AURA_RADIUS);
             });
 
@@ -1221,15 +1221,29 @@ methods:
                AllegroFlare::Placement2D bar_place;
                bar_place.rotation = -3.1415 * 0.5;
                bar_place.position.x = bar_x;
-               bar_place.position.y = bar_y;
+               bar_place.position.y = bar_y+116;
                bar_place.align.y = 0.5;
-               bar_place.align.x = 0.5;
+               bar_place.align.x = 0.0;
                //bar_place.start_transform();
                AllegroFlare::Elements::HealthBars::Classic bar;
                //bar.set_max(20);
                //bar.set_value(10);
-               bar.set_max(20);
-               bar.set_value((lottie__num_lines_written * (lottie__total_lines_available) / 100.0) * bar.get_max());
+               bar.set_max(gameplay_progress.player_line_capacity); // HERE
+               //bar.set_max(20); // HERE
+               /*
+                 - name: player_line_capacity
+                   type: int
+                   init_with: 0
+                   exposed: true
+
+                 - name: player_lines_filled
+                   type: int
+                   init_with: 0
+                   exposed: true
+               */
+
+               bar.set_value(gameplay_progress.player_lines_filled);
+               //bar.set_value((lottie__num_lines_written * (lottie__total_lines_available) / 100.0) * bar.get_max());
                // NOTE: These values are switched around because 
                bar.set_bar_width(bar_height);
                bar.set_bar_height(bar_width);
@@ -1238,6 +1252,7 @@ methods:
 
                bar_place.size.y = bar.get_bar_height();
                bar_place.size.x = bar.get_max() * bar.get_bar_spacing();
+               //bar_place.position.x 
                bar_place.start_transform();
                bar.render();
 
@@ -1551,24 +1566,108 @@ methods:
          // TODO: Note that there could be a race condition
          //event_emitter->emit_activate_dialog_node_by_name_event("became_overhyped");
       //}
+
+
+
+
       else if (game_event->is_type("document_giraffe_event"))
       {
+         auto type = TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE;
          double &lottie__excitement = gameplay_progress.player_excitement;
-         int num_giraffe_lines = 3;
-         lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
-         lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
-         //gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE); // HERE
-         document_animal_type(TINS2025::Entity::Type::ENTITY_TYPE_GIRAFFE);
+         const TINS2026::Animal& record = animal_database.get_record_by_entity_type(type);
+         int num_lines = record.how_many_lines_needed_for_notetaking;
+         if (gameplay_progress.lines_available() >= num_lines)
+         {
+            lottie__num_lines_written += num_lines;
+            lottie__excitement -= num_lines * 5;
+            document_animal_type(type);
+            // TODO: Emit "done!" dialog // HERE
+            event_emitter->emit_activate_dialog_node_by_name_event("documented_the_animal");
+         }
+         else
+         {
+            event_emitter->emit_activate_dialog_node_by_name_event("unable_to_document_the_animal");
+         }
       }
       else if (game_event->is_type("document_goat_event"))
       {
+         auto type = TINS2025::Entity::Type::ENTITY_TYPE_GOAT;
          double &lottie__excitement = gameplay_progress.player_excitement;
-         int num_giraffe_lines = 3;
-         lottie__num_lines_written += num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
-         lottie__excitement -= num_giraffe_lines; // TODO: Work out stats here // DEVELOPMENT
-         //gameplay_progress.documented_entity_types.insert(TINS2025::Entity::Type::ENTITY_TYPE_GOAT); // HERE
-         document_animal_type(TINS2025::Entity::Type::ENTITY_TYPE_GOAT);
+         const TINS2026::Animal& record = animal_database.get_record_by_entity_type(type);
+         int num_lines = record.how_many_lines_needed_for_notetaking;
+         if (gameplay_progress.lines_available() >= num_lines)
+         {
+            lottie__num_lines_written += num_lines;
+            lottie__excitement -= num_lines * 5;
+            document_animal_type(type);
+            // TODO: Emit "done!" dialog // HERE
+            event_emitter->emit_activate_dialog_node_by_name_event("documented_the_animal");
+         }
+         else
+         {
+            event_emitter->emit_activate_dialog_node_by_name_event("unable_to_document_the_animal");
+         }
       }
+      else if (game_event->is_type("document_zebra_event"))
+      {
+         auto type = TINS2025::Entity::Type::ENTITY_TYPE_ZEBRA;
+         double &lottie__excitement = gameplay_progress.player_excitement;
+         const TINS2026::Animal& record = animal_database.get_record_by_entity_type(type);
+         int num_lines = record.how_many_lines_needed_for_notetaking;
+         if (gameplay_progress.lines_available() >= num_lines)
+         {
+            lottie__num_lines_written += num_lines;
+            lottie__excitement -= num_lines * 5;
+            document_animal_type(type);
+            // TODO: Emit "done!" dialog // HERE
+            event_emitter->emit_activate_dialog_node_by_name_event("documented_the_animal");
+         }
+         else
+         {
+            event_emitter->emit_activate_dialog_node_by_name_event("unable_to_document_the_animal");
+         }
+      }
+      else if (game_event->is_type("document_tiger_event"))
+      {
+         auto type = TINS2025::Entity::Type::ENTITY_TYPE_TIGER;
+         double &lottie__excitement = gameplay_progress.player_excitement;
+         const TINS2026::Animal& record = animal_database.get_record_by_entity_type(type);
+         int num_lines = record.how_many_lines_needed_for_notetaking;
+         if (gameplay_progress.lines_available() >= num_lines)
+         {
+            lottie__num_lines_written += num_lines;
+            lottie__excitement -= num_lines * 5;
+            document_animal_type(type);
+            // TODO: Emit "done!" dialog // HERE
+            event_emitter->emit_activate_dialog_node_by_name_event("documented_the_animal");
+         }
+         else
+         {
+            event_emitter->emit_activate_dialog_node_by_name_event("unable_to_document_the_animal");
+         }
+      }
+      else if (game_event->is_type("document_leopard_event"))
+      {
+         auto type = TINS2025::Entity::Type::ENTITY_TYPE_LEOPARD;
+         double &lottie__excitement = gameplay_progress.player_excitement;
+         const TINS2026::Animal& record = animal_database.get_record_by_entity_type(type);
+         int num_lines = record.how_many_lines_needed_for_notetaking;
+         if (gameplay_progress.lines_available() >= num_lines)
+         {
+            lottie__num_lines_written += num_lines;
+            lottie__excitement -= num_lines * 5;
+            document_animal_type(type);
+            // TODO: Emit "done!" dialog // HERE
+            event_emitter->emit_activate_dialog_node_by_name_event("documented_the_animal");
+         }
+         else
+         {
+            event_emitter->emit_activate_dialog_node_by_name_event("unable_to_document_the_animal");
+         }
+      }
+
+
+
       else if (game_event->is_type("show_cake_1"))
       {
          event_emitter->emit_play_music_track_event("sad_theme");
@@ -3073,15 +3172,15 @@ methods:
             }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
          )},
          { "zoo_entrance_reaction", new AllegroFlare::DialogTree::Nodes::Interparsable(LOTTIE, {
-               "WOAH! What a massive zoo!",
-               "I had no idea this place would be so big.",
-               "There must be at least...",
-               "1...",
-               "2...",
-               "3...",
-               "A thousand animals here!",
-               "I bet the zookeepers are THRILLED to be working here.",
-               "They're in the presence of some of the most majestic creatures...",
+               "WOAH! What a nice little zoo!",
+               "I had no idea this place would be so quaint.",
+               "There are exactly...",
+               "1... 2...",
+               "3... 4...",
+               "5 animals here!",
+               //"I bet the zookeepers are THRILLED to be working here.",
+               "And they are truly some of natures most majestic creatures...",
+               //"They're in the presence of some of the most majestic creatures...",
                "like...",
                "...ever!",
                "It's a good thing I brought my (em)notebook(/em) with all of the (em)blank pages(/em) in it.",
@@ -3120,6 +3219,41 @@ methods:
             )
          },
 
+
+
+
+         { "documented_the_animal", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               {
+                  "Done!",
+                  "I've documented the animal.",
+                  "Aahh. I feel more relaxed now."
+               //},
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+               //{ { "End Ch1", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_restart_to_safe_point"), 0 } }
+               //{
+                  //{ "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } // DEVELOPMENT
+                  ////{ "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
+               //}
+            //)
+         )},
+
+
+
+         { "unable_to_document_the_animal", new AllegroFlare::DialogTree::Nodes::Interparsable(
+               LOTTIE,
+               {
+                  "Oh no!",
+                  "I don't have enough blank lines!"
+               //},
+            }, { { "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } }
+               //{ { "End Ch1", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->trigger_restart_to_safe_point"), 0 } }
+               //{
+                  //{ "Exit", new AllegroFlare::DialogTree::NodeOptions::ExitDialog(), 0 } // DEVELOPMENT
+                  ////{ "next", new AllegroFlare::DialogTree::NodeOptions::GoToNode("->document_giraffe"), 0 }
+               //}
+            //)
+         )},
 
 
 

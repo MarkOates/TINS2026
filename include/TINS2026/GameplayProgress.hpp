@@ -29,6 +29,7 @@ namespace TINS2026
       GameplayProgress();
       ~GameplayProgress();
 
+      int lines_available();
    };
 }
 

@@ -63,7 +63,7 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
             "Amazing! A giraffe!",
             "They have huge long necks!",
          },
-         LINES_OF_NOTES_NEEDED,
+         7, //LINES_OF_NOTES_NEEDED,
          HYPE_RATE,
          HYPE_AURA_RADIUS
       ),
@@ -80,7 +80,7 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
             "IS SOOO CUUUTEE!",
             "This has to be the CUTEST GOAT in the ENTIRE WORLD!",
          },
-         LINES_OF_NOTES_NEEDED,
+         3, //LINES_OF_NOTES_NEEDED,
          HYPE_RATE,
          HYPE_AURA_RADIUS
       ),
@@ -94,7 +94,7 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
             "These guys have exceptional night vision.",
             "Leopards can see up to seven times better in the dark than humans."
          },
-         LINES_OF_NOTES_NEEDED,
+         6, //LINES_OF_NOTES_NEEDED,
          HYPE_RATE,
          HYPE_AURA_RADIUS
       ),
@@ -109,7 +109,7 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
             "Did you know that no two tigers have the exact same stripe pattern?",
             "They're totally unique, just like human fingerprints!"
          },
-         LINES_OF_NOTES_NEEDED,
+         8, //LINES_OF_NOTES_NEEDED,
          HYPE_RATE,
          HYPE_AURA_RADIUS
       ),
@@ -124,7 +124,7 @@ std::map<TINS2025::Entity::Type, TINS2026::Animal> AnimalDatabase::build_animal_
             "Actually, underneath all that hair, their skin is totally black!",
             "Nature is so wild."
          },
-         LINES_OF_NOTES_NEEDED,
+         4, //LINES_OF_NOTES_NEEDED,
          HYPE_RATE,
          HYPE_AURA_RADIUS
       ),

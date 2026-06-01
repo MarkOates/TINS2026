@@ -47,6 +47,15 @@ properties:
     exposed: true
 
 
+methods:
+
+
+  - name: lines_available
+    type: int
+    body: |
+      return player_line_capacity - player_lines_filled;
+
+
 dependencies:
 
 
