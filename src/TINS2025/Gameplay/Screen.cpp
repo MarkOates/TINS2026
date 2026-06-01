@@ -1635,7 +1635,7 @@ void Screen::game_event_func(AllegroFlare::GameEvent* game_event)
    }
    else if (game_event->is_type("wind_blow"))
    {
-      reveal_all_notebook_pages();
+      reveal_all_notebook_pages_not_collected();
    }
    else if (game_event->is_type("bakeoff_begins"))
    {
@@ -1929,6 +1929,8 @@ void Screen::refresh_environment_and_world(bool set_player_position)
          e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
          e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
          e.flags |= TINS2025::Entity::FLAG_HIDDEN; // HIDE Notebook pages by default
+         e.flags |= TINS2025::Entity::FLAG_INACTIVE; // make them inactive by default too
+         //entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
       }
       else if (object->name == "friend_2")
       {
@@ -2186,15 +2188,21 @@ void Screen::primary_update_func(double time_now, double delta_time)
    return;
 }
 
-void Screen::reveal_all_notebook_pages()
+void Screen::reveal_all_notebook_pages_not_collected()
 {
    for (auto &entity : entities)
    {
       if (entity.type == TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE)
       {
+         // HERE
          //e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
          //e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
          //e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+         //entity.tmj_id; // HERE
+         if (items_collected_tmj_ids.count(entity.tmj_id) > 0) continue; // Already collected
+
+         //entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
+         entity.flags &= ~TINS2025::Entity::FLAG_INACTIVE; // Remove the flag
          entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
       }
    }
@@ -2301,6 +2309,8 @@ void Screen::key_down_func(ALLEGRO_EVENT* ev)
             if (items_collected_tmj_ids.count(entity.tmj_id) == 0) continue;
             mark_entity_collected(&entity);
          }
+
+         reveal_all_notebook_pages_not_collected();
 
          white_flash();
          // TODO: White flash?

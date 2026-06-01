@@ -1,14 +1,20 @@
 {
   "documented_entity_types": [],
-  "items_collected_tmj_ids": [],
+  "items_collected_tmj_ids": [
+    95
+  ],
   "player_excitement": 0.0,
   "player_freakouts": 0,
-  "player_line_capacity": 0,
+  "player_line_capacity": 4,
   "player_lines_filled": 0,
   "player_location": {
-    "x": 29.085247039794922,
-    "y": 49.695865631103516
+    "x": 14.817212104797363,
+    "y": 50.81787109375
   },
   "progress_and_state_flags": [],
-  "triggered_dialog_names": []
+  "triggered_dialog_names": [
+    "zoo_entrance_reaction",
+    "zoo_intro_dialog",
+    "zoo_mechanic_setup"
+  ]
 }

@@ -1584,7 +1584,7 @@ methods:
       }
       else if (game_event->is_type("wind_blow"))
       {
-         reveal_all_notebook_pages();
+         reveal_all_notebook_pages_not_collected();
       }
       else if (game_event->is_type("bakeoff_begins"))
       {
@@ -1882,6 +1882,8 @@ methods:
             e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
             e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
             e.flags |= TINS2025::Entity::FLAG_HIDDEN; // HIDE Notebook pages by default
+            e.flags |= TINS2025::Entity::FLAG_INACTIVE; // make them inactive by default too
+            //entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
          }
          else if (object->name == "friend_2")
          {
@@ -2142,15 +2144,21 @@ methods:
       return;
 
 
-  - name: reveal_all_notebook_pages
+  - name: reveal_all_notebook_pages_not_collected
     body: |
       for (auto &entity : entities)
       {
          if (entity.type == TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE)
          {
+            // HERE
             //e.type = TINS2025::Entity::ENTITY_TYPE_NOTEBOOK_PAGE;
             //e.sprite = bitmap_bin->auto_get("notebook_paper_item_feature-01.png");
             //e.flags |= TINS2025::Entity::FLAG_HIDDEN;
+            //entity.tmj_id; // HERE
+            if (items_collected_tmj_ids.count(entity.tmj_id) > 0) continue; // Already collected
+
+            //entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
+            entity.flags &= ~TINS2025::Entity::FLAG_INACTIVE; // Remove the flag
             entity.flags &= ~TINS2025::Entity::FLAG_HIDDEN; // Remove the flag
          }
       }
@@ -2258,6 +2266,8 @@ methods:
                if (items_collected_tmj_ids.count(entity.tmj_id) == 0) continue;
                mark_entity_collected(&entity);
             }
+
+            reveal_all_notebook_pages_not_collected();
 
             white_flash();
             // TODO: White flash?

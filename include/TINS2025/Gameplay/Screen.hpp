@@ -188,7 +188,7 @@ namespace TINS2025
          void refresh_environment_and_world(bool set_player_position=false);
          virtual void display_switch_in_func() override;
          virtual void primary_update_func(double time_now=0.0f, double delta_time=1.0f) override;
-         void reveal_all_notebook_pages();
+         void reveal_all_notebook_pages_not_collected();
          virtual void primary_render_func() override;
          virtual void mouse_axes_func(ALLEGRO_EVENT* ev=nullptr) override;
          virtual void mouse_down_func(ALLEGRO_EVENT* ev=nullptr) override;
