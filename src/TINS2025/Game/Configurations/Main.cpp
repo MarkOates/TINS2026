@@ -188,10 +188,13 @@ AllegroFlare::Screens::Gameplay* Main::create_primary_gameplay_screen(AllegroFla
    //title_screen.set_menu_font_name("Exan-Regular.ttf");
    //title_screen.set_menu_font_size(-24);
    //title_screen.set_menu_text_color(ALLEGRO_COLOR{0.8, 0.8, 0.8, 0.8});4e4dc0
-   title_screen.set_menu_text_color(al_color_html("4e4dc0"));
-   title_screen.set_menu_selected_text_color(al_color_html("4e4dc0"));
+   //title_screen.set_menu_text_color(al_color_html("4e4dc0"));
+   title_screen.set_menu_text_color(al_color_name("lightblue"));
+   title_screen.set_menu_selected_text_color(al_color_html("ffffff"));
    //title_screen.set_menu_selected_text_color(al_color_html("4e4dc0"));
-   title_screen.set_menu_selector_fill_color(al_color_html("cde2eb"));
+   title_screen.set_menu_selector_fill_color(al_color_name("deepskyblue"));
+   //title_screen.set_menu_selector_fill_color(al_color_name("darkslateblue"));
+   //title_screen.set_menu_selector_fill_color(al_color_html("cde2eb"));
 
    //title_screen.set_menu_selected_text_color(ALLEGRO_COLOR{1, 1, 1, 1});
    //title_screen.set_menu_selector_fill_color(ALLEGRO_COLOR{0.0, 0.01, 0.02, 0.05});
@@ -204,7 +207,8 @@ AllegroFlare::Screens::Gameplay* Main::create_primary_gameplay_screen(AllegroFla
    //title_screen.set_footer_text_font_name("Michroma-Regular.ttf");
    //title_screen.set_copyright_text(copyright_text);
    //title_screen.set_footer_text_font_size(-22);
-   title_screen.set_title_bitmap_name("title-03.png");
+   //title_screen.set_title_bitmap_name("title-03.png");
+   title_screen.set_title_bitmap_name("hello_zoo-title_screen-01.png");
    title_screen.set_title_position_y(1080/2); //1080/2-60*2+20-20);
    //title_screen.set_menu_position_y(0); //1080/2-60*2+20+80+120+60);
    //title_screen.set_title_bitmap_name("odeya_logo-02b.png");
@@ -595,11 +599,11 @@ void Main::load_audio_controller(AllegroFlare::AudioController* audio_controller
    //// An example of how to load a music track:
    audio_controller->set_and_load_music_track_elements({
       //{ "intro_music", { "wanderer-01.ogg", true, "ignore" } },
-      { "theme", { "hello_friend-theme-01.ogg", true, "ignore" } },
-      { "sad_theme", { "hello_friend-sad_theme-01.ogg", true, "ignore" } },
-      { "chipper_tune", { "hello_friend-chipper_tune-01.ogg", true, "ignore" } },
-      { "idea", { "hello_friend-idea-01.ogg", false, "ignore" } },
-      { "closer", { "hello_friend-closer-01.ogg", false, "ignore" } },
+      { "theme", { "hello_friend-theme-01.ogg", true, "ignore", 2.0 } },
+      { "sad_theme", { "hello_friend-sad_theme-01.ogg", true, "ignore", 2.0 } },
+      { "chipper_tune", { "hello_friend-chipper_tune-01.ogg", true, "ignore", 2.0 } },
+      { "idea", { "hello_friend-idea-01.ogg", false, "ignore", 2.0 } },
+      { "closer", { "hello_friend-closer-01.ogg", false, "ignore", 2.0 } },
    });
 
    // How to play a music track:
