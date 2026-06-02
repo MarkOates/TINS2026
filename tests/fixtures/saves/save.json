@@ -1,15 +1,16 @@
 {
   "documented_entity_types": [],
   "items_collected_tmj_ids": [
-    95
+    82,
+    94
   ],
-  "player_excitement": 0.0,
+  "player_excitement": 92.33333333333377,
   "player_freakouts": 0,
-  "player_line_capacity": 4,
+  "player_line_capacity": 8,
   "player_lines_filled": 0,
   "player_location": {
-    "x": 41.0860481262207,
-    "y": 35.93357849121094
+    "x": 50.01492691040039,
+    "y": 5.388869762420654
   },
   "progress_and_state_flags": [],
   "triggered_dialog_names": [
